@@ -16,6 +16,14 @@ Before starting any task, read `.claude/directus.md` if Directus work is involve
 ## Project map (quick reference)
 
 ```
+barkomas-dev/
+  docs/plans/    — Implementation plan documents (feature designs, architecture decisions)
+                   New plans go here, not at the project root.
+  .claude/
+    agents/      — Claude Code agents (this file lives here)
+    skills/      — Claude Code slash-command skills
+    directus.md  — Authoritative Directus conventions (read before any schema work)
+
 frontend/src/
   lib/
     types.ts       — ALL TypeScript types. Single source of truth. Add types here first.
@@ -283,4 +291,6 @@ const eclassInfo = resolveEclassCode(product, product.category ?? null);
 - Do not use `direction: "rtl"` detection in components — BaseLayout sets `dir` on `<html>`, CSS handles it.
 - Do not create new translation alias fields without also creating both relations on the junction table.
 - Do not use `--no-verify` on git or skip builds to "save time" — catch errors before they compound.
+- Do not add `Co-Authored-By: Claude` or any AI co-author line to commit messages.
+- Do not create plan or design documents at the project root — place them in `docs/plans/`.
 - Do not add block fields to `BLOCK_ITEM_FIELDS` without also updating the block's TypeScript type.

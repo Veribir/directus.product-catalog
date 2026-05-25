@@ -10,9 +10,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 barkomas-dev/
   directus/      — Directus CMS (Docker + Neon PostgreSQL)
   frontend/      — Astro 6 frontend
+  docs/
+    plans/       — Implementation plan documents (feature designs, architecture decisions)
   .mcp.json      — MCP server config (barkomas_dev → Directus at localhost:8055)
   .claude/
     directus.md  — Full Directus conventions, patterns, and MCP tool rules (read before any Directus work)
+    agents/      — Claude Code project agents
+    skills/      — Claude Code slash-command skills
 ```
 
 ---
