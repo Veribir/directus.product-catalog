@@ -1,0 +1,100 @@
+---
+import type { BlockHero } from "../../lib/directus";
+import { DIRECTUS_URL } from "../../lib/directus";
+import { getTranslation } from "../../lib/i18n";
+
+interface Props {
+  block: BlockHero;
+  background: "light" | "dark";
+  locale: string;
+}
+
+const { block, background, locale } = Astro.props;
+const tx = getTranslation(block.translations, locale);
+const imageUrl = block.image ? `${DIRECTUS_URL}/assets/${block.image}` : null;
+const isDark = background === "dark";
+const isCenter = block.layout === "image_center" || !block.layout;
+const isRight = block.layout === "image_right";
+---
+
+<section
+  class:list={[
+    "flex items-center gap-12 px-6 py-20 md:px-16",
+    isDark ? "bg-slate-900 text-slate-50" : "bg-white text-slate-900",
+    isCenter ? "flex-col text-center" : isRight ? "flex-row-reverse" : "flex-row",
+  ]}
+>
+  {
+    isCenter ? (
+      <>
+        <div class="w-full max-w-2xl mx-auto">
+          {tx.tagline && (
+            <p
+              class:list={[
+                "text-xs font-semibold tracking-widest uppercase mb-3",
+                "text-(--accent)",
+              ]}
+            >
+              {tx.tagline}
+            </p>
+          )}
+          {tx.headline && (
+            <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-5">{tx.headline}</h1>
+          )}
+          {tx.description && (
+            <p
+              class:list={[
+                "text-lg leading-relaxed max-w-prose mx-auto",
+                isDark ? "text-slate-300" : "text-slate-600",
+              ]}
+            >
+              {tx.description}
+            </p>
+          )}
+        </div>
+        {imageUrl && (
+          <img
+            src={imageUrl}
+            alt={tx.headline ?? ""}
+            class="w-full max-h-120 object-cover rounded-xl"
+          />
+        )}
+      </>
+    ) : (
+      <>
+        <div class="flex-1">
+          {tx.tagline && (
+            <p
+              class:list={[
+                "text-xs font-semibold tracking-widest uppercase mb-3",
+                "text-(--accent)",
+              ]}
+            >
+              {tx.tagline}
+            </p>
+          )}
+          {tx.headline && (
+            <h1 class="text-4xl md:text-5xl font-extrabold leading-tight mb-5">{tx.headline}</h1>
+          )}
+          {tx.description && (
+            <p
+              class:list={[
+                "text-lg leading-relaxed max-w-prose",
+                isDark ? "text-slate-300" : "text-slate-600",
+              ]}
+            >
+              {tx.description}
+            </p>
+          )}
+        </div>
+        {imageUrl && (
+          <img
+            src={imageUrl}
+            alt={tx.headline ?? ""}
+            class="flex-1 max-w-[50%] w-full h-auto object-cover rounded-xl"
+          />
+        )}
+      </>
+    )
+  }
+</section>

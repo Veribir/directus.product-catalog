@@ -1,0 +1,306 @@
+---
+import type { Product, PageBlock } from "../lib/directus";
+import { DIRECTUS_URL } from "../lib/directus";
+import { getTranslation } from "../lib/i18n";
+import { formatPrice, isOnSale, formatUnit } from "../lib/price";
+import { resolveTemplate, getEnabledSections, resolveEclassCode } from "../lib/catalog";
+import CategoryBreadcrumb from "./CategoryBreadcrumb.astro";
+import ProductGallery from "./ProductGallery.astro";
+import ProductSpecs from "./ProductSpecs.astro";
+import ProductCertifications from "./ProductCertifications.astro";
+import ProductPricingTable from "./ProductPricingTable.astro";
+import ProductBrandBadge from "./ProductBrandBadge.astro";
+import EclassBadge from "./EclassBadge.astro";
+import ProductTags from "./ProductTags.astro";
+import PageBlocks from "./PageBlocks.astro";
+import { fetchAllCategories } from "../lib/api";
+import { buildCategoryPaths, getProductFullPath } from "../lib/catalog";
+
+interface Props {
+  product: Product;
+  locale: string;
+  productsPagePermalink: string;
+}
+
+const { product, locale, productsPagePermalink } = Astro.props;
+
+const tx = getTranslation(product.translations, locale);
+const template = resolveTemplate(product);
+const sections = getEnabledSections(template);
+
+// Build category path for breadcrumb + back link
+const allCategories = template.show_breadcrumb && product.category
+  ? await fetchAllCategories()
+  : [];
+const catPathMap = allCategories.length > 0 ? buildCategoryPaths(allCategories, locale) : new Map<string, string>();
+const categoryPath = product.category ? catPathMap.get(product.category.id) ?? null : null;
+
+// Price display
+const currency = "USD"; // TODO: resolve from globals/region
+const onSale = isOnSale(product.price, product.compare_at_price);
+const price = formatPrice(product.price, locale, currency);
+const compareAt = formatPrice(product.compare_at_price, locale, currency);
+const unitLabel = formatUnit(product.unit, locale);
+
+// Variants — pre-compute everything in frontmatter to avoid Astro JSX parser issues with < and <=
+const variantRows = (product.variants ?? [])
+  .filter((v) => v.status === "published")
+  .map((variant) => {
+    const vtx = getTranslation(variant.translations, locale);
+    const effectiveUnit = variant.unit_override ?? product.unit;
+    const vUnitLabel = formatUnit(effectiveUnit, locale);
+    const vOnSale = isOnSale(variant.price ?? product.price, variant.compare_at_price);
+    const vPrice = formatPrice(variant.price ?? product.price, locale, currency);
+    const vCompareAt = formatPrice(variant.compare_at_price, locale, currency);
+    const stockNum = Number(variant.stock);
+    const threshold = variant.low_stock_threshold != null ? Number(variant.low_stock_threshold) : null;
+    const isLowStock = threshold !== null && stockNum !== 0 && stockNum <= threshold;
+    const outOfStock = stockNum === 0;
+    return { variant, vtx, vUnitLabel, vOnSale, vPrice, vCompareAt, isLowStock, outOfStock };
+  });
+
+// eCl@ss classification
+const eclassInfo = resolveEclassCode(product, product.category ?? null);
+
+// Related products
+const relatedProducts = (product.related_products ?? [])
+  .map((r) => r.related_products_id)
+  .filter(Boolean);
+---
+
+<div class="max-w-6xl mx-auto px-6 py-12">
+
+  <!-- Breadcrumb -->
+  {template.show_breadcrumb && categoryPath && allCategories.length > 0 && (
+    <div class="mb-8">
+      <CategoryBreadcrumb
+        {categoryPath}
+        {productsPagePermalink}
+        {locale}
+        {allCategories}
+      />
+    </div>
+  )}
+
+  {/* Back link fallback when no category breadcrumb */}
+  {(!template.show_breadcrumb || !categoryPath) && (
+    <nav class="mb-8 text-sm text-slate-500">
+      <a href={`/${locale}${productsPagePermalink}`} class="hover:text-(--accent) transition-colors">
+        ← {productsPagePermalink.replace(/^\//, "")}
+      </a>
+    </nav>
+  )}
+
+  <div class="grid md:grid-cols-2 gap-12 items-start">
+
+    <!-- Gallery section -->
+    {sections.includes("gallery") && (
+      <ProductGallery
+        mainImage={product.image}
+        gallery={product.gallery}
+        alt={tx?.name ?? ""}
+        layout={template.gallery_layout}
+      />
+    )}
+
+    <!-- Info column -->
+    <div class="flex flex-col gap-5">
+
+      <!-- Category label -->
+      {product.category && (
+        <p class="text-xs font-semibold tracking-widest uppercase text-(--accent)">
+          {getTranslation(product.category.translations, locale)?.name}
+        </p>
+      )}
+
+      <!-- Product name -->
+      {tx?.name && (
+        <h1 class="text-3xl md:text-4xl font-extrabold leading-tight text-slate-900">
+          {tx.name}
+        </h1>
+      )}
+
+      <!-- Tags (always shown near title if present) -->
+      {(product.tags ?? []).length > 0 && (
+        <ProductTags tags={product.tags} {locale} />
+      )}
+
+      <!-- Brand section -->
+      {sections.includes("brand") && product.brand && (
+        <ProductBrandBadge brand={product.brand} {locale} />
+      )}
+
+      <!-- eCl@ss badge -->
+      {eclassInfo && (
+        <EclassBadge code={eclassInfo.code} version={eclassInfo.version} />
+      )}
+
+      <!-- Price section -->
+      {sections.includes("price") && !product.rfq_enabled && price && (
+        <div class="flex items-center gap-3 flex-wrap">
+          <span class="text-2xl font-bold text-slate-900">{price}</span>
+          {unitLabel && (
+            <span class="text-sm text-slate-400">/ {unitLabel}</span>
+          )}
+          {onSale && (
+            <>
+              <span class="text-lg text-slate-400 line-through">{compareAt}</span>
+              <span class="text-sm font-semibold px-2 py-0.5 rounded bg-red-100 text-red-600">Sale</span>
+            </>
+          )}
+        </div>
+      )}
+
+      <!-- RFQ CTA -->
+      {product.rfq_enabled && (
+        <div class="flex flex-col gap-2 p-4 rounded-xl bg-slate-50 border border-slate-200">
+          <p class="text-sm font-semibold text-slate-800">Price on Request</p>
+          {product.rfq_min_quantity && (
+            <p class="text-xs text-slate-500">Minimum order: {product.rfq_min_quantity} units</p>
+          )}
+          {product.rfq_lead_time_days && (
+            <p class="text-xs text-slate-500">Lead time: ~{product.rfq_lead_time_days} business days</p>
+          )}
+          <a
+            href={`mailto:?subject=Quote Request: ${tx?.name ?? product.slug}`}
+            class="mt-1 inline-flex items-center justify-center px-4 py-2 rounded-lg bg-(--accent) text-white text-sm font-semibold hover:opacity-90 transition-opacity"
+          >
+            Request a Quote
+          </a>
+        </div>
+      )}
+
+      <!-- SKU section -->
+      {sections.includes("sku") && product.sku && (
+        <p class="text-xs font-mono text-slate-400">SKU: {product.sku}</p>
+      )}
+
+      <!-- Description section -->
+      {sections.includes("description") && tx?.description && (
+        <p class="text-base text-slate-600 leading-relaxed">{tx.description}</p>
+      )}
+
+      <!-- Variants section -->
+      {sections.includes("variants") && variantRows.length > 0 && (
+        <div class="flex flex-col gap-3 pt-2">
+          <p class="text-sm font-semibold text-slate-700">Options</p>
+          <div class="flex flex-col gap-2">
+            {variantRows.map(({ variant, vtx, vUnitLabel, vOnSale, vPrice, vCompareAt, isLowStock, outOfStock }) => (
+              <div class="flex items-center justify-between gap-3 rounded-lg border border-slate-200 px-4 py-3 hover:border-(--accent) transition-colors cursor-pointer">
+                <div class="flex flex-col gap-0.5">
+                  <span class="text-sm font-medium text-slate-800">{vtx?.name ?? variant.sku}</span>
+                  {variant.options && variant.options.length > 0 && (
+                    <span class="text-xs text-slate-400">
+                      {variant.options.map((o) => `${o.attribute}: ${o.value}`).join(" · ")}
+                    </span>
+                  )}
+                </div>
+                <div class="flex items-center gap-2 shrink-0 flex-wrap justify-end">
+                  {!product.rfq_enabled && vPrice && (
+                    <span class="text-sm font-bold">{vPrice}{vUnitLabel ? ` / ${vUnitLabel}` : ""}</span>
+                  )}
+                  {vOnSale && <span class="text-xs text-slate-400 line-through">{vCompareAt}</span>}
+                  {outOfStock && <span class="text-xs text-slate-400">Out of stock</span>}
+                  {isLowStock && <span class="text-xs text-orange-500 font-medium">Low stock</span>}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+    </div>
+  </div>
+
+  <!-- Below-the-fold sections driven by template order -->
+
+  {sections.includes("specs") && (product.specs ?? []).length > 0 && (
+    <div class="mt-16">
+      <h2 class="text-xl font-bold text-slate-900 mb-6">Specifications</h2>
+      <ProductSpecs
+        specs={product.specs}
+        {locale}
+        layout={template.spec_layout}
+      />
+    </div>
+  )}
+
+  {sections.includes("certifications") && (product.certifications ?? []).length > 0 && (
+    <div class="mt-16">
+      <h2 class="text-xl font-bold text-slate-900 mb-6">Certifications</h2>
+      <ProductCertifications certifications={product.certifications} {locale} />
+    </div>
+  )}
+
+  {sections.includes("pricing_table") && (product.pricing_tiers ?? []).length > 0 && (
+    <div class="mt-16">
+      <h2 class="text-xl font-bold text-slate-900 mb-6">Volume Pricing</h2>
+      <ProductPricingTable tiers={product.pricing_tiers} {locale} {currency} />
+    </div>
+  )}
+
+  {sections.includes("description") && tx?.content && (
+    <div
+      class="mt-16 prose prose-lg max-w-none prose-headings:font-bold prose-a:text-(--accent)"
+      set:html={tx.content}
+    />
+  )}
+
+  {sections.includes("related") && relatedProducts.length > 0 && (
+    <div class="mt-16">
+      <h2 class="text-xl font-bold text-slate-900 mb-6">Related Products</h2>
+      <ul class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 list-none p-0 m-0">
+        {relatedProducts.map((rel) => {
+          const relTx = getTranslation(rel.translations, locale);
+          const relImageUrl = rel.image
+            ? `${DIRECTUS_URL}/assets/${rel.image}?width=400&height=400&fit=cover`
+            : null;
+          const relFullPath = getProductFullPath(rel.slug, null, catPathMap);
+          const relHref = `/${locale}${productsPagePermalink}/${relFullPath}`;
+          const relPrice = formatPrice(rel.price, locale, currency);
+          const relOnSale = isOnSale(rel.price, rel.compare_at_price);
+
+          return (
+            <li class="flex flex-col rounded-xl border border-slate-200 bg-white overflow-hidden hover:shadow-md transition-shadow">
+              <a href={relHref} tabindex="-1" aria-hidden="true" class="block">
+                {relImageUrl ? (
+                  <img src={relImageUrl} alt={relTx?.name ?? ""} class="w-full aspect-square object-cover" />
+                ) : (
+                  <div class="w-full aspect-square bg-slate-100 flex items-center justify-center text-3xl text-slate-300">📦</div>
+                )}
+              </a>
+              <div class="p-3 flex flex-col gap-1">
+                <h3 class="text-sm font-semibold">
+                  <a href={relHref} class="no-underline hover:underline text-slate-900">
+                    {relTx?.name ?? rel.slug}
+                  </a>
+                </h3>
+                {relPrice && (
+                  <div class="flex items-center gap-1.5">
+                    <span class="text-sm font-bold text-slate-800">{relPrice}</span>
+                    {relOnSale && (
+                      <span class="text-xs text-slate-400 line-through">
+                        {formatPrice(rel.compare_at_price, locale, currency)}
+                      </span>
+                    )}
+                  </div>
+                )}
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  )}
+
+  {sections.includes("content_blocks") && (product.blocks ?? []).length > 0 && (
+    <div class="mt-16">
+      <PageBlocks
+        blocks={product.blocks as PageBlock[]}
+        {locale}
+        pagePermalink={productsPagePermalink}
+      />
+    </div>
+  )}
+
+</div>

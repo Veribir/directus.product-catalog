@@ -1,0 +1,100 @@
+---
+description: Add one or more fields to a Directus collection using MCP, following project conventions.
+argument-hint: "<collection> <field_name> <type> [notes about the field]"
+---
+
+# directus-add-field
+
+Add fields to an existing Directus collection via MCP, following the conventions in `.claude/directus.md`.
+
+## Input
+
+`$ARGUMENTS` — space-separated: collection name, field name, field type, plus any free-form notes
+(e.g. `products weight decimal nullable, shown in product detail`)
+
+## Steps
+
+### 1 — Read current field state
+
+Use `mcp__barkomas_dev__fields` with `action: "read"` on the target collection so you know:
+- existing sort numbers (to place the new field at the right position)
+- existing group names (to put the field inside the right tab group)
+- any section dividers that already exist
+
+Also read `.claude/directus.md` if you haven't in this session — it is the authoritative source for all interface/meta patterns.
+
+### 2 — Determine field configuration
+
+Apply the following rules to choose the correct interface and meta:
+
+| Situation | Interface | Extra meta |
+|---|---|---|
+| Short code / ID (slug, IRDI, SKU, eCl@ss) | `input` | `options: { font: "monospace" }` |
+| Long free text | `input` | none |
+| Multiline text | `input-multiline` | none |
+| Number | `input` | none |
+| Boolean | `boolean` | none |
+| Date / timestamp | `datetime` | `display: "datetime"` |
+| Select from fixed choices | `select-dropdown` | `options: { choices: [...] }` |
+| Relation (M2O) | `select-dropdown-m2o` | see directus.md |
+| Rich text (HTML) | `input-rich-text-html` | none |
+| JSON blob | `input-code` | `options: { language: "json" }` |
+| Image (single) | `file-image` | `options: { folder: "ece7bab9-5433-4a63-b9f7-bde8b517d6d9" }` |
+
+**Width**: default `"full"`. Use `"half"` only when two sibling fields naturally pair (e.g. price + compare_at_price).
+
+**Nullable**: most new fields should have `schema: { is_nullable: true }`. Only set `is_nullable: false` for required fields that have a default value.
+
+**Group assignment for `products`**: fields belong inside `meta_content` tab unless they are SEO. Pass `"group": "meta_content"` in meta.
+
+**Placement dividers**: if adding a new logical section, first create a `presentation-divider` field one sort position before the content fields:
+```json
+{
+  "field": "meta_divider_<section>",
+  "type": "alias",
+  "meta": {
+    "interface": "presentation-divider",
+    "options": { "title": "<Section Title>", "color": "#6644AA" },
+    "special": ["alias", "no-data"],
+    "sort": <N>,
+    "width": "full"
+  },
+  "schema": null
+}
+```
+
+### 3 — Create the field
+
+Use `mcp__barkomas_dev__fields` with `action: "create"`:
+
+```json
+{
+  "action": "create",
+  "collection": "<collection>",
+  "data": [
+    {
+      "field": "<field_name>",
+      "type": "<type>",
+      "meta": {
+        "interface": "<interface>",
+        "options": { ... },
+        "note": "<short admin note>",
+        "sort": <N>,
+        "width": "full",
+        "group": "<group_if_applicable>"
+      },
+      "schema": {
+        "is_nullable": true
+      }
+    }
+  ]
+}
+```
+
+**CRITICAL — update rule**: When updating existing fields, do NOT pass `field` as a top-level parameter — it must be inside `data` items only. See `.claude/directus.md` → "Fields tool" section.
+
+### 4 — Verify
+
+Read the field back with `mcp__barkomas_dev__fields` (`action: "read"`, supply `field`) and confirm it was created with the expected interface and sort order.
+
+Report: collection name, field name, interface used, sort position, group assignment (if any).

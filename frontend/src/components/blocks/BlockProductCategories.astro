@@ -1,0 +1,146 @@
+---
+import type { BlockProductCategories } from "../../lib/directus";
+import { DIRECTUS_URL } from "../../lib/directus";
+import { fetchCategoriesByParent, fetchAllCategories } from "../../lib/api";
+import { getTranslation } from "../../lib/i18n";
+import { buildCategoryPaths } from "../../lib/catalog";
+
+interface Props {
+  block: BlockProductCategories;
+  background: "light" | "dark";
+  locale: string;
+  productsPagePermalink: string;
+}
+
+const { block, background, locale, productsPagePermalink } = Astro.props;
+const tx = getTranslation(block.translations, locale);
+const isDark = background === "dark";
+
+const layout = block.layout ?? "grid_3";
+const gridClass = {
+  grid_2: "sm:grid-cols-2",
+  grid_3: "sm:grid-cols-2 lg:grid-cols-3",
+  grid_4: "sm:grid-cols-2 lg:grid-cols-4",
+  list: "",
+}[layout] ?? "sm:grid-cols-2 lg:grid-cols-3";
+const isList = layout === "list";
+
+const [categories, allCategories] = await Promise.all([
+  fetchCategoriesByParent(block.parent_category ?? null),
+  fetchAllCategories(),
+]);
+
+const catPathMap = buildCategoryPaths(allCategories, locale);
+---
+
+<section
+  class:list={[
+    "px-6 py-20 md:px-16",
+    isDark ? "bg-slate-800 text-slate-50" : "bg-slate-50 text-slate-900",
+  ]}
+>
+  <div class="max-w-6xl mx-auto">
+
+    {(tx?.tagline || tx?.headline) && (
+      <div class="mb-12 text-center">
+        {tx.tagline && (
+          <p class="text-xs font-semibold tracking-widest uppercase mb-3 text-(--accent)">
+            {tx.tagline}
+          </p>
+        )}
+        {tx.headline && (
+          <h2 class="text-3xl md:text-4xl font-bold leading-snug">{tx.headline}</h2>
+        )}
+      </div>
+    )}
+
+    <ul
+      class:list={[
+        "list-none p-0 m-0",
+        isList ? "flex flex-col gap-4" : `grid gap-6 ${gridClass}`,
+      ]}
+    >
+      {categories.map((cat) => {
+        const catTx = getTranslation(cat.translations, locale);
+        const catPath = catPathMap.get(cat.id);
+        const href = catPath ? `/${locale}${productsPagePermalink}/${catPath}` : null;
+        const imageUrl = cat.image
+          ? `${DIRECTUS_URL}/assets/${cat.image}?width=600&height=400&fit=cover`
+          : null;
+        const coverUrl = cat.cover_image
+          ? `${DIRECTUS_URL}/assets/${cat.cover_image}?width=600&height=400&fit=cover`
+          : null;
+        const displayUrl = imageUrl ?? coverUrl;
+
+        return href ? (
+          isList ? (
+            <li
+              class:list={[
+                "flex gap-4 rounded-xl border overflow-hidden transition-shadow hover:shadow-md",
+                isDark ? "border-slate-700 bg-slate-900" : "border-slate-200 bg-white",
+              ]}
+            >
+              {displayUrl && (
+                <a href={href} class="shrink-0" tabindex="-1" aria-hidden="true">
+                  <img src={displayUrl} alt={catTx?.name ?? ""} class="w-28 h-28 object-cover" />
+                </a>
+              )}
+              <div class="flex flex-col justify-center gap-1 py-3 pr-4">
+                <h3 class="text-base font-semibold">
+                  <a
+                    href={href}
+                    class:list={["no-underline hover:underline", isDark ? "text-slate-50" : "text-slate-900"]}
+                  >
+                    {catTx?.name ?? cat.slug}
+                  </a>
+                </h3>
+                {catTx?.description && (
+                  <p class:list={["text-sm leading-relaxed line-clamp-2", isDark ? "text-slate-400" : "text-slate-500"]}>
+                    {catTx.description}
+                  </p>
+                )}
+              </div>
+            </li>
+          ) : (
+            <li
+              class:list={[
+                "flex flex-col rounded-xl border overflow-hidden transition-shadow hover:shadow-md group",
+                isDark ? "border-slate-700 bg-slate-900" : "border-slate-200 bg-white",
+              ]}
+            >
+              <a href={href} tabindex="-1" aria-hidden="true" class="block overflow-hidden">
+                {displayUrl ? (
+                  <img
+                    src={displayUrl}
+                    alt={catTx?.name ?? ""}
+                    class="w-full aspect-video object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                ) : (
+                  <div class:list={["w-full aspect-video flex items-center justify-center", isDark ? "bg-slate-800" : "bg-slate-100"]}>
+                    <span class="text-4xl text-slate-300">🗂️</span>
+                  </div>
+                )}
+              </a>
+              <div class="p-4 flex flex-col gap-1">
+                <h3 class="text-base font-semibold leading-snug">
+                  <a
+                    href={href}
+                    class:list={["no-underline hover:underline", isDark ? "text-slate-50" : "text-slate-900"]}
+                  >
+                    {catTx?.name ?? cat.slug}
+                  </a>
+                </h3>
+                {catTx?.description && (
+                  <p class:list={["text-sm leading-relaxed line-clamp-2", isDark ? "text-slate-400" : "text-slate-500"]}>
+                    {catTx.description}
+                  </p>
+                )}
+              </div>
+            </li>
+          )
+        ) : null;
+      })}
+    </ul>
+
+  </div>
+</section>

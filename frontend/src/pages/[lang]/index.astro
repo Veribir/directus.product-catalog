@@ -1,0 +1,30 @@
+---
+import { getLanguages, type Language } from "../../lib/i18n";
+import { fetchPageByPermalink } from "../../lib/api";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageBlocks from "../../components/PageBlocks.astro";
+
+export async function getStaticPaths() {
+  const languages = await getLanguages();
+  return languages.map((lang) => ({
+    params: { lang: lang.code },
+    props: { language: lang, languages },
+  }));
+}
+
+const { language, languages } = Astro.props as { language: Language; languages: Language[] };
+
+const page = await fetchPageByPermalink("/");
+const title = (page?.seo as { title?: string } | null)?.title ?? page?.title ?? "Barkomas";
+---
+
+<BaseLayout {title} {language} {languages}>
+  {
+    !page && (
+      <div class="flex items-center justify-center h-[60vh] text-slate-400 text-sm">
+        No published homepage found.
+      </div>
+    )
+  }
+  {page && <PageBlocks blocks={page.blocks} locale={language.code} pagePermalink="/" />}
+</BaseLayout>

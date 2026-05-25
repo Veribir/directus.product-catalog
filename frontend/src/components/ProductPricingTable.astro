@@ -1,0 +1,86 @@
+---
+import type { ProductPricingTier } from "../lib/directus";
+import { formatPrice } from "../lib/price";
+import { getTranslation } from "../lib/i18n";
+
+interface Props {
+  tiers: ProductPricingTier[];
+  locale: string;
+  currency?: string;
+}
+
+const { tiers, locale, currency = "USD" } = Astro.props;
+
+const published = tiers
+  .filter((t) => t.status === "published")
+  .sort((a, b) => (a.min_quantity ?? 0) - (b.min_quantity ?? 0));
+
+if (published.length === 0) return;
+
+// Group by customer_group (null = all customers)
+const allGroupIds = [...new Set(published.map((t) => t.customer_group?.id ?? null))];
+---
+
+<div class="overflow-x-auto">
+  <table class="w-full text-sm border-collapse">
+    <thead>
+      <tr class="bg-slate-50">
+        <th class="text-left px-4 py-2.5 font-semibold text-slate-700 border-b border-slate-200">
+          Qty
+        </th>
+        {allGroupIds.map((gid) => {
+          const tier = published.find((t) => (t.customer_group?.id ?? null) === gid);
+          const groupTx = tier?.customer_group
+            ? getTranslation(tier.customer_group.translations, locale)
+            : null;
+          return (
+            <th class="text-left px-4 py-2.5 font-semibold text-slate-700 border-b border-slate-200">
+              {groupTx?.name ?? "Price"}
+            </th>
+          );
+        })}
+      </tr>
+    </thead>
+    <tbody>
+      {/* Unique quantity breakpoints */}
+      {[...new Map(published.map((t) => [`${t.min_quantity}-${t.max_quantity}`, t])).values()].map(
+        (breakpoint) => (
+          <tr class="even:bg-slate-50 hover:bg-slate-100 transition-colors">
+            <td class="px-4 py-2.5 text-slate-600 border-b border-slate-100 font-mono text-xs">
+              {breakpoint.min_quantity ?? 1}
+              {breakpoint.max_quantity ? `–${breakpoint.max_quantity}` : "+"}
+            </td>
+            {allGroupIds.map((gid) => {
+              const match = published.find(
+                (t) =>
+                  (t.customer_group?.id ?? null) === gid &&
+                  t.min_quantity === breakpoint.min_quantity &&
+                  t.max_quantity === breakpoint.max_quantity,
+              );
+              return (
+                <td class="px-4 py-2.5 border-b border-slate-100">
+                  {match?.price != null ? (
+                    <span class="font-semibold text-slate-800">
+                      {formatPrice(match.price, locale, currency)}
+                    </span>
+                  ) : (
+                    <span class="text-slate-300">—</span>
+                  )}
+                </td>
+              );
+            })}
+          </tr>
+        ),
+      )}
+    </tbody>
+  </table>
+  {published.some((t) => t.note) && (
+    <ul class="mt-2 flex flex-col gap-1">
+      {published
+        .filter((t) => t.note)
+        .map((t) => (
+          <li class="text-xs text-slate-400">* {t.note}</li>
+        ))}
+    </ul>
+  )}
+</div>

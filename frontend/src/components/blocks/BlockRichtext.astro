@@ -1,0 +1,47 @@
+---
+import type { BlockRichtext } from "../../lib/directus";
+import { getTranslation } from "../../lib/i18n";
+
+interface Props {
+  block: BlockRichtext;
+  background: "light" | "dark";
+  locale: string;
+}
+
+const { block, background, locale } = Astro.props;
+const tx = getTranslation(block.translations, locale);
+const isDark = background === "dark";
+const isCenter = block.alignment === "center";
+---
+
+<!-- Astro deduplicates component styles at build time — rendered once in <head> regardless of how many instances appear on a page. -->
+<section
+  class:list={[
+    "px-6 py-20 md:px-16",
+    isDark ? "bg-slate-800 text-slate-50" : "bg-slate-50 text-slate-900",
+  ]}
+>
+  <div class:list={["max-w-3xl", isCenter ? "mx-auto text-center" : ""]}>
+    {
+      tx.tagline && (
+        <p
+          class:list={[
+            "text-xs font-semibold tracking-widest uppercase mb-3",
+            "text-[var(--accent)]",
+          ]}
+        >
+          {tx.tagline}
+        </p>
+      )
+    }
+    {tx.headline && <h2 class="text-3xl md:text-4xl font-bold leading-snug mb-6">{tx.headline}</h2>}
+    {
+      tx.content && (
+        <div
+          class:list={["prose prose-lg max-w-none", isDark ? "prose-invert" : ""]}
+          set:html={tx.content}
+        />
+      )
+    }
+  </div>
+</section>

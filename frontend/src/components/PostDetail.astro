@@ -1,0 +1,72 @@
+---
+import type { Post } from "../lib/directus";
+import { DIRECTUS_URL } from "../lib/directus";
+import { getTranslation } from "../lib/i18n";
+
+interface Props {
+  post: Post;
+  locale: string;
+  postsPagePermalink: string;
+}
+
+const { post, locale, postsPagePermalink } = Astro.props;
+const tx = getTranslation(post.translations, locale);
+const imageUrl = post.image
+  ? `${DIRECTUS_URL}/assets/${post.image}?width=1200&height=630&fit=cover`
+  : null;
+const publishedDate = post.published_at
+  ? new Date(post.published_at).toLocaleDateString(locale, {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    })
+  : null;
+---
+
+<article class="max-w-3xl mx-auto px-6 py-16">
+  <nav class="mb-8 text-sm text-slate-500">
+    <a
+      href={`/${locale}${postsPagePermalink}`}
+      class="hover:text-(--accent) transition-colors"
+    >
+      ← {postsPagePermalink.replace(/^\//, "")}
+    </a>
+  </nav>
+
+  {
+    publishedDate && (
+      <time class="text-xs font-medium text-slate-500 tracking-wide uppercase">
+        {publishedDate}
+      </time>
+    )
+  }
+
+  {
+    tx.title && (
+      <h1 class="mt-3 mb-4 text-4xl md:text-5xl font-extrabold leading-tight text-slate-900">
+        {tx.title}
+      </h1>
+    )
+  }
+
+  {tx.description && <p class="mb-8 text-xl text-slate-500 leading-relaxed">{tx.description}</p>}
+
+  {
+    imageUrl && (
+      <img
+        src={imageUrl}
+        alt={tx.title ?? ""}
+        class="w-full aspect-video object-cover rounded-xl mb-10"
+      />
+    )
+  }
+
+  {
+    tx.content && (
+      <div
+        class="prose prose-lg max-w-none prose-headings:font-bold prose-a:text-(--accent)"
+        set:html={tx.content}
+      />
+    )
+  }
+</article>

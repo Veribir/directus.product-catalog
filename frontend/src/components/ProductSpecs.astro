@@ -1,0 +1,163 @@
+---
+import type { ProductSpec } from "../lib/directus";
+import { getTranslation } from "../lib/i18n";
+
+interface Props {
+  specs: ProductSpec[];
+  locale: string;
+  layout: "table" | "accordion" | "comparison";
+}
+
+const { specs, locale, layout } = Astro.props;
+
+const published = specs
+  .filter((s) => s.status === "published")
+  .sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0));
+
+if (published.length === 0) return;
+
+// Group specs by their group (or "ungrouped" if no group)
+const groupMap = new Map<string, { label: string; icon: string | null; irdi: string | null; specs: typeof published }>();
+
+for (const spec of published) {
+  const groupId = spec.group?.id ?? "__ungrouped__";
+  if (!groupMap.has(groupId)) {
+    const groupTx = spec.group
+      ? getTranslation(spec.group.translations, locale)
+      : null;
+    groupMap.set(groupId, {
+      label: groupTx?.name ?? (spec.group ? spec.group.id : "Specifications"),
+      icon: spec.group?.icon ?? null,
+      irdi: spec.group?.irdi ?? null,
+      specs: [],
+    });
+  }
+  groupMap.get(groupId)!.specs.push(spec);
+}
+
+const groups = [...groupMap.values()];
+
+function renderValue(spec: ProductSpec, locale: string): string {
+  const tx = getTranslation(spec.translations, locale);
+  if (!tx) return "";
+  const raw = tx.value ?? "";
+  if (spec.display_type === "boolean") {
+    const lower = raw.toLowerCase();
+    return lower === "true" || lower === "yes" || lower === "1" ? "✓ Yes" : "✗ No";
+  }
+  const unit = spec.unit?.symbol ?? "";
+  return unit ? `${raw} ${unit}` : raw;
+}
+---
+
+{layout === "table" && (
+  <div class="flex flex-col gap-8">
+    {groups.map((group) => (
+      <div>
+        <h3 class="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-3" title={group.irdi ?? undefined}>
+          {group.icon && (
+            <span class="material-symbols-outlined text-base text-(--accent)" aria-hidden="true">
+              {group.icon}
+            </span>
+          )}
+          {group.label}
+        </h3>
+        <dl class="divide-y divide-slate-100 border border-slate-200 rounded-lg overflow-hidden">
+          {group.specs.map((spec) => {
+            const tx = getTranslation(spec.translations, locale);
+            return (
+              <div class="grid grid-cols-2 gap-4 px-4 py-2.5 even:bg-slate-50">
+                <dt class="text-sm text-slate-500" title={spec.irdi ?? undefined}>{tx?.label}</dt>
+                <dd class="text-sm font-medium text-slate-800">{renderValue(spec, locale)}</dd>
+              </div>
+            );
+          })}
+        </dl>
+      </div>
+    ))}
+  </div>
+)}
+
+{layout === "accordion" && (
+  <div class="flex flex-col gap-2">
+    {groups.map((group) => (
+      <details class="group rounded-lg border border-slate-200 overflow-hidden">
+        <summary class="flex items-center justify-between gap-2 px-4 py-3 cursor-pointer select-none bg-white hover:bg-slate-50 transition-colors list-none" title={group.irdi ?? undefined}>
+          <span class="flex items-center gap-2 text-sm font-semibold text-slate-700">
+            {group.icon && (
+              <span class="material-symbols-outlined text-base text-(--accent)" aria-hidden="true">
+                {group.icon}
+              </span>
+            )}
+            {group.label}
+          </span>
+          <span class="text-slate-400 group-open:rotate-180 transition-transform text-lg leading-none">▾</span>
+        </summary>
+        <dl class="divide-y divide-slate-100 bg-white">
+          {group.specs.map((spec) => {
+            const tx = getTranslation(spec.translations, locale);
+            return (
+              <div class="grid grid-cols-2 gap-4 px-4 py-2.5">
+                <dt class="text-sm text-slate-500" title={spec.irdi ?? undefined}>{tx?.label}</dt>
+                <dd class="text-sm font-medium text-slate-800">{renderValue(spec, locale)}</dd>
+              </div>
+            );
+          })}
+        </dl>
+      </details>
+    ))}
+  </div>
+)}
+
+{layout === "comparison" && (
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm border-collapse">
+      <thead>
+        <tr>
+          <th class="text-left py-2 px-3 text-slate-500 font-medium border-b border-slate-200 bg-slate-50 w-40">
+            Specification
+          </th>
+          {groups.map((group) => (
+            <th class="text-left py-2 px-3 border-b border-slate-200 bg-slate-50" title={group.irdi ?? undefined}>
+              <span class="flex items-center gap-1.5 font-semibold text-slate-700">
+                {group.icon && (
+                  <span class="material-symbols-outlined text-sm text-(--accent)" aria-hidden="true">
+                    {group.icon}
+                  </span>
+                )}
+                {group.label}
+              </span>
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {/* Find the union of all spec labels across groups for rows */}
+        {Array.from(
+          new Map(
+            groups.flatMap((g) =>
+              g.specs.map((s) => {
+                const tx = getTranslation(s.translations, locale);
+                return [tx?.label ?? s.id, tx?.label ?? s.id] as [string, string];
+              }),
+            ),
+          ).values(),
+        ).map((label) => (
+          <tr class="even:bg-slate-50 hover:bg-slate-100 transition-colors">
+            <td class="py-2 px-3 text-slate-500 font-medium border-b border-slate-100">{label}</td>
+            {groups.map((group) => {
+              const spec = group.specs.find(
+                (s) => getTranslation(s.translations, locale)?.label === label,
+              );
+              return (
+                <td class="py-2 px-3 text-slate-800 border-b border-slate-100">
+                  {spec ? renderValue(spec, locale) : <span class="text-slate-300">—</span>}
+                </td>
+              );
+            })}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+)}

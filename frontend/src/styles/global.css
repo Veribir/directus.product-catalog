@@ -1,0 +1,6 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+:root {
+  --accent: #6366f1; /* fallback — overridden by globals.accent_color at runtime */
+}

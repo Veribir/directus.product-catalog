@@ -1,0 +1,36 @@
+---
+interface Props {
+  code: string;
+  version: string;
+  class?: string;
+}
+
+const { code, version, class: className } = Astro.props;
+
+// Normalise: strip any dashes the editor may have typed, pad/trim to 8 chars
+const raw = code.replace(/-/g, "").slice(0, 8).padEnd(8, "0");
+
+// Display as XX-XX-XX-XX
+const formatted =
+  raw.length === 8
+    ? `${raw.slice(0, 2)}-${raw.slice(2, 4)}-${raw.slice(4, 6)}-${raw.slice(6, 8)}`
+    : raw;
+---
+
+<a
+  href="https://eclass.eu"
+  target="_blank"
+  rel="noopener noreferrer"
+  title={`eCl@ss ${formatted}${version ? ` v${version}` : ""}`}
+  class:list={[
+    "inline-flex items-center gap-2 text-xs no-underline hover:opacity-80 transition-opacity",
+    className,
+  ]}
+>
+  <span class="text-slate-400 font-medium select-none">eCl@ss</span>
+  <code class="font-mono bg-slate-100 text-slate-700 px-1.5 py-0.5 rounded">{formatted}</code>
+  {version && (
+    <span class="bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded">v{version}</span>
+  )}
+  <span class="text-slate-400">↗</span>
+</a>

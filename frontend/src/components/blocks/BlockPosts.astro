@@ -1,0 +1,120 @@
+---
+import type { BlockPosts } from "../../lib/directus";
+import { DIRECTUS_URL } from "../../lib/directus";
+import { fetchPosts } from "../../lib/api";
+import { getTranslation } from "../../lib/i18n";
+
+interface Props {
+  block: BlockPosts;
+  background: "light" | "dark";
+  locale: string;
+  pagePermalink: string;
+}
+
+const { block, background, locale, pagePermalink } = Astro.props;
+const tx = getTranslation(block.translations, locale);
+const isDark = background === "dark";
+
+const posts = await fetchPosts(block.limit ?? 6);
+---
+
+<section
+  class:list={[
+    "px-6 py-20 md:px-16",
+    isDark ? "bg-slate-800 text-slate-50" : "bg-slate-50 text-slate-900",
+  ]}
+>
+  <div class="max-w-6xl mx-auto">
+    {
+      (tx.tagline || tx.headline) && (
+        <div class="mb-12 text-center">
+          {tx.tagline && (
+            <p class="text-xs font-semibold tracking-widest uppercase mb-3 text-(--accent)">
+              {tx.tagline}
+            </p>
+          )}
+          {tx.headline && (
+            <h2 class="text-3xl md:text-4xl font-bold leading-snug">{tx.headline}</h2>
+          )}
+        </div>
+      )
+    }
+
+    <ul class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 list-none p-0 m-0">
+      {
+        posts.map((post) => {
+          const postTx = getTranslation(post.translations, locale);
+          const imageUrl = post.image
+            ? `${DIRECTUS_URL}/assets/${post.image}?width=800&height=450&fit=cover`
+            : null;
+          const postDate = post.published_at
+            ? new Date(post.published_at).toLocaleDateString(locale, {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })
+            : null;
+          const href = `/${locale}${pagePermalink}/${post.slug}`;
+
+          return (
+            <li
+              class:list={[
+                "flex flex-col rounded-xl overflow-hidden border transition-shadow hover:shadow-lg",
+                isDark ? "border-slate-700 bg-slate-900" : "border-slate-200 bg-white",
+              ]}
+            >
+              {imageUrl && (
+                <a href={href} tabindex="-1" aria-hidden="true">
+                  <img
+                    src={imageUrl}
+                    alt={postTx.title ?? ""}
+                    class="w-full aspect-video object-cover"
+                  />
+                </a>
+              )}
+              <div class="flex flex-col flex-1 p-6 gap-3">
+                {postDate && (
+                  <time
+                    class:list={[
+                      "text-xs font-medium",
+                      isDark ? "text-slate-400" : "text-slate-500",
+                    ]}
+                  >
+                    {postDate}
+                  </time>
+                )}
+                <h3 class="text-lg font-semibold leading-snug">
+                  <a
+                    href={href}
+                    class:list={[
+                      "no-underline hover:underline",
+                      isDark ? "text-slate-50" : "text-slate-900",
+                    ]}
+                  >
+                    {postTx.title ?? post.slug}
+                  </a>
+                </h3>
+                {postTx.description && (
+                  <p
+                    class:list={[
+                      "text-sm leading-relaxed line-clamp-3",
+                      isDark ? "text-slate-400" : "text-slate-600",
+                    ]}
+                  >
+                    {postTx.description}
+                  </p>
+                )}
+                <a
+                  href={href}
+                  class="mt-auto pt-2 text-sm font-medium text-(--accent) hover:underline"
+                >
+                  Read more →
+                </a>
+              </div>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </div>
+</section>

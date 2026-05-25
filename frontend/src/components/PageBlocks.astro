@@ -1,0 +1,72 @@
+---
+import type {
+  PageBlock,
+  BlockHero,
+  BlockRichtext,
+  BlockPosts,
+  BlockProducts,
+  BlockProductCategories,
+} from "../lib/directus";
+import BlockHeroComponent from "./blocks/BlockHero.astro";
+import BlockRichtextComponent from "./blocks/BlockRichtext.astro";
+import BlockPostsComponent from "./blocks/BlockPosts.astro";
+import BlockProductsComponent from "./blocks/BlockProducts.astro";
+import BlockProductCategoriesComponent from "./blocks/BlockProductCategories.astro";
+
+interface Props {
+  blocks: PageBlock[];
+  locale: string;
+  pagePermalink: string;
+}
+
+const { blocks, locale, pagePermalink } = Astro.props;
+
+type KnownCollection =
+  | "block_hero"
+  | "block_richtext"
+  | "block_posts"
+  | "block_products"
+  | "block_product_categories";
+
+type KnownBlock = PageBlock & {
+  collection: KnownCollection;
+  item: BlockHero | BlockRichtext | BlockPosts | BlockProducts | BlockProductCategories;
+};
+
+const visibleBlocks = blocks
+  .filter((b) => !b.hide_block)
+  .sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0))
+  .filter(
+    (b): b is KnownBlock =>
+      b.collection === "block_hero" ||
+      b.collection === "block_richtext" ||
+      b.collection === "block_posts" ||
+      b.collection === "block_products" ||
+      b.collection === "block_product_categories",
+  );
+---
+
+{
+  visibleBlocks.map((block) => {
+    if (block.collection === "block_hero")
+      return (
+        <BlockHeroComponent block={block.item as BlockHero} background={block.background} locale={locale} />
+      );
+    if (block.collection === "block_richtext")
+      return (
+        <BlockRichtextComponent block={block.item as BlockRichtext} background={block.background} locale={locale} />
+      );
+    if (block.collection === "block_posts")
+      return (
+        <BlockPostsComponent block={block.item as BlockPosts} background={block.background} locale={locale} pagePermalink={pagePermalink} />
+      );
+    if (block.collection === "block_products")
+      return (
+        <BlockProductsComponent block={block.item as BlockProducts} background={block.background} locale={locale} pagePermalink={pagePermalink} />
+      );
+    if (block.collection === "block_product_categories")
+      return (
+        <BlockProductCategoriesComponent block={block.item as BlockProductCategories} background={block.background} locale={locale} productsPagePermalink={pagePermalink} />
+      );
+  })
+}

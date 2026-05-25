@@ -1,0 +1,64 @@
+---
+interface Props {
+  categoryPath: string;
+  productsPagePermalink: string;
+  locale: string;
+  allCategories: { id: string; slug: string; parent: string | null; translations: { languages_code: string; name: string | null; slug: string | null }[] }[];
+}
+
+const { categoryPath, productsPagePermalink, locale, allCategories } = Astro.props;
+
+const productsLabel = productsPagePermalink.replace(/^\//, "");
+const productsHref = `/${locale}${productsPagePermalink}`;
+
+// Build breadcrumb items from the category path segments.
+// e.g. "electronics/headphones-audio" → [{label, href}, {label, href}]
+const segments = categoryPath.split("/");
+const crumbs: { label: string; href: string }[] = [];
+
+// Build cumulative paths to match categories
+for (let i = 0; i < segments.length; i++) {
+  const partialPath = segments.slice(0, i + 1).join("/");
+
+  // Find the category that resolves to this partial path by matching the slug at this level
+  const segSlug = segments[i];
+  const parentPath = i > 0 ? segments.slice(0, i).join("/") : null;
+
+  // Find category matching this segment — look up by translated or base slug
+  const matchedCat = allCategories.find((cat) => {
+    const catSlug =
+      cat.translations.find((t) => t.languages_code === locale)?.slug ??
+      cat.translations.find((t) => t.languages_code === "en-US")?.slug ??
+      cat.slug;
+    return catSlug === segSlug;
+  });
+
+  const label =
+    matchedCat?.translations.find((t) => t.languages_code === locale)?.name ??
+    matchedCat?.translations.find((t) => t.languages_code === "en-US")?.name ??
+    segSlug;
+
+  crumbs.push({
+    label,
+    href: `/${locale}${productsPagePermalink}/${partialPath}`,
+  });
+}
+---
+
+<nav aria-label="Breadcrumb" class="flex items-center gap-1.5 text-sm text-slate-500 flex-wrap">
+  <a href={`/${locale}`} class="hover:text-(--accent) transition-colors">Home</a>
+  <span aria-hidden="true" class="text-slate-300">/</span>
+  <a href={productsHref} class="hover:text-(--accent) transition-colors capitalize">
+    {productsLabel}
+  </a>
+  {crumbs.map((crumb, i) => (
+    <>
+      <span aria-hidden="true" class="text-slate-300">/</span>
+      {i < crumbs.length - 1 ? (
+        <a href={crumb.href} class="hover:text-(--accent) transition-colors">{crumb.label}</a>
+      ) : (
+        <span class="text-slate-800 font-medium" aria-current="page">{crumb.label}</span>
+      )}
+    </>
+  ))}
+</nav>

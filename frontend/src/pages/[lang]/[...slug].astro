@@ -1,0 +1,220 @@
+---
+import { getLanguages, getTranslation, type Language } from "../../lib/i18n";
+import {
+  fetchPageByPermalink,
+  fetchAllPages,
+  fetchPostsPagePermalink,
+  fetchAllPostSlugs,
+  fetchPostBySlug,
+  fetchProductsPagePermalink,
+  fetchAllProductSlugs,
+  fetchProductBySlug,
+  fetchAllCategories,
+  fetchCategoryById,
+  fetchProductsByCategory,
+  fetchGlobals,
+} from "../../lib/api";
+import type { ProductUrlStructure } from "../../lib/directus";
+import {
+  buildCategoryPaths,
+  getProductFullPath,
+  getDescendantIds,
+} from "../../lib/catalog";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageBlocks from "../../components/PageBlocks.astro";
+import PostDetail from "../../components/PostDetail.astro";
+import ProductDetail from "../../components/ProductDetail.astro";
+import CategoryLanding from "../../components/CategoryLanding.astro";
+
+export async function getStaticPaths() {
+  const [
+    languages,
+    pages,
+    postsPagePermalink,
+    postSlugs,
+    productsPagePermalink,
+    productSlugs,
+    allCategories,
+    globals,
+  ] = await Promise.all([
+    getLanguages(),
+    fetchAllPages(),
+    fetchPostsPagePermalink(),
+    fetchAllPostSlugs(),
+    fetchProductsPagePermalink(),
+    fetchAllProductSlugs(),
+    fetchAllCategories(),
+    fetchGlobals(),
+  ]);
+
+  const urlStructure: ProductUrlStructure = globals.product_url_structure ?? "category_prefixed";
+
+  const slugPages = pages.filter((p) => p.permalink !== "/");
+  const postsPrefix = postsPagePermalink?.replace(/^\//, "") ?? null;
+  const productsPrefix = productsPagePermalink?.replace(/^\//, "") ?? null;
+
+  return languages.flatMap((lang) => {
+    const catPathMap = buildCategoryPaths(allCategories, lang.code);
+
+    return [
+      // Regular CMS pages
+      ...slugPages.map((p) => ({
+        params: { lang: lang.code, slug: p.permalink.replace(/^\//, "") },
+        props: { type: "page" as const, language: lang, languages, permalink: p.permalink },
+      })),
+
+      // Post detail pages
+      ...(postsPrefix
+        ? postSlugs.map((p) => ({
+            params: { lang: lang.code, slug: `${postsPrefix}/${p.slug}` },
+            props: {
+              type: "post" as const,
+              language: lang,
+              languages,
+              postSlug: p.slug,
+              postsPagePermalink: postsPagePermalink!,
+            },
+          }))
+        : []),
+
+      // Category pages
+      ...(productsPrefix
+        ? [...catPathMap.entries()].map(([catId, catFullPath]) => ({
+            params: { lang: lang.code, slug: `${productsPrefix}/${catFullPath}` },
+            props: {
+              type: "category" as const,
+              language: lang,
+              languages,
+              categoryId: catId,
+              categoryPath: catFullPath,
+              productsPagePermalink: productsPagePermalink!,
+              urlStructure,
+            },
+          }))
+        : []),
+
+      // Product detail pages
+      ...(productsPrefix
+        ? productSlugs.map((p) => {
+            const fullPath = getProductFullPath(p.slug, p.category?.id ?? null, catPathMap, urlStructure);
+            return {
+              params: { lang: lang.code, slug: `${productsPrefix}/${fullPath}` },
+              props: {
+                type: "product" as const,
+                language: lang,
+                languages,
+                productSlug: p.slug,
+                productsPagePermalink: productsPagePermalink!,
+                urlStructure,
+              },
+            };
+          })
+        : []),
+    ];
+  });
+}
+
+type Props =
+  | { type: "page"; language: Language; languages: Language[]; permalink: string }
+  | {
+      type: "post";
+      language: Language;
+      languages: Language[];
+      postSlug: string;
+      postsPagePermalink: string;
+    }
+  | {
+      type: "category";
+      language: Language;
+      languages: Language[];
+      categoryId: string;
+      categoryPath: string;
+      productsPagePermalink: string;
+      urlStructure: ProductUrlStructure;
+    }
+  | {
+      type: "product";
+      language: Language;
+      languages: Language[];
+      productSlug: string;
+      productsPagePermalink: string;
+      urlStructure: ProductUrlStructure;
+    };
+
+const props = Astro.props;
+const { language, languages } = props;
+
+const page = props.type === "page" ? await fetchPageByPermalink(props.permalink) : null;
+const post = props.type === "post" ? await fetchPostBySlug(props.postSlug) : null;
+const product = props.type === "product" ? await fetchProductBySlug(props.productSlug) : null;
+
+let category = null;
+let categoryProducts: Awaited<ReturnType<typeof fetchProductsByCategory>> = [];
+let allCategoriesForNav: Awaited<ReturnType<typeof fetchAllCategories>> = [];
+
+if (props.type === "category") {
+  [category, allCategoriesForNav] = await Promise.all([
+    fetchCategoryById(props.categoryId),
+    fetchAllCategories(),
+  ]);
+  if (category) {
+    const descendantIds = getDescendantIds(props.categoryId, allCategoriesForNav);
+    categoryProducts = await fetchProductsByCategory(
+      [props.categoryId, ...descendantIds],
+      -1,
+      category.listing_layout ?? undefined,
+    );
+  }
+}
+
+const title =
+  page
+    ? ((page.seo as { title?: string } | null)?.title ?? page.title)
+    : post
+      ? (getTranslation(post.translations, language.code).title ?? post.slug)
+      : product
+        ? (getTranslation(product.translations, language.code).name ?? product.slug)
+        : category
+          ? (getTranslation(category.translations, language.code)?.name ?? "Category")
+          : "Not Found";
+---
+
+<BaseLayout {title} {language} {languages}>
+  {page && (
+    <PageBlocks
+      blocks={page.blocks}
+      locale={language.code}
+      pagePermalink={props.type === "page" ? props.permalink : "/"}
+    />
+  )}
+
+  {post && props.type === "post" && (
+    <PostDetail {post} locale={language.code} postsPagePermalink={props.postsPagePermalink} />
+  )}
+
+  {category && props.type === "category" && (
+    <CategoryLanding
+      {category}
+      products={categoryProducts}
+      allCategories={allCategoriesForNav}
+      locale={language.code}
+      categoryPath={props.categoryPath}
+      productsPagePermalink={props.productsPagePermalink}
+      urlStructure={props.urlStructure}
+    />
+  )}
+
+  {product && props.type === "product" && (
+    <ProductDetail
+      {product}
+      locale={language.code}
+      productsPagePermalink={props.productsPagePermalink}
+    />
+  )}
+
+  {!page && !post && !product && !category && (
+    <div class="flex items-center justify-center h-[60vh] text-slate-400 text-sm">
+      Page not found.
+    </div>
+  )}
+</BaseLayout>

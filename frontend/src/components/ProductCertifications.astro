@@ -1,0 +1,74 @@
+---
+import type { ProductCertification } from "../lib/directus";
+import { DIRECTUS_URL } from "../lib/directus";
+import { getTranslation } from "../lib/i18n";
+
+interface Props {
+  certifications: { product_certifications_id: ProductCertification; obtained_at: string | null }[];
+  locale: string;
+}
+
+const { certifications, locale } = Astro.props;
+
+if (certifications.length === 0) return;
+
+function formatDate(iso: string | null): string | null {
+  if (!iso) return null;
+  return new Intl.DateTimeFormat(locale, { dateStyle: "medium" }).format(new Date(iso));
+}
+---
+
+<div class="flex flex-col gap-3">
+  {certifications.map(({ product_certifications_id: cert, obtained_at }) => {
+    const tx = getTranslation(cert.translations, locale);
+    const docUrl = cert.document
+      ? `${DIRECTUS_URL}/assets/${cert.document}`
+      : null;
+    const isExpired = cert.expires_at ? new Date(cert.expires_at) < new Date() : false;
+
+    return (
+      <div class:list={[
+        "flex items-start gap-4 rounded-xl border px-4 py-3",
+        isExpired ? "border-slate-200 bg-slate-50 opacity-60" : "border-slate-200 bg-white",
+      ]}>
+        <!-- Badge icon -->
+        <div class="shrink-0 w-10 h-10 rounded-full bg-green-50 border border-green-200 flex items-center justify-center text-lg">
+          {isExpired ? "⏰" : "✓"}
+        </div>
+
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-semibold text-slate-800">
+            {tx?.name ?? cert.issuer ?? "Certification"}
+            {isExpired && <span class="ml-2 text-xs text-red-500 font-normal">Expired</span>}
+          </p>
+
+          {tx?.description && (
+            <p class="text-xs text-slate-500 mt-0.5 leading-relaxed">{tx.description}</p>
+          )}
+
+          <div class="flex flex-wrap gap-x-4 gap-y-0.5 mt-1.5 text-xs text-slate-400">
+            {cert.issuer && <span>Issuer: {cert.issuer}</span>}
+            {cert.certificate_number && <span>Cert #: {cert.certificate_number}</span>}
+            {obtained_at && <span>Obtained: {formatDate(obtained_at)}</span>}
+            {cert.expires_at && (
+              <span class={isExpired ? "text-red-400" : ""}>
+                Expires: {formatDate(cert.expires_at)}
+              </span>
+            )}
+          </div>
+        </div>
+
+        {docUrl && (
+          <a
+            href={docUrl}
+            target="_blank"
+            rel="noopener"
+            class="shrink-0 text-xs text-(--accent) hover:underline font-medium"
+          >
+            View ↗
+          </a>
+        )}
+      </div>
+    );
+  })}
+</div>

@@ -1,0 +1,107 @@
+---
+import { DIRECTUS_URL } from "../lib/directus";
+
+interface Props {
+  mainImage: string | null;
+  gallery: { directus_files_id: string }[] | null;
+  alt: string;
+  layout: "thumbnails" | "carousel" | "grid";
+}
+
+const { mainImage, gallery, alt, layout } = Astro.props;
+
+const mainUrl = mainImage
+  ? `${DIRECTUS_URL}/assets/${mainImage}?width=900&height=900&fit=cover`
+  : null;
+
+const galleryUrls = (gallery ?? []).map((g, i) => ({
+  id: `img-${i}`,
+  thumb: `${DIRECTUS_URL}/assets/${g.directus_files_id}?width=200&height=200&fit=cover`,
+  full: `${DIRECTUS_URL}/assets/${g.directus_files_id}?width=900&height=900&fit=cover`,
+}));
+
+const allImages = [
+  ...(mainUrl ? [{ id: "img-main", thumb: mainUrl, full: mainUrl }] : []),
+  ...galleryUrls,
+];
+---
+
+{layout === "thumbnails" && (
+  <div class="flex flex-col gap-3">
+    {mainUrl
+      ? <img src={mainUrl} alt={alt} class="w-full aspect-square object-cover rounded-xl" />
+      : <div class="w-full aspect-square rounded-xl bg-slate-100 flex items-center justify-center text-slate-300 text-6xl">📦</div>
+    }
+    {galleryUrls.length > 0 && (
+      <div class="grid grid-cols-4 gap-2">
+        {galleryUrls.map(({ thumb }) => (
+          <img src={thumb} alt="" class="aspect-square object-cover rounded-lg cursor-pointer hover:opacity-80 transition-opacity" />
+        ))}
+      </div>
+    )}
+  </div>
+)}
+
+{layout === "carousel" && (
+  <div class="flex flex-col gap-3">
+    {allImages.length === 0 ? (
+      <div class="w-full aspect-square rounded-xl bg-slate-100 flex items-center justify-center text-slate-300 text-6xl">📦</div>
+    ) : (
+      <>
+        <!-- Scroll-snap carousel — zero JS, keyboard + hash navigation -->
+        <div
+          class="relative overflow-hidden rounded-xl"
+          style="scroll-snap-type: x mandatory; display: flex; overflow-x: auto; scroll-behavior: smooth;"
+          id="gallery-carousel"
+        >
+          {allImages.map(({ id, full }) => (
+            <div
+              id={id}
+              style="scroll-snap-align: start; flex: 0 0 100%;"
+            >
+              <img src={full} alt={alt} class="w-full aspect-square object-cover" />
+            </div>
+          ))}
+        </div>
+        {allImages.length > 1 && (
+          <div class="flex gap-2 justify-center">
+            {allImages.map(({ id, thumb }) => (
+              <a href={`#${id}`} class="block w-14 h-14 rounded-lg overflow-hidden border-2 border-transparent hover:border-(--accent) transition-colors focus:outline-none focus:border-(--accent)">
+                <img src={thumb} alt="" class="w-full h-full object-cover" />
+              </a>
+            ))}
+          </div>
+        )}
+      </>
+    )}
+  </div>
+)}
+
+{layout === "grid" && (
+  <div class="flex flex-col gap-3">
+    {!mainUrl && galleryUrls.length === 0 && (
+      <div class="w-full aspect-square rounded-xl bg-slate-100 flex items-center justify-center text-slate-300 text-6xl">📦</div>
+    )}
+    {mainUrl && (
+      <img src={mainUrl} alt={alt} class="w-full aspect-square object-cover rounded-xl" />
+    )}
+    {galleryUrls.length > 0 && (
+      <div class="columns-2 gap-2 space-y-2">
+        {galleryUrls.map(({ full }) => (
+          <img src={full} alt="" class="w-full rounded-lg break-inside-avoid" />
+        ))}
+      </div>
+    )}
+  </div>
+)}
+
+<style>
+  /* Hide scrollbar for carousel */
+  #gallery-carousel {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  #gallery-carousel::-webkit-scrollbar {
+    display: none;
+  }
+</style>

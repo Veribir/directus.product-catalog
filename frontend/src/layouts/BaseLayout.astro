@@ -1,0 +1,40 @@
+---
+import type { Language } from "../lib/i18n";
+import { fetchGlobals, fetchAllPages } from "../lib/api";
+import Navbar from "../components/Navbar.astro";
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  language: Language;
+  languages: Language[];
+}
+
+const { title, language, languages } = Astro.props;
+
+const [globals, navPages] = await Promise.all([fetchGlobals(), fetchAllPages()]);
+
+const pageTitle = title ?? globals.title ?? "Barkomas";
+const faviconUrl = globals.favicon
+  ? (await import("../lib/directus")).DIRECTUS_URL + `/assets/${globals.favicon}`
+  : "/favicon.svg";
+---
+
+<html
+  lang={language.code}
+  dir={language.direction}
+  style={globals.accent_color ? `--accent: ${globals.accent_color}` : ""}
+>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href={faviconUrl} />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    {globals.description && <meta name="description" content={globals.description} />}
+    <title>{pageTitle}</title>
+  </head>
+  <body class="m-0 font-sans antialiased">
+    <Navbar {globals} {navPages} {language} {languages} currentPath={Astro.url.pathname} />
+    <slot />
+  </body>
+</html>

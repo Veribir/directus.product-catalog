@@ -1,0 +1,257 @@
+---
+import type { ProductCategory, Product, CategoryPageBlock, PageBlock, ProductUrlStructure } from "../lib/directus";
+import { DIRECTUS_URL } from "../lib/directus";
+import { getTranslation } from "../lib/i18n";
+import { formatPrice, isOnSale } from "../lib/price";
+import { buildCategoryPaths, getProductFullPath } from "../lib/catalog";
+import CategoryBreadcrumb from "./CategoryBreadcrumb.astro";
+import PageBlocks from "./PageBlocks.astro";
+import EclassBadge from "./EclassBadge.astro";
+
+interface Props {
+  category: ProductCategory;
+  products: Product[];
+  allCategories: ProductCategory[];
+  locale: string;
+  categoryPath: string;
+  productsPagePermalink: string;
+  urlStructure: ProductUrlStructure;
+}
+
+const { category, products, allCategories, locale, categoryPath, productsPagePermalink, urlStructure } =
+  Astro.props;
+
+const tx = getTranslation(category.translations, locale);
+const catPathMap = buildCategoryPaths(allCategories, locale);
+
+const coverUrl = category.cover_image
+  ? `${DIRECTUS_URL}/assets/${category.cover_image}?width=1600&height=600&fit=cover`
+  : null;
+
+const thumbnailUrl = category.image
+  ? `${DIRECTUS_URL}/assets/${category.image}?width=80&height=80&fit=cover`
+  : null;
+
+// Direct children for the subcategory bar
+const children = allCategories.filter((c) => c.parent === category.id);
+
+// Partition category blocks by position
+const visibleBlocks = (category.blocks ?? []).filter((b) => !b.hide_block);
+const blocksAbove = visibleBlocks.filter((b) => b.position === "above");
+const blocksBelow = visibleBlocks.filter((b) => b.position === "below");
+
+// Listing layout
+const layout = category.listing_layout ?? "grid_3";
+const gridClass = {
+  grid_2: "sm:grid-cols-2",
+  grid_3: "sm:grid-cols-2 lg:grid-cols-3",
+  grid_4: "sm:grid-cols-2 lg:grid-cols-4",
+  list: "",
+}[layout] ?? "sm:grid-cols-2 lg:grid-cols-3";
+const isList = layout === "list";
+---
+
+<div>
+  <!-- Cover image -->
+  {coverUrl && (
+    <div class="relative h-56 md:h-72 overflow-hidden bg-slate-100">
+      <img src={coverUrl} alt={tx?.name ?? ""} class="w-full h-full object-cover" />
+      <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+      <div class="absolute bottom-0 left-0 px-6 md:px-16 py-8">
+        <h1 class="text-3xl md:text-4xl font-extrabold text-white leading-tight">{tx?.name}</h1>
+      </div>
+    </div>
+  )}
+
+  <div class="max-w-6xl mx-auto px-6 md:px-16 py-10">
+
+    <!-- Breadcrumb -->
+    <CategoryBreadcrumb
+      {categoryPath}
+      {productsPagePermalink}
+      {locale}
+      {allCategories}
+    />
+
+    <!-- Header (when no cover image) -->
+    {!coverUrl && (
+      <div class="mt-6 flex items-center gap-4">
+        {thumbnailUrl && (
+          <img src={thumbnailUrl} alt="" class="w-14 h-14 rounded-xl object-cover shrink-0" />
+        )}
+        <div>
+          <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900 leading-tight">
+            {tx?.name}
+          </h1>
+        </div>
+      </div>
+    )}
+
+    {tx?.description && (
+      <p class="mt-4 text-base text-slate-600 leading-relaxed max-w-2xl">{tx.description}</p>
+    )}
+
+    <!-- eCl@ss badge -->
+    {category.eclass_code && (
+      <div class="mt-3">
+        <EclassBadge code={category.eclass_code} version={category.eclass_version ?? ""} />
+      </div>
+    )}
+
+    <!-- Subcategory bar -->
+    {category.show_subcategories_bar && children.length > 0 && (
+      <div class="mt-8 flex flex-wrap gap-2">
+        {children.map((child) => {
+          const childTx = getTranslation(child.translations, locale);
+          const childPath = catPathMap.get(child.id);
+          const href = childPath ? `/${locale}${productsPagePermalink}/${childPath}` : null;
+          const childThumb = child.image
+            ? `${DIRECTUS_URL}/assets/${child.image}?width=48&height=48&fit=cover`
+            : null;
+          return href ? (
+            <a
+              href={href}
+              class="flex items-center gap-2 px-4 py-2 rounded-full border border-slate-200 bg-white hover:border-(--accent) hover:text-(--accent) transition-colors text-sm font-medium text-slate-700"
+            >
+              {childThumb && (
+                <img src={childThumb} alt="" class="w-5 h-5 rounded-full object-cover" />
+              )}
+              {childTx?.name ?? child.slug}
+            </a>
+          ) : null;
+        })}
+      </div>
+    )}
+
+    <!-- Blocks above -->
+    {blocksAbove.length > 0 && (
+      <div class="mt-10">
+        <PageBlocks
+          blocks={blocksAbove as unknown as PageBlock[]}
+          locale={locale}
+          pagePermalink={productsPagePermalink}
+        />
+      </div>
+    )}
+
+    <!-- Product grid -->
+    <div class="mt-10">
+      {products.length === 0 ? (
+        <p class="text-slate-400 text-sm py-8 text-center">No products found in this category.</p>
+      ) : (
+        <ul
+          class:list={[
+            "list-none p-0 m-0",
+            isList ? "flex flex-col gap-6" : `grid gap-6 ${gridClass}`,
+          ]}
+        >
+          {products.map((product) => {
+            const ptx = getTranslation(product.translations, locale);
+            const imageUrl = product.image
+              ? `${DIRECTUS_URL}/assets/${product.image}?width=600&height=600&fit=cover`
+              : null;
+            const fullPath = getProductFullPath(
+              product.slug,
+              product.category?.id ?? null,
+              catPathMap,
+              urlStructure,
+            );
+            const href = `/${locale}${productsPagePermalink}/${fullPath}`;
+            const onSale = isOnSale(product.price, product.compare_at_price);
+            const price = formatPrice(product.price, locale);
+            const compareAt = formatPrice(product.compare_at_price, locale);
+
+            return isList ? (
+              <li class="flex gap-5 rounded-xl border border-slate-200 bg-white overflow-hidden transition-shadow hover:shadow-md">
+                {imageUrl && (
+                  <a href={href} class="shrink-0" tabindex="-1" aria-hidden="true">
+                    <img src={imageUrl} alt={ptx.name ?? ""} class="w-36 h-36 object-cover" />
+                  </a>
+                )}
+                <div class="flex flex-col justify-center gap-2 py-4 pr-5">
+                  <h3 class="text-base font-semibold leading-snug">
+                    <a href={href} class="no-underline hover:underline text-slate-900">
+                      {ptx.name ?? product.slug}
+                    </a>
+                  </h3>
+                  {ptx.description && (
+                    <p class="text-sm text-slate-500 leading-relaxed line-clamp-2">
+                      {ptx.description}
+                    </p>
+                  )}
+                  <div class="flex items-center gap-2 mt-1">
+                    {product.rfq_enabled ? (
+                      <span class="text-sm font-semibold text-(--accent)">Request a Quote</span>
+                    ) : price ? (
+                      <>
+                        <span class="text-sm font-bold">{price}</span>
+                        {onSale && (
+                          <span class="text-xs text-slate-400 line-through">{compareAt}</span>
+                        )}
+                      </>
+                    ) : null}
+                  </div>
+                </div>
+              </li>
+            ) : (
+              <li class="flex flex-col rounded-xl border border-slate-200 bg-white overflow-hidden transition-shadow hover:shadow-md">
+                <a href={href} tabindex="-1" aria-hidden="true" class="relative block">
+                  {imageUrl ? (
+                    <img
+                      src={imageUrl}
+                      alt={ptx.name ?? ""}
+                      class="w-full aspect-square object-cover"
+                    />
+                  ) : (
+                    <div class="w-full aspect-square flex items-center justify-center text-slate-300 bg-slate-100">
+                      <span class="text-4xl">📦</span>
+                    </div>
+                  )}
+                  {onSale && (
+                    <span class="absolute top-2 left-2 text-xs font-semibold px-2 py-0.5 rounded bg-red-500 text-white">
+                      Sale
+                    </span>
+                  )}
+                </a>
+                <div class="flex flex-col flex-1 p-4 gap-2">
+                  <h3 class="text-sm font-semibold leading-snug">
+                    <a href={href} class="no-underline hover:underline text-slate-900">
+                      {ptx.name ?? product.slug}
+                    </a>
+                  </h3>
+                  {product.sku && (
+                    <p class="text-xs font-mono text-slate-400">{product.sku}</p>
+                  )}
+                  <div class="flex items-center gap-2 mt-auto pt-2">
+                    {product.rfq_enabled ? (
+                      <span class="text-xs font-semibold text-(--accent)">Request a Quote</span>
+                    ) : price ? (
+                      <>
+                        <span class="text-sm font-bold">{price}</span>
+                        {onSale && (
+                          <span class="text-xs text-slate-400 line-through">{compareAt}</span>
+                        )}
+                      </>
+                    ) : null}
+                  </div>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </div>
+
+    <!-- Blocks below -->
+    {blocksBelow.length > 0 && (
+      <div class="mt-10">
+        <PageBlocks
+          blocks={blocksBelow as unknown as PageBlock[]}
+          locale={locale}
+          pagePermalink={productsPagePermalink}
+        />
+      </div>
+    )}
+
+  </div>
+</div>

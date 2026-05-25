@@ -1,0 +1,8 @@
+---
+import { getLanguages, getDefaultLanguage } from "../lib/i18n";
+
+const languages = await getLanguages();
+const defaultLang = getDefaultLanguage(languages);
+
+return Astro.redirect(`/${defaultLang.code}`, 302);
+---

@@ -1,0 +1,17 @@
+# Directus (tracked separately later)
+directus/
+
+# Frontend build output & deps
+frontend/node_modules/
+frontend/dist/
+frontend/.astro/
+
+# OS / editor
+.directory
+*.DS_Store
+Thumbs.db
+
+# Environment files (never commit secrets)
+.env
+.env.*
+!.env.example
