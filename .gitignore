@@ -11,6 +11,9 @@ frontend/.astro/
 *.DS_Store
 Thumbs.db
 
+# MCP config (contains auth tokens — use .mcp.json.example as template)
+.mcp.json
+
 # Environment files (never commit secrets)
 .env
 .env.*

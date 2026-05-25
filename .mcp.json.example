@@ -4,7 +4,7 @@
       "type": "http",
       "url": "http://localhost:8055/mcp",
       "headers": {
-        "Authorization": "Bearer Q9ZO6necT7Np0fILL17_EGdDcuU8c-lz"
+        "Authorization": "Bearer <your-directus-token>"
       }
     }
   }
