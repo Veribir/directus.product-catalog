@@ -569,18 +569,27 @@ Two relations: both FKs to `products` with `one_field: "related_products"` on th
 
 ## Status
 
-- [ ] Plan reviewed & approved
-- [ ] Module 0 — units of measure
-- [ ] `globals.default_currency`
-- [ ] Module 1 — product type, unit, RFQ flags, brand/tags/related on `products`
-- [ ] Module 1b — stock & reorder on `product_variants`
-- [ ] Module 2 — brands
-- [ ] Module 3 — tags
-- [ ] Module 5 — spec groups & specs
-- [ ] Module 4 — certifications
-- [ ] Module 7 — customer groups
-- [ ] Module 6 — pricing tiers
-- [ ] Module 8 — product regions & regional prices
-- [ ] Module 9 — RFQ requests + Directus flow
-- [ ] Frontend — extend types, api, price.ts, new units.ts
-- [ ] Frontend — extend ProductDetail + new sub-components
+**Audit performed against live schema — this entire plan is essentially shipped.**
+
+- [x] Plan reviewed & approved
+- [x] Module 0 — units of measure (`product_units` + translations)
+- [x] `globals.default_currency`
+- [x] Module 1 — `product_type`, `unit`, `unit_quantity`, `rfq_enabled`, `rfq_min_quantity`, `rfq_lead_time_days`, `brand`, `tags`, `related_products`, `eclass_code`, `eclass_version` on `products`
+- [x] Module 1b — `product_variants`: `low_stock_threshold`, `reorder_point`, `reorder_quantity`, `unit_override`
+- [x] Module 2 — brands (`product_brands` + translations)
+- [x] Module 3 — tags (`product_tags` + translations + `products_tags` junction)
+- [x] Module 4 — certifications (`product_certifications`, translations, `products_certifications` junction)
+- [x] Module 5 — spec groups & specs (`product_spec_groups`, `product_specs`, translations, plus `product_spec_variant_values` for variant comparison)
+- [x] Module 6 — pricing tiers (`product_pricing_tiers`)
+- [x] Module 7 — customer groups (`customer_groups` + translations)
+- [x] Module 8 — product regions & regional prices (`product_regions`, `product_regional_prices`)
+- [x] Module 9 — RFQ requests collection (`product_rfq_requests`)
+- [x] Frontend — extended `types.ts`, `api.ts`, `price.ts`
+- [x] Frontend — extended `ProductDetail.astro` + new sub-components (`ProductSpecs`, `ProductCertifications`, `ProductPricingTable`, `ProductBrandBadge`, `ProductTags`, `ProductGallery`)
+
+**Remaining work (non-blocking):**
+
+- [ ] RFQ Directus Flow: email notification on new `product_rfq_requests` item creation
+- [ ] `ProductRFQForm.astro` storefront form (POST to Directus) — Open Question #4 still to resolve
+- [ ] `units.ts` pluralization helper (current rendering uses `unit.symbol` only — fine for now)
+- [ ] Open Questions #1, #2, #5 (variant-less stock policy, unit conversion fields, `product_attributes` for faceted filtering) — defer until needed

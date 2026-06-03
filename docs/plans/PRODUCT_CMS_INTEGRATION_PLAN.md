@@ -194,6 +194,74 @@ Add two fields:
 
 ---
 
+### A6 — Multi-Category Membership ✅ DONE (schema + frontend wiring)
+
+**Implementation status (as of this session):**
+
+- ✅ `products_categories` junction collection created (group: `product_categories`, hidden, accountability: all)
+- ✅ Fields on junction: `id` (int PK, auto), `products_id` (uuid), `product_categories_id` (uuid), `sort` (int)
+- ✅ `products.additional_categories` alias (list-m2m, display template `{{product_categories_id.translations}}`, group `meta_content`, sort 31)
+- ✅ Relation 1: `products_categories.products_id → products` (CASCADE, `one_field: "additional_categories"`, `junction_field: "product_categories_id"`, `sort_field: "sort"`, `one_deselect_action: "delete"`)
+- ✅ Relation 2: `products_categories.product_categories_id → product_categories` (CASCADE, `junction_field: "products_id"`, `one_deselect_action: "nullify"`)
+- ✅ Public read permission on `products_categories` (granted via Directus public policy)
+- ✅ Frontend `Product` type extended with `additional_categories: { product_categories_id: ProductCategoryRef }[]`
+- ✅ `fetchProductsByCategory` uses `_or` filter matching either primary `category` or `additional_categories.product_categories_id`
+- ✅ `fetchProductBySlug` field list includes `additional_categories.product_categories_id.*` (id, slug, parent, translations)
+
+**Still TODO (editor UX + storefront polish):**
+- ⏳ Frontend filter on the `additional_categories` picker to exclude the currently-selected primary `products.category` (editor UX guard)
+- ⏳ Optional: surface secondary category chips on the product detail page (storefront UX) — not blocking
+- ⏳ Verify build/runtime: `npm run build` rerun after permission grant
+
+Allow a product to appear under multiple categories without breaking canonical URLs or breadcrumbs.
+
+**Design:** keep `products.category` (M2O) as the **primary / canonical** category — it drives the URL, breadcrumb, and main category chip. Add `products.additional_categories` (M2M) for **secondary listing memberships** — products appear on those category pages but do not get extra URLs.
+
+**New junction: `products_categories`** (hidden, `group: product_categories`)
+
+| Field | Type | Notes |
+|---|---|---|
+| `id` | int PK | |
+| `products_id` | uuid | |
+| `product_categories_id` | uuid | |
+| `sort` | int | Display order within the additional category's listing (optional). |
+
+**New alias on `products`:**
+
+| Field | Interface | Note |
+|---|---|---|
+| `additional_categories` | list-m2m → `product_categories` | "Extra category memberships for cross-listing. The product URL and breadcrumb are still controlled by the primary **Category** field above. Use this to make a product appear under multiple category pages." |
+
+**Relations:**
+- `products_categories.products_id → products` (`one_field: "additional_categories"`, `junction_field: "product_categories_id"`, CASCADE, `one_deselect_action: "delete"`)
+- `products_categories.product_categories_id → product_categories` (CASCADE, `one_deselect_action: "nullify"`)
+
+**URL / breadcrumb behaviour (unchanged):**
+- Canonical URL is still `/{prefix}/{primary-category-path}/{product-slug}` (or flat if no primary category)
+- Breadcrumb walks `products.category` only
+- `additional_categories` never generates extra routes — listing-only
+
+**`fetchProductsByCategory(categoryId, recursive = true)` update:**
+
+```ts
+filter: {
+  _or: [
+    { category: { _in: expandedCategoryIds } },                                          // primary match
+    { additional_categories: { product_categories_id: { _in: expandedCategoryIds } } }   // secondary match
+  ]
+}
+```
+
+Where `expandedCategoryIds` includes the target category id plus all descendant ids when `recursive = true`.
+
+**Editor UX guards:**
+- In the `additional_categories` picker, exclude the currently-selected `products.category` (frontend filter, not DB constraint) — prevents the same category appearing as both primary and additional.
+- Add a note above the field: "Already covered by the primary Category field — you only need this for extra listings."
+
+**Effort:** ~30 min schema + one fetch function update.
+
+---
+
 ## Part B — Routing Strategy
 
 ### B0 — Slug Collision Policy
@@ -469,6 +537,7 @@ export function getEnabledSections(
 3. **A4** — Create `product_page_templates` collection with single `sections` repeater
 4. **A1 follow-up** — Add `product_categories.default_page_template` m2o (now that A4 exists)
 5. **A5** — Add `page_template` and `blocks` / `product_blocks` junction on `products`
+5b. **A6** — Add `additional_categories` M2M (`products_categories` junction) on `products`
 6. **~~A3~~** — Already done, skip
 7. **A2** — Create `block_product_categories` + translations (M2A registration already exists)
 8. **B — Routing** — Update `getStaticPaths`, add `fetchAllCategories`, update `fetchAllProductSlugs`, add `catalog.ts` (incl. slug-collision check from B0)
@@ -497,17 +566,26 @@ export function getEnabledSections(
 
 ## Status
 
-- [ ] Plan reviewed & approved
-- [ ] **Prereq:** Catalog plan Modules 0–9 complete
-- [ ] A1 — Extend `product_categories` (translations + cover/seo/layout fields)
-- [ ] A1 — `product_category_blocks` junction (with `position`) + `blocks` alias
-- [ ] A4 — `product_page_templates` collection (single `sections` repeater)
-- [ ] A1 follow-up — `product_categories.default_page_template` m2o
-- [ ] A5 — `products.page_template` + `products.blocks` / `product_blocks` junction
+**Audit performed against live schema + frontend — this entire plan is essentially shipped.**
+
+- [x] Plan reviewed & approved
+- [x] **Prereq:** Catalog plan Modules 0–9 complete
+- [x] A1 — Extend `product_categories`: `cover_image`, `seo`, `spec_layout`, `listing_layout`, `show_subcategories_bar`, `eclass_code`, `eclass_version`, `brand`
+- [x] A1 — `product_category_blocks` junction (M2A) + `blocks` alias on `product_categories`
+- [x] A4 — `product_page_templates` collection
+- [x] A1 follow-up — `product_categories.default_page_template` m2o
+- [x] A5 — `products.page_template` + `products.blocks` / `product_blocks` junction
+- [x] A6 — `products.additional_categories` M2M + `products_categories` junction (schema, relations, public read permission, frontend types + fetch wiring all done)
 - [x] ~~A3 — Extend `block_products`~~ — already done in DB
-- [ ] A2 — `block_product_categories` + translations (M2A registration already exists)
-- [ ] B — Routing: `catalog.ts` (incl. slug-collision check), updated `getStaticPaths`, new API functions
-- [ ] C1/C2 — `CategoryLanding.astro` + `CategoryBreadcrumb.astro`
-- [ ] C3 — `BlockProductCategories.astro` + `PageBlocks.astro` update
-- [ ] C4/C5 — `ProductDetail.astro` refactor + `ProductGallery.astro` (scroll-snap carousel)
-- [ ] Seed starter templates + test category hierarchy
+- [x] A2 — `block_product_categories` + translations (collection exists; M2A registration already exists)
+- [x] B — Routing: `catalog.ts` (incl. slug-collision check), updated `getStaticPaths`, new API functions (`fetchAllCategories`, `fetchProductsByCategory`, etc.)
+- [x] C1/C2 — `CategoryLanding.astro` + `CategoryBreadcrumb.astro`
+- [x] C3 — `BlockProductCategories.astro` + `PageBlocks.astro` update
+- [x] C4/C5 — `ProductDetail.astro` refactor + `ProductGallery.astro`
+- [ ] Seed starter `product_page_templates` (Default / Minimal / Datasheet)
+
+**Remaining polish (non-blocking):**
+
+- [ ] A6 editor-UX guard: filter `additional_categories` picker to exclude the currently-selected primary `products.category`
+- [ ] Optional: surface secondary category chips on the product detail page (storefront UX)
+- [ ] Resolve Open Questions: site-default template (hardcoded vs globals m2o), category auto-nav-population, `product_attributes` faceted filtering
