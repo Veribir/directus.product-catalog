@@ -8,7 +8,9 @@
       "mcp__barkomas_dev__flows",
       "mcp__barkomas_dev__operations",
       "mcp__barkomas_dev__schema",
-      "Edit(/.claude/skills/**)"
+      "Edit(/.claude/skills/**)",
+      "WebFetch(domain:barkomas.com)",
+      "mcp__barkomas_dev__files"
     ]
   }
 }

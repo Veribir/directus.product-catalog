@@ -252,6 +252,87 @@ Missing any one layer causes either a TS error (missing type) or silent data gap
 
 ---
 
+## File & image operations via MCP
+
+### Importing a file from a URL
+Use `mcp__barkomas_dev__files` with `action: "import"`. The returned UUID is what you store in any `file`/`file-image` type field.
+
+```json
+{
+  "action": "import",
+  "data": [
+    {
+      "url": "https://example.com/image.jpg",
+      "file": {
+        "title": "Descriptive human title",
+        "folder": "ece7bab9-5433-4a63-b9f7-bde8b517d6d9"
+      }
+    }
+  ]
+}
+```
+
+**Batch imports** — send up to 6 at a time (fly.dev has a request timeout; batches > 6 risk partial failures):
+```json
+{
+  "action": "import",
+  "data": [
+    { "url": "https://…/img1.jpg", "file": { "title": "Image 1", "folder": "ece7bab9-5433-4a63-b9f7-bde8b517d6d9" } },
+    { "url": "https://…/img2.png", "file": { "title": "Image 2", "folder": "ece7bab9-5433-4a63-b9f7-bde8b517d6d9" } }
+  ]
+}
+```
+
+Returns an array of file UUIDs in the same order as the input. **Save every UUID immediately** — you will need them to assign to collection fields.
+
+### Assigning an imported file to a collection field
+After import, update the item with the UUID:
+```json
+{
+  "action": "update",
+  "collection": "block_numbered_list",
+  "keys": ["<item-uuid>"],
+  "data": { "image": "<file-uuid>" }
+}
+```
+
+Or pass the UUID inline when creating an item:
+```json
+{
+  "action": "create",
+  "collection": "block_hero_slider_slides",
+  "data": [{ "image": "<file-uuid>", "video": "<video-file-uuid>", … }]
+}
+```
+
+### Checking what files are already imported
+Before importing, check if the file already exists to avoid duplicates:
+```json
+{
+  "action": "read",
+  "query": {
+    "fields": ["id", "title", "filename_download"],
+    "sort": ["-uploaded_on"],
+    "limit": 50
+  }
+}
+```
+
+### File folder
+All project media goes in folder `ece7bab9-5433-4a63-b9f7-bde8b517d6d9`. Always pass this in the `file.folder` key on import.
+
+### Videos
+Videos import the same way as images — `mcp__barkomas_dev__files` with `action: "import"`. The MIME type is inferred from the URL. Video file UUIDs go in `video` fields (type `uuid` with `special: ["file"]`), not image fields.
+
+### Asset URL pattern (frontend)
+```ts
+`${DIRECTUS_URL}/assets/<file-uuid>?width=800&height=450&fit=cover`
+// For videos — no transform params, just the raw asset:
+`${DIRECTUS_URL}/assets/<file-uuid>`
+```
+
+---
+
 ## Common data patterns
 
 ### Fetching with translations
