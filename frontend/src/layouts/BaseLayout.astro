@@ -1,6 +1,6 @@
 ---
 import type { Language } from "../lib/i18n";
-import { assetUrl } from "../lib/assets";
+import { assetUrl, loadAssetMap } from "../lib/assets";
 import { fetchGlobals, fetchNavigation } from "../lib/api";
 import Navbar from "../components/Navbar.astro";
 import Footer from "../components/Footer.astro";
@@ -18,6 +18,7 @@ const [globals, mainNav, footerNav] = await Promise.all([
   fetchGlobals(),
   fetchNavigation("main"),
   fetchNavigation("footer"),
+  loadAssetMap(),
 ]);
 
 const pageTitle = title ?? globals.title ?? "Barkomas";
