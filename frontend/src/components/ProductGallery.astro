@@ -1,5 +1,5 @@
 ---
-import { DIRECTUS_URL } from "../lib/directus";
+import { ASSETS_URL } from "../lib/directus";
 
 interface Props {
   mainImage: string | null;
@@ -11,13 +11,13 @@ interface Props {
 const { mainImage, gallery, alt, layout } = Astro.props;
 
 const mainUrl = mainImage
-  ? `${DIRECTUS_URL}/assets/${mainImage}?width=900&height=900&fit=cover`
+  ? `${ASSETS_URL}/${mainImage}?width=900&height=900&fit=cover`
   : null;
 
 const galleryUrls = (gallery ?? []).map((g, i) => ({
   id: `img-${i}`,
-  thumb: `${DIRECTUS_URL}/assets/${g.directus_files_id}?width=200&height=200&fit=cover`,
-  full: `${DIRECTUS_URL}/assets/${g.directus_files_id}?width=900&height=900&fit=cover`,
+  thumb: `${ASSETS_URL}/${g.directus_files_id}?width=200&height=200&fit=cover`,
+  full: `${ASSETS_URL}/${g.directus_files_id}?width=900&height=900&fit=cover`,
 }));
 
 const allImages = [

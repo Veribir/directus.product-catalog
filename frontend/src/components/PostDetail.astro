@@ -1,6 +1,6 @@
 ---
 import type { Post } from "../lib/directus";
-import { DIRECTUS_URL } from "../lib/directus";
+import { ASSETS_URL } from "../lib/directus";
 import { getTranslation } from "../lib/i18n";
 
 interface Props {
@@ -12,7 +12,7 @@ interface Props {
 const { post, locale, postsPagePermalink } = Astro.props;
 const tx = getTranslation(post.translations, locale);
 const imageUrl = post.image
-  ? `${DIRECTUS_URL}/assets/${post.image}?width=1200&height=630&fit=cover`
+  ? `${ASSETS_URL}/${post.image}?width=1200&height=630&fit=cover`
   : null;
 const publishedDate = post.published_at
   ? new Date(post.published_at).toLocaleDateString(locale, {

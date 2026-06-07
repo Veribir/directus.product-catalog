@@ -1,6 +1,6 @@
 ---
 import type { Globals } from "../lib/directus";
-import { DIRECTUS_URL } from "../lib/directus";
+import { ASSETS_URL } from "../lib/directus";
 import type { Language } from "../lib/i18n";
 import type { Navigation } from "../lib/directus";
 
@@ -15,9 +15,9 @@ interface Props {
 const { globals, navigation, language, languages, currentPath } = Astro.props;
 
 const logoUrl = globals.logo_dark_mode
-  ? `${DIRECTUS_URL}/assets/${globals.logo_dark_mode}`
+  ? `${ASSETS_URL}/${globals.logo_dark_mode}`
   : globals.logo
-    ? `${DIRECTUS_URL}/assets/${globals.logo}`
+    ? `${ASSETS_URL}/${globals.logo}`
     : null;
 
 const siteTitle = globals.title ?? "Barkomas";

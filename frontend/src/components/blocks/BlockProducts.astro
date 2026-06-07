@@ -1,6 +1,6 @@
 ---
 import type { BlockProducts } from "../../lib/directus";
-import { DIRECTUS_URL } from "../../lib/directus";
+import { ASSETS_URL } from "../../lib/directus";
 import { fetchProducts, fetchAllCategories, fetchGlobals } from "../../lib/api";
 import { buildCategoryPaths, getProductFullPath } from "../../lib/catalog";
 import { getTranslation } from "../../lib/i18n";
@@ -43,7 +43,7 @@ const urlStructure = globals.product_url_structure ?? "category_prefixed";
 const productRows = products.map((product) => {
   const ptx = getTranslation(product.translations, locale);
   const imageUrl = product.image
-    ? `${DIRECTUS_URL}/assets/${product.image}?width=600&height=600&fit=cover`
+    ? `${ASSETS_URL}/${product.image}?width=600&height=600&fit=cover`
     : null;
   const fullPath = getProductFullPath(product.slug, product.category?.id ?? null, catPathMap, urlStructure);
   const href = `/${locale}${pagePermalink}/${fullPath}`;

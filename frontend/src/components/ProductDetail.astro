@@ -1,6 +1,6 @@
 ---
 import type { Product, PageBlock } from "../lib/directus";
-import { DIRECTUS_URL } from "../lib/directus";
+import { ASSETS_URL } from "../lib/directus";
 import { getTranslation } from "../lib/i18n";
 import { formatPrice, isOnSale } from "../lib/price";
 import { resolveTemplate, getEnabledSections } from "../lib/catalog";
@@ -44,14 +44,14 @@ const relatedProducts = (product.related_products ?? [])
   .filter(Boolean);
 
 const mainImageUrl = product.image
-  ? `${DIRECTUS_URL}/assets/${product.image}?width=900&height=1000&fit=cover`
+  ? `${ASSETS_URL}/${product.image}?width=900&height=1000&fit=cover`
   : null;
 
 const categoryTx = product.category ? getTranslation(product.category.translations, locale) : null;
 const specLayout = product.spec_layout ?? product.page_template?.spec_layout ?? product.category?.spec_layout ?? template.spec_layout;
 
 const brandLogoUrl = product.brand?.logo
-  ? `${DIRECTUS_URL}/assets/${product.brand.logo}?width=160&height=80&fit=contain`
+  ? `${ASSETS_URL}/${product.brand.logo}?width=160&height=80&fit=contain`
   : null;
 
 // Separate feature blocks from other blocks for ordered rendering
@@ -211,7 +211,7 @@ const catTaglineRest = catWords.slice(1).join(" ");
                 .filter(Boolean)
                 .map(uuid => (
                   <img
-                    src={`${DIRECTUS_URL}/assets/${uuid}?width=260&fit=contain&format=webp`}
+                    src={`${ASSETS_URL}/${uuid}?width=260&fit=contain&format=webp`}
                     alt=""
                     class="w-full object-contain opacity-70 mix-blend-multiply"
                     loading="lazy"
@@ -238,7 +238,7 @@ const catTaglineRest = catWords.slice(1).join(" ");
     <div class="overflow-x-auto flex gap-1 bg-white">
       {(product.gallery ?? []).map(g => (
         <img
-          src={`${DIRECTUS_URL}/assets/${g.directus_files_id}?width=700&height=500&fit=cover`}
+          src={`${ASSETS_URL}/${g.directus_files_id}?width=700&height=500&fit=cover`}
           alt=""
           class="h-56 md:h-80 w-auto flex-none object-cover"
           loading="lazy"
@@ -280,7 +280,7 @@ const catTaglineRest = catWords.slice(1).join(" ");
         {relatedProducts.map((rel) => {
           const relTx = getTranslation(rel.translations, locale);
           const relImageUrl = rel.image
-            ? `${DIRECTUS_URL}/assets/${rel.image}?width=400&height=400&fit=cover`
+            ? `${ASSETS_URL}/${rel.image}?width=400&height=400&fit=cover`
             : null;
           const relFullPath = getProductFullPath(rel.slug, null, catPathMap);
           const relHref = `/${locale}${productsPagePermalink}/${relFullPath}`;

@@ -1,5 +1,6 @@
 ---
 import type { Language } from "../lib/i18n";
+import { ASSETS_URL } from "../lib/directus";
 import { fetchGlobals, fetchNavigation } from "../lib/api";
 import Navbar from "../components/Navbar.astro";
 import Footer from "../components/Footer.astro";
@@ -21,7 +22,7 @@ const [globals, mainNav, footerNav] = await Promise.all([
 
 const pageTitle = title ?? globals.title ?? "Barkomas";
 const faviconUrl = globals.favicon
-  ? (await import("../lib/directus")).DIRECTUS_URL + `/assets/${globals.favicon}`
+  ? `${ASSETS_URL}/${globals.favicon}`
   : "/favicon.svg";
 ---
 

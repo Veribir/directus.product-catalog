@@ -3,6 +3,8 @@ import type { Schema } from "./types";
 
 export const DIRECTUS_URL = import.meta.env.DIRECTUS_URL ?? "http://localhost:8055";
 
+export const ASSETS_URL = import.meta.env.ASSETS_URL ?? `${DIRECTUS_URL}/assets`;
+
 export const directus = createDirectus<Schema>(DIRECTUS_URL).with(authentication()).with(rest());
 
 export type { Schema } from "./types";

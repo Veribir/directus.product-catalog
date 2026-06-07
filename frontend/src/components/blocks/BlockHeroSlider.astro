@@ -1,6 +1,6 @@
 ---
 import type { BlockHeroSlider } from "../../lib/directus";
-import { DIRECTUS_URL } from "../../lib/directus";
+import { ASSETS_URL } from "../../lib/directus";
 import { getTranslation } from "../../lib/i18n";
 
 interface Props {
@@ -17,16 +17,16 @@ const slides = (block.slides ?? [])
   .sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0));
 
 const brandLogoUrl = block.brand_logo
-  ? `${DIRECTUS_URL}/assets/${block.brand_logo}?width=200&height=80&fit=contain`
+  ? `${ASSETS_URL}/${block.brand_logo}?width=200&height=80&fit=contain`
   : null;
 ---
 
 <section class="relative min-h-screen flex items-center overflow-hidden bg-zinc-950 -mt-16">
   {slides.map((slide, index) => {
     const tx = getTranslation(slide.translations, locale);
-    const videoUrl = slide.video ? `${DIRECTUS_URL}/assets/${slide.video}` : null;
+    const videoUrl = slide.video ? `${ASSETS_URL}/${slide.video}` : null;
     const imageUrl = slide.image
-      ? `${DIRECTUS_URL}/assets/${slide.image}?width=1920&height=1080&fit=cover`
+      ? `${ASSETS_URL}/${slide.image}?width=1920&height=1080&fit=cover`
       : null;
     return (
       <div

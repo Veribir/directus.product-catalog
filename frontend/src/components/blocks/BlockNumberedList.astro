@@ -1,6 +1,6 @@
 ---
 import type { BlockNumberedList } from "../../lib/directus";
-import { DIRECTUS_URL } from "../../lib/directus";
+import { ASSETS_URL } from "../../lib/directus";
 import { getTranslation } from "../../lib/i18n";
 
 interface Props {
@@ -18,7 +18,7 @@ const imageOnLeft = (block.layout ?? "image_left") === "image_left";
 const items = (block.items ?? []).sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0));
 
 const imageUrl = block.image
-  ? `${DIRECTUS_URL}/assets/${block.image}?width=700&height=800&fit=cover`
+  ? `${ASSETS_URL}/${block.image}?width=700&height=800&fit=cover`
   : null;
 ---
 

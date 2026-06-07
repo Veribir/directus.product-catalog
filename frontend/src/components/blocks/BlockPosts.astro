@@ -1,6 +1,6 @@
 ---
 import type { BlockPosts } from "../../lib/directus";
-import { DIRECTUS_URL } from "../../lib/directus";
+import { ASSETS_URL } from "../../lib/directus";
 import { fetchPosts } from "../../lib/api";
 import { getTranslation } from "../../lib/i18n";
 
@@ -45,7 +45,7 @@ const posts = await fetchPosts(block.limit ?? 6);
         posts.map((post) => {
           const postTx = getTranslation(post.translations, locale);
           const imageUrl = post.image
-            ? `${DIRECTUS_URL}/assets/${post.image}?width=800&height=450&fit=cover`
+            ? `${ASSETS_URL}/${post.image}?width=800&height=450&fit=cover`
             : null;
           const postDate = post.published_at
             ? new Date(post.published_at).toLocaleDateString(locale, {
