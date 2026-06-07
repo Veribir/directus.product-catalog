@@ -6,7 +6,11 @@ import cloudflare from "@astrojs/cloudflare";
 import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 
-const { ASTRO_ADAPTER, SITE_URL } = loadEnv(process.env.NODE_ENV ?? "production", process.cwd(), "");
+const { ASTRO_ADAPTER, SITE_URL } = loadEnv(
+  process.env.NODE_ENV ?? "production",
+  process.cwd(),
+  "",
+);
 
 console.log(`Using ASTRO_ADAPTER=${ASTRO_ADAPTER}, SITE_URL=${SITE_URL}`);
 
@@ -24,7 +28,7 @@ export default defineConfig({
   // Site is fully static (no SSR). Set ASTRO_ADAPTER=cloudflare in .env to deploy via
   // the Cloudflare adapter — it makes Cloudflare deploy as static assets correctly
   // instead of guessing via generic framework detection.
-  adapter: ASTRO_ADAPTER === "cloudflare" ? cloudflare({ imageService: "passthrough", sessionKVBindingName: "BARKOMAS_MOMENTUM_SESSION" }) : undefined,
+  adapter: ASTRO_ADAPTER === "cloudflare" ? cloudflare() : undefined,
 
   integrations: [sitemap()],
 
