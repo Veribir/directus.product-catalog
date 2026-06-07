@@ -24,7 +24,7 @@
     "tailwindcss": "^4.3.0"
   },
   "devDependencies": {
-    "@types/node": "^25.9.2",
+    "@types/node": "^24.13.1",
     "prettier": "^3.8.3",
     "prettier-plugin-astro": "^0.14.1",
     "wrangler": "^4.98.0"
