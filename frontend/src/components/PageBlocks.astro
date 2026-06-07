@@ -6,12 +6,24 @@ import type {
   BlockPosts,
   BlockProducts,
   BlockProductCategories,
+  BlockHeroSlider,
+  BlockFeaturesGrid,
+  BlockNumberedList,
+  BlockBrandLogos,
+  BlockCtaBanner,
+  BlockProductCategoryCards,
 } from "../lib/directus";
 import BlockHeroComponent from "./blocks/BlockHero.astro";
 import BlockRichtextComponent from "./blocks/BlockRichtext.astro";
 import BlockPostsComponent from "./blocks/BlockPosts.astro";
 import BlockProductsComponent from "./blocks/BlockProducts.astro";
 import BlockProductCategoriesComponent from "./blocks/BlockProductCategories.astro";
+import BlockHeroSliderComponent from "./blocks/BlockHeroSlider.astro";
+import BlockFeaturesGridComponent from "./blocks/BlockFeaturesGrid.astro";
+import BlockNumberedListComponent from "./blocks/BlockNumberedList.astro";
+import BlockBrandLogosComponent from "./blocks/BlockBrandLogos.astro";
+import BlockCtaBannerComponent from "./blocks/BlockCtaBanner.astro";
+import BlockProductCategoryCardsComponent from "./blocks/BlockProductCategoryCards.astro";
 
 interface Props {
   blocks: PageBlock[];
@@ -26,11 +38,28 @@ type KnownCollection =
   | "block_richtext"
   | "block_posts"
   | "block_products"
-  | "block_product_categories";
+  | "block_product_categories"
+  | "block_hero_slider"
+  | "block_features_grid"
+  | "block_numbered_list"
+  | "block_brands_logos"
+  | "block_cta_banner"
+  | "block_product_category_cards";
 
 type KnownBlock = PageBlock & {
   collection: KnownCollection;
-  item: BlockHero | BlockRichtext | BlockPosts | BlockProducts | BlockProductCategories;
+  item:
+    | BlockHero
+    | BlockRichtext
+    | BlockPosts
+    | BlockProducts
+    | BlockProductCategories
+    | BlockHeroSlider
+    | BlockFeaturesGrid
+    | BlockNumberedList
+    | BlockBrandLogos
+    | BlockCtaBanner
+    | BlockProductCategoryCards;
 };
 
 const visibleBlocks = blocks
@@ -42,7 +71,13 @@ const visibleBlocks = blocks
       b.collection === "block_richtext" ||
       b.collection === "block_posts" ||
       b.collection === "block_products" ||
-      b.collection === "block_product_categories",
+      b.collection === "block_product_categories" ||
+      b.collection === "block_hero_slider" ||
+      b.collection === "block_features_grid" ||
+      b.collection === "block_numbered_list" ||
+      b.collection === "block_brands_logos" ||
+      b.collection === "block_cta_banner" ||
+      b.collection === "block_product_category_cards",
   );
 ---
 
@@ -67,6 +102,30 @@ const visibleBlocks = blocks
     if (block.collection === "block_product_categories")
       return (
         <BlockProductCategoriesComponent block={block.item as BlockProductCategories} background={block.background} locale={locale} productsPagePermalink={pagePermalink} />
+      );
+    if (block.collection === "block_hero_slider")
+      return (
+        <BlockHeroSliderComponent block={block.item as BlockHeroSlider} background={block.background} locale={locale} pagePermalink={pagePermalink} />
+      );
+    if (block.collection === "block_features_grid")
+      return (
+        <BlockFeaturesGridComponent block={block.item as BlockFeaturesGrid} background={block.background} locale={locale} pagePermalink={pagePermalink} />
+      );
+    if (block.collection === "block_numbered_list")
+      return (
+        <BlockNumberedListComponent block={block.item as BlockNumberedList} background={block.background} locale={locale} pagePermalink={pagePermalink} />
+      );
+    if (block.collection === "block_brands_logos")
+      return (
+        <BlockBrandLogosComponent block={block.item as BlockBrandLogos} background={block.background} locale={locale} pagePermalink={pagePermalink} />
+      );
+    if (block.collection === "block_cta_banner")
+      return (
+        <BlockCtaBannerComponent block={block.item as BlockCtaBanner} background={block.background} locale={locale} pagePermalink={pagePermalink} />
+      );
+    if (block.collection === "block_product_category_cards")
+      return (
+        <BlockProductCategoryCardsComponent block={block.item as BlockProductCategoryCards} background={block.background} locale={locale} pagePermalink={pagePermalink} />
       );
   })
 }

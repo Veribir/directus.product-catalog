@@ -1,0 +1,127 @@
+---
+import type { BlockProductCategoryCards } from "../../lib/directus";
+import { DIRECTUS_URL } from "../../lib/directus";
+import { getTranslation } from "../../lib/i18n";
+
+interface Props {
+  block: BlockProductCategoryCards;
+  background: "light" | "dark";
+  locale: string;
+  pagePermalink: string;
+}
+
+const { block, locale } = Astro.props;
+const tx = getTranslation(block.translations, locale);
+
+const cards = (block.cards ?? []).sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0));
+
+const brandLogoUrl = block.brand_logo
+  ? `${DIRECTUS_URL}/assets/${block.brand_logo}?width=200&height=80&fit=contain`
+  : null;
+
+const taglineParts = (tx?.tagline ?? "").split(" ");
+const taglineLast = taglineParts.pop() ?? "";
+const taglineRest = taglineParts.join(" ");
+---
+
+<section data-animate class="py-20 md:py-28 px-6 md:px-16 bg-zinc-950 text-slate-50">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-12">
+      {brandLogoUrl && (
+        <img src={brandLogoUrl} alt={tx?.brand_label ?? ""} class="h-12 w-auto mx-auto mb-6" loading="lazy" />
+      )}
+      {tx?.tagline && (
+        <p class="text-xs font-semibold tracking-[0.2em] uppercase mb-4 text-slate-500">
+          {taglineRest && <span>{taglineRest} </span>}
+          <span class="text-(--accent)">{taglineLast}</span>
+        </p>
+      )}
+      {tx?.headline && (
+        <h2 class="text-3xl md:text-4xl font-bold text-white leading-snug mb-4">{tx.headline}</h2>
+      )}
+      {tx?.description && (
+        <p class="text-sm text-slate-400 max-w-2xl mx-auto leading-relaxed">{tx.description}</p>
+      )}
+    </div>
+
+    <div class:list={["grid gap-1", cards.length >= 3 ? "md:grid-cols-3" : "md:grid-cols-2"]}>
+      {cards.map((card) => {
+        const ctx = getTranslation(card.translations, locale);
+        const imageUrl = card.image
+          ? `${DIRECTUS_URL}/assets/${card.image}?width=960&height=720&fit=cover`
+          : null;
+        const videoUrl = card.video
+          ? `${DIRECTUS_URL}/assets/${card.video}`
+          : null;
+        const rawHref = card.link_url ?? "#";
+        const href = rawHref !== "#" && !rawHref.startsWith("http")
+          ? `/${locale}${rawHref}`
+          : rawHref;
+
+        const titleWords = (ctx?.title ?? "").split(" ");
+        const titleFirst = titleWords.slice(0, -1).join(" ");
+        const titleLast = titleWords[titleWords.length - 1] ?? "";
+
+        return (
+          <a
+            href={href}
+            class="group relative block overflow-hidden rounded-2xl bg-zinc-900 min-h-80"
+            data-card
+          >
+            {imageUrl && (
+              <img
+                src={imageUrl}
+                alt={ctx?.title ?? ""}
+                class="card-img absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                loading="lazy"
+              />
+            )}
+            {videoUrl && (
+              <video
+                src={videoUrl}
+                loop
+                muted
+                playsinline
+                class="card-vid absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-300"
+                data-video
+              />
+            )}
+            <div class="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent" />
+            <div class="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"/><path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"/></svg>
+            </div>
+            <div class="absolute bottom-0 left-0 right-0 p-6 md:p-8">
+              {ctx?.title && (
+                <h3 class="text-2xl md:text-3xl font-light text-white leading-tight">
+                  {titleFirst && <span>{titleFirst}<br /></span>}
+                  <span class="font-bold">{titleLast}</span>
+                </h3>
+              )}
+              {ctx?.subtitle && (
+                <p class="text-xs text-slate-400 mt-2 tracking-wide">{ctx.subtitle}</p>
+              )}
+            </div>
+          </a>
+        );
+      })}
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-card]").forEach((card) => {
+    const video = card.querySelector<HTMLVideoElement>("[data-video]");
+    const img = card.querySelector<HTMLImageElement>(".card-img");
+    if (!video) return;
+    card.addEventListener("mouseenter", () => {
+      video.play();
+      video.classList.remove("opacity-0");
+      img?.classList.add("opacity-0");
+    });
+    card.addEventListener("mouseleave", () => {
+      video.pause();
+      video.classList.add("opacity-0");
+      img?.classList.remove("opacity-0");
+    });
+  });
+</script>

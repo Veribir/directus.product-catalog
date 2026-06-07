@@ -1,6 +1,6 @@
 import { readItems, readSingleton } from "@directus/sdk";
 import { directus } from "./directus";
-import type { Page, Globals, Post, Product, ProductCategory } from "./directus";
+import type { Page, Globals, Post, Product, ProductCategory, Navigation } from "./directus";
 
 // ─── Shared field sets ────────────────────────────────────────────────────────
 
@@ -74,6 +74,102 @@ const BLOCK_ITEM_FIELDS = [
   "blocks.item:block_product_categories.layout",
   "blocks.item:block_product_categories.show_product_count",
   "blocks.item:block_product_categories.translations.*",
+  // block_hero_slider
+  "blocks.item:block_hero_slider.id",
+  "blocks.item:block_hero_slider.status",
+  "blocks.item:block_hero_slider.brand_logo",
+  "blocks.item:block_hero_slider.brand_logo_link",
+  "blocks.item:block_hero_slider.slides.id",
+  "blocks.item:block_hero_slider.slides.sort",
+  "blocks.item:block_hero_slider.slides.status",
+  "blocks.item:block_hero_slider.slides.image",
+  "blocks.item:block_hero_slider.slides.video",
+  "blocks.item:block_hero_slider.slides.translations.languages_code",
+  "blocks.item:block_hero_slider.slides.translations.tagline",
+  "blocks.item:block_hero_slider.slides.translations.headline",
+  "blocks.item:block_hero_slider.slides.translations.description",
+  "blocks.item:block_hero_slider.slides.translations.cta_label",
+  "blocks.item:block_hero_slider.slides.translations.cta_url",
+  // block_features_grid
+  "blocks.item:block_features_grid.id",
+  "blocks.item:block_features_grid.status",
+  "blocks.item:block_features_grid.layout",
+  "blocks.item:block_features_grid.cta_url",
+  "blocks.item:block_features_grid.image",
+  "blocks.item:block_features_grid.image_link",
+  "blocks.item:block_features_grid.translations.languages_code",
+  "blocks.item:block_features_grid.translations.tagline",
+  "blocks.item:block_features_grid.translations.headline",
+  "blocks.item:block_features_grid.translations.description",
+  "blocks.item:block_features_grid.translations.cta_label",
+  "blocks.item:block_features_grid.translations.image_title",
+  "blocks.item:block_features_grid.items.id",
+  "blocks.item:block_features_grid.items.sort",
+  "blocks.item:block_features_grid.items.image",
+  "blocks.item:block_features_grid.items.link_url",
+  "blocks.item:block_features_grid.items.translations.languages_code",
+  "blocks.item:block_features_grid.items.translations.headline",
+  "blocks.item:block_features_grid.items.translations.description",
+  // block_numbered_list
+  "blocks.item:block_numbered_list.id",
+  "blocks.item:block_numbered_list.status",
+  "blocks.item:block_numbered_list.cta_url",
+  "blocks.item:block_numbered_list.image",
+  "blocks.item:block_numbered_list.image_link",
+  "blocks.item:block_numbered_list.layout",
+  "blocks.item:block_numbered_list.translations.languages_code",
+  "blocks.item:block_numbered_list.translations.tagline",
+  "blocks.item:block_numbered_list.translations.headline",
+  "blocks.item:block_numbered_list.translations.description",
+  "blocks.item:block_numbered_list.translations.image_title",
+  "blocks.item:block_numbered_list.items.id",
+  "blocks.item:block_numbered_list.items.sort",
+  "blocks.item:block_numbered_list.items.translations.languages_code",
+  "blocks.item:block_numbered_list.items.translations.title",
+  "blocks.item:block_numbered_list.items.translations.description",
+  // block_brands_logos
+  "blocks.item:block_brands_logos.id",
+  "blocks.item:block_brands_logos.status",
+  "blocks.item:block_brands_logos.image",
+  "blocks.item:block_brands_logos.image_link",
+  "blocks.item:block_brands_logos.translations.languages_code",
+  "blocks.item:block_brands_logos.translations.tagline",
+  "blocks.item:block_brands_logos.translations.headline",
+  "blocks.item:block_brands_logos.translations.description",
+  "blocks.item:block_brands_logos.translations.image_title",
+  "blocks.item:block_brands_logos.logos.id",
+  "blocks.item:block_brands_logos.logos.sort",
+  "blocks.item:block_brands_logos.logos.image",
+  "blocks.item:block_brands_logos.logos.name",
+  "blocks.item:block_brands_logos.logos.url",
+  // block_cta_banner
+  "blocks.item:block_cta_banner.id",
+  "blocks.item:block_cta_banner.status",
+  "blocks.item:block_cta_banner.primary_cta_url",
+  "blocks.item:block_cta_banner.secondary_cta_url",
+  "blocks.item:block_cta_banner.translations.languages_code",
+  "blocks.item:block_cta_banner.translations.tagline",
+  "blocks.item:block_cta_banner.translations.headline",
+  "blocks.item:block_cta_banner.translations.primary_cta_label",
+  "blocks.item:block_cta_banner.translations.secondary_cta_label",
+  // block_product_category_cards
+  "blocks.item:block_product_category_cards.id",
+  "blocks.item:block_product_category_cards.status",
+  "blocks.item:block_product_category_cards.brand_logo",
+  "blocks.item:block_product_category_cards.translations.languages_code",
+  "blocks.item:block_product_category_cards.translations.tagline",
+  "blocks.item:block_product_category_cards.translations.headline",
+  "blocks.item:block_product_category_cards.translations.description",
+  "blocks.item:block_product_category_cards.translations.brand_label",
+  "blocks.item:block_product_category_cards.cards.id",
+  "blocks.item:block_product_category_cards.cards.sort",
+  "blocks.item:block_product_category_cards.cards.category",
+  "blocks.item:block_product_category_cards.cards.image",
+  "blocks.item:block_product_category_cards.cards.video",
+  "blocks.item:block_product_category_cards.cards.link_url",
+  "blocks.item:block_product_category_cards.cards.translations.languages_code",
+  "blocks.item:block_product_category_cards.cards.translations.title",
+  "blocks.item:block_product_category_cards.cards.translations.subtitle",
 ];
 
 const PAGE_BLOCK_JUNCTION_FIELDS = [
@@ -116,6 +212,11 @@ export async function fetchGlobals(): Promise<Globals> {
         "url",
         "accent_color",
         "product_url_structure",
+        "phone",
+        "address",
+        "email",
+        "footer_image",
+        "social_links",
       ],
     }),
   ) as unknown as Globals;
@@ -242,7 +343,10 @@ export async function fetchProductsByCategory(
     readItems("products", {
       filter: {
         status: { _eq: "published" },
-        category: { _in: categoryIds },
+        _or: [
+          { category: { _in: categoryIds } },
+          { additional_categories: { product_categories_id: { _in: categoryIds } } },
+        ],
       } as any,
       fields: PRODUCT_CARD_FIELDS as any[],
       sort: sort as any[],
@@ -284,6 +388,13 @@ export async function fetchProductBySlug(slug: string): Promise<Product | null> 
         "category.translations.name",
         "category.translations.slug",
         ...PRODUCT_PAGE_TEMPLATE_FIELDS.map((f) => `category.default_page_template.${f}`),
+        // additional categories (M2M — drives extra listing memberships, not the canonical URL)
+        "additional_categories.product_categories_id.id",
+        "additional_categories.product_categories_id.slug",
+        "additional_categories.product_categories_id.parent",
+        "additional_categories.product_categories_id.translations.languages_code",
+        "additional_categories.product_categories_id.translations.name",
+        "additional_categories.product_categories_id.translations.slug",
         // product template
         ...PRODUCT_PAGE_TEMPLATE_FIELDS.map((f) => `page_template.${f}`),
         // brand
@@ -350,6 +461,14 @@ export async function fetchProductBySlug(slug: string): Promise<Product | null> 
         "specs.unit.code",
         "specs.unit.symbol",
         "specs.unit.translations.*",
+        // spec variant values — nested under each spec via O2M backlink
+        "specs.spec_variant_values.variant",
+        "specs.spec_variant_values.value",
+        // spec layout override and drawings (engineering line art for left column)
+        "spec_layout",
+        "spec_drawing_1",
+        "spec_drawing_2",
+        "spec_drawing_3",
         // pricing tiers (O2M)
         "pricing_tiers.id",
         "pricing_tiers.status",
@@ -432,6 +551,10 @@ export async function fetchCategoryById(id: string): Promise<ProductCategory | n
         "eclass_version",
         "seo",
         "translations.*",
+        "brand.id",
+        "brand.slug",
+        "brand.logo",
+        "brand.translations.*",
         ...PRODUCT_PAGE_TEMPLATE_FIELDS.map((f) => `default_page_template.${f}`),
         ...CATEGORY_BLOCK_FIELDS,
       ] as any[],
@@ -466,4 +589,31 @@ export async function fetchCategoriesByParent(
       limit: -1,
     }),
   ) as unknown as ProductCategory[];
+}
+
+// ─── Navigation ───────────────────────────────────────────────────────────────
+
+export async function fetchNavigation(id: string): Promise<Navigation | null> {
+  const results = (await directus.request(
+    readItems("navigation", {
+      filter: { id: { _eq: id }, is_active: { _eq: true } },
+      fields: [
+        "id",
+        "title",
+        "is_active",
+        "items.id",
+        "items.title",
+        "items.type",
+        "items.url",
+        "items.sort",
+        "items.children.id",
+        "items.children.title",
+        "items.children.type",
+        "items.children.url",
+        "items.children.sort",
+      ] as any[],
+      limit: 1,
+    }),
+  )) as unknown as Navigation[];
+  return results[0] ?? null;
 }

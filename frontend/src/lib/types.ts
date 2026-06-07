@@ -6,6 +6,11 @@ export type Language = {
 
 export type ProductUrlStructure = "category_prefixed" | "parent_prefixed" | "root_prefixed" | "flat";
 
+export type SocialLink = {
+  service: "facebook" | "instagram" | "linkedin" | "x" | "youtube" | "vimeo" | "github" | "discord" | "docker";
+  url: string;
+};
+
 export type Globals = {
   title: string | null;
   tagline: string | null;
@@ -17,6 +22,11 @@ export type Globals = {
   accent_color: string | null;
   default_currency: string | null;
   product_url_structure: ProductUrlStructure | null;
+  phone: string | null;
+  address: string | null;
+  email: string | null;
+  footer_image: string | null;
+  social_links: SocialLink[] | null;
 };
 
 // ─── Block types ────────────────────────────────────────────────────────────
@@ -98,6 +108,172 @@ export type BlockProductCategories = {
   translations: BlockProductCategoriesTranslation[];
 };
 
+// ─── New block types ─────────────────────────────────────────────────────────
+
+export type BlockHeroSliderSlideTranslation = {
+  languages_code: string;
+  tagline: string | null;
+  headline: string | null;
+  description: string | null;
+  cta_label: string | null;
+  cta_url: string | null;
+};
+
+export type BlockHeroSliderSlide = {
+  id: string;
+  sort: number | null;
+  status: string;
+  image: string | null;
+  video: string | null;
+  translations: BlockHeroSliderSlideTranslation[];
+};
+
+export type BlockHeroSlider = {
+  id: string;
+  status: string;
+  brand_logo: string | null;
+  brand_logo_link: string | null;
+  slides: BlockHeroSliderSlide[];
+};
+
+export type BlockFeaturesGridTranslation = {
+  languages_code: string;
+  tagline: string | null;
+  headline: string | null;
+  description: string | null;
+  cta_label: string | null;
+  image_title: string | null;
+};
+
+export type BlockFeaturesGridItemTranslation = {
+  languages_code: string;
+  headline: string | null;
+  description: string | null;
+};
+
+export type BlockFeaturesGridItem = {
+  id: string;
+  sort: number | null;
+  image: string | null;
+  link_url: string | null;
+  translations: BlockFeaturesGridItemTranslation[];
+};
+
+export type BlockFeaturesGrid = {
+  id: string;
+  status: string;
+  layout: "grid_2" | "grid_3" | "grid_4" | "showcase_left" | "showcase_right" | null;
+  cta_url: string | null;
+  image: string | null;
+  image_link: string | null;
+  translations: BlockFeaturesGridTranslation[];
+  items: BlockFeaturesGridItem[];
+};
+
+export type BlockNumberedListTranslation = {
+  languages_code: string;
+  tagline: string | null;
+  headline: string | null;
+  description: string | null;
+  image_title: string | null;
+};
+
+export type BlockNumberedListItemTranslation = {
+  languages_code: string;
+  title: string | null;
+  description: string | null;
+};
+
+export type BlockNumberedListItem = {
+  id: string;
+  sort: number | null;
+  translations: BlockNumberedListItemTranslation[];
+};
+
+export type BlockNumberedList = {
+  id: string;
+  status: string;
+  cta_url: string | null;
+  image: string | null;
+  image_link: string | null;
+  layout: "image_left" | "image_right" | null;
+  translations: BlockNumberedListTranslation[];
+  items: BlockNumberedListItem[];
+};
+
+export type BlockBrandLogosTranslation = {
+  languages_code: string;
+  tagline: string | null;
+  headline: string | null;
+  description: string | null;
+  image_title: string | null;
+};
+
+export type BlockBrandLogosItem = {
+  id: string;
+  sort: number | null;
+  image: string | null;
+  name: string | null;
+  url: string | null;
+};
+
+export type BlockBrandLogos = {
+  id: string;
+  status: string;
+  image: string | null;
+  image_link: string | null;
+  translations: BlockBrandLogosTranslation[];
+  logos: BlockBrandLogosItem[];
+};
+
+export type BlockCtaBannerTranslation = {
+  languages_code: string;
+  tagline: string | null;
+  headline: string | null;
+  primary_cta_label: string | null;
+  secondary_cta_label: string | null;
+};
+
+export type BlockCtaBanner = {
+  id: string;
+  status: string;
+  primary_cta_url: string | null;
+  secondary_cta_url: string | null;
+  translations: BlockCtaBannerTranslation[];
+};
+
+export type BlockProductCategoryCardsTranslation = {
+  languages_code: string;
+  tagline: string | null;
+  headline: string | null;
+  description: string | null;
+  brand_label: string | null;
+};
+
+export type BlockProductCategoryCardsItemTranslation = {
+  languages_code: string;
+  title: string | null;
+  subtitle: string | null;
+};
+
+export type BlockProductCategoryCardsItem = {
+  id: string;
+  sort: number | null;
+  category: string | null;
+  image: string | null;
+  video: string | null;
+  link_url: string | null;
+  translations: BlockProductCategoryCardsItemTranslation[];
+};
+
+export type BlockProductCategoryCards = {
+  id: string;
+  status: string;
+  brand_logo: string | null;
+  translations: BlockProductCategoryCardsTranslation[];
+  cards: BlockProductCategoryCardsItem[];
+};
+
 // ─── Post ────────────────────────────────────────────────────────────────────
 
 export type PostTranslation = {
@@ -162,6 +338,7 @@ export type ProductSpec = {
   irdi: string | null;
   eclass_preferred_name: string | null;
   translations: { languages_code: string; label: string; value: string; note: string | null }[];
+  spec_variant_values: { variant: string; value: string }[];
 };
 
 export type ProductCertification = {
@@ -235,6 +412,8 @@ export type ProductCategoryTranslation = {
   name: string | null;
   description: string | null;
   slug: string | null;
+  tagline: string | null;
+  model_list: string | null;
 };
 
 export type ProductCategory = {
@@ -250,6 +429,7 @@ export type ProductCategory = {
   eclass_code: string | null;
   eclass_version: string | null;
   seo: Record<string, unknown> | null;
+  brand: ProductBrand | null;
   translations: ProductCategoryTranslation[];
   default_page_template: ProductPageTemplate | null;
   blocks: CategoryPageBlock[] | null;
@@ -292,6 +472,15 @@ export type ProductTranslation = {
   description: string | null;
   content: string | null;
   slug: string | null;
+  tagline: string | null;
+  model_range: string | null;
+};
+
+export type ProductSpecVariantValue = {
+  id: string;
+  spec: string;
+  variant: string;
+  value: string;
 };
 
 export type ProductCategoryRef = {
@@ -325,12 +514,17 @@ export type Product = {
   unit_quantity: number | null;
   brand: ProductBrand | null;
   category: ProductCategoryRef | null;
+  additional_categories: { product_categories_id: ProductCategoryRef }[];
   translations: ProductTranslation[];
   variants: ProductVariant[];
   tags: { product_tags_id: ProductTag }[];
   related_products: { related_products_id: Pick<Product, "id" | "slug" | "sku" | "price" | "compare_at_price" | "image" | "translations"> }[];
   certifications: { product_certifications_id: ProductCertification; obtained_at: string | null }[];
   specs: ProductSpec[];
+  spec_layout: "table" | "accordion" | "comparison" | null;
+  spec_drawing_1: string | null;
+  spec_drawing_2: string | null;
+  spec_drawing_3: string | null;
   pricing_tiers: ProductPricingTier[];
   regional_prices: ProductRegionalPrice[];
   page_template: ProductPageTemplate | null;
@@ -342,10 +536,34 @@ export type Product = {
 export type PageBlock = {
   id: string;
   sort: number | null;
-  collection: "block_hero" | "block_richtext" | "block_posts" | "block_products" | "block_product_categories" | string;
+  collection:
+    | "block_hero"
+    | "block_richtext"
+    | "block_posts"
+    | "block_products"
+    | "block_product_categories"
+    | "block_hero_slider"
+    | "block_features_grid"
+    | "block_numbered_list"
+    | "block_brands_logos"
+    | "block_cta_banner"
+    | "block_product_category_cards"
+    | string;
   hide_block: boolean;
   background: "light" | "dark";
-  item: BlockHero | BlockRichtext | BlockPosts | BlockProducts | BlockProductCategories | Record<string, unknown>;
+  item:
+    | BlockHero
+    | BlockRichtext
+    | BlockPosts
+    | BlockProducts
+    | BlockProductCategories
+    | BlockHeroSlider
+    | BlockFeaturesGrid
+    | BlockNumberedList
+    | BlockBrandLogos
+    | BlockCtaBanner
+    | BlockProductCategoryCards
+    | Record<string, unknown>;
 };
 
 export type Page = {
@@ -359,6 +577,22 @@ export type Page = {
 
 // ─── Directus schema map ──────────────────────────────────────────────────────
 
+export type Navigation = {
+  id: string;
+  title: string | null;
+  is_active: boolean;
+  items: NavigationItem[];
+};
+
+export type NavigationItem = {
+  id: string;
+  title: string | null;
+  type: "page" | "post" | "url" | "group" | null;
+  url: string | null;
+  sort: number | null;
+  children: NavigationItem[];
+};
+
 export type Schema = {
   languages: Language[];
   globals: Globals;
@@ -370,6 +604,12 @@ export type Schema = {
   posts: Post[];
   block_products: BlockProducts[];
   block_product_categories: BlockProductCategories[];
+  block_hero_slider: BlockHeroSlider[];
+  block_features_grid: BlockFeaturesGrid[];
+  block_numbered_list: BlockNumberedList[];
+  block_brands_logos: BlockBrandLogos[];
+  block_cta_banner: BlockCtaBanner[];
+  block_product_category_cards: BlockProductCategoryCards[];
   products: Product[];
   product_variants: ProductVariant[];
   product_categories: ProductCategory[];
@@ -380,8 +620,11 @@ export type Schema = {
   product_certifications: ProductCertification[];
   product_spec_groups: ProductSpecGroup[];
   product_specs: ProductSpec[];
+  product_spec_variant_values: ProductSpecVariantValue[];
   product_pricing_tiers: ProductPricingTier[];
   customer_groups: CustomerGroup[];
   product_regions: ProductRegion[];
   product_regional_prices: ProductRegionalPrice[];
+  navigation: Navigation[];
+  navigation_items: NavigationItem[];
 };

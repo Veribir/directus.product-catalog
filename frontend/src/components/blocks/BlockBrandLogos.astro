@@ -1,0 +1,73 @@
+---
+import type { BlockBrandLogos } from "../../lib/directus";
+import { DIRECTUS_URL } from "../../lib/directus";
+import { getTranslation } from "../../lib/i18n";
+
+interface Props {
+  block: BlockBrandLogos;
+  background: "light" | "dark";
+  locale: string;
+  pagePermalink: string;
+}
+
+const { block, locale } = Astro.props;
+const tx = getTranslation(block.translations, locale);
+
+const logos = (block.logos ?? []).sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0));
+
+const blockImageUrl = block.image
+  ? `${DIRECTUS_URL}/assets/${block.image}?width=700&height=700&fit=cover`
+  : null;
+---
+
+<section data-animate class="py-12 md:py-16 px-6 md:px-16 bg-white">
+  <div class="max-w-6xl mx-auto">
+    <div class="rounded-3xl bg-zinc-900 overflow-hidden">
+      <div class="grid md:grid-cols-[42%_58%] min-h-96">
+
+        <div class="relative min-h-64 md:min-h-full bg-zinc-800">
+          {blockImageUrl
+            ? <img src={blockImageUrl} alt={tx?.image_title ?? ""} class="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+            : <div class="absolute inset-0 bg-zinc-800" />
+          }
+          <div class="absolute inset-0 bg-linear-to-t from-black/70 via-black/10 to-transparent" />
+          {block.image_link && (
+            <a href={block.image_link} class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/25 transition-colors" aria-label="Learn more">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"/><path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"/></svg>
+            </a>
+          )}
+          {tx?.image_title && (
+            <p class="absolute bottom-5 left-6 text-white text-xl font-bold leading-snug">{tx.image_title}</p>
+          )}
+        </div>
+
+        <div class="p-8 md:p-12 flex flex-col gap-6 text-white">
+          {tx?.headline && (
+            <h2 class="text-xl md:text-2xl font-bold leading-snug text-white">{tx.headline}</h2>
+          )}
+          {tx?.description && (
+            <p class="text-sm text-zinc-400 leading-relaxed">{tx.description}</p>
+          )}
+
+          {logos.length > 0 && (
+            <div class="grid grid-cols-2 mt-2">
+              {logos.map((logo) => {
+                const inner = (
+                  <span class="text-xs font-bold tracking-widest uppercase text-white">{logo.name}</span>
+                );
+                return (
+                  <div class="py-4 border-b border-zinc-800 flex items-center pr-4 last:border-b-0">
+                    {logo.url
+                      ? <a href={logo.url} target="_blank" rel="noopener noreferrer" class="hover:text-(--accent) transition-colors">{inner}</a>
+                      : inner
+                    }
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

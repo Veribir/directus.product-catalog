@@ -1,7 +1,8 @@
 ---
 import type { Language } from "../lib/i18n";
-import { fetchGlobals, fetchAllPages } from "../lib/api";
+import { fetchGlobals, fetchNavigation } from "../lib/api";
 import Navbar from "../components/Navbar.astro";
+import Footer from "../components/Footer.astro";
 import "../styles/global.css";
 
 interface Props {
@@ -12,7 +13,11 @@ interface Props {
 
 const { title, language, languages } = Astro.props;
 
-const [globals, navPages] = await Promise.all([fetchGlobals(), fetchAllPages()]);
+const [globals, mainNav, footerNav] = await Promise.all([
+  fetchGlobals(),
+  fetchNavigation("main"),
+  fetchNavigation("footer"),
+]);
 
 const pageTitle = title ?? globals.title ?? "Barkomas";
 const faviconUrl = globals.favicon
@@ -33,8 +38,18 @@ const faviconUrl = globals.favicon
     {globals.description && <meta name="description" content={globals.description} />}
     <title>{pageTitle}</title>
   </head>
-  <body class="m-0 font-sans antialiased">
-    <Navbar {globals} {navPages} {language} {languages} currentPath={Astro.url.pathname} />
-    <slot />
+  <body class="m-0 font-sans antialiased bg-white text-slate-900">
+    <Navbar {globals} navigation={mainNav} {language} {languages} currentPath={Astro.url.pathname} />
+    <main class="pt-16">
+      <slot />
+    </main>
+    <Footer {globals} navigation={footerNav} {language} />
+    <script>
+      const animatedEls = document.querySelectorAll('[data-animate]');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('animate-in'); observer.unobserve(e.target); } });
+      }, { threshold: 0.08 });
+      animatedEls.forEach(el => observer.observe(el));
+    </script>
   </body>
 </html>

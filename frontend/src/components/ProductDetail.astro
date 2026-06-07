@@ -2,16 +2,12 @@
 import type { Product, PageBlock } from "../lib/directus";
 import { DIRECTUS_URL } from "../lib/directus";
 import { getTranslation } from "../lib/i18n";
-import { formatPrice, isOnSale, formatUnit } from "../lib/price";
-import { resolveTemplate, getEnabledSections, resolveEclassCode } from "../lib/catalog";
+import { formatPrice, isOnSale } from "../lib/price";
+import { resolveTemplate, getEnabledSections } from "../lib/catalog";
 import CategoryBreadcrumb from "./CategoryBreadcrumb.astro";
-import ProductGallery from "./ProductGallery.astro";
 import ProductSpecs from "./ProductSpecs.astro";
 import ProductCertifications from "./ProductCertifications.astro";
 import ProductPricingTable from "./ProductPricingTable.astro";
-import ProductBrandBadge from "./ProductBrandBadge.astro";
-import EclassBadge from "./EclassBadge.astro";
-import ProductTags from "./ProductTags.astro";
 import PageBlocks from "./PageBlocks.astro";
 import { fetchAllCategories } from "../lib/api";
 import { buildCategoryPaths, getProductFullPath } from "../lib/catalog";
@@ -28,226 +24,257 @@ const tx = getTranslation(product.translations, locale);
 const template = resolveTemplate(product);
 const sections = getEnabledSections(template);
 
-// Build category path for breadcrumb + back link
 const allCategories = template.show_breadcrumb && product.category
   ? await fetchAllCategories()
   : [];
 const catPathMap = allCategories.length > 0 ? buildCategoryPaths(allCategories, locale) : new Map<string, string>();
 const categoryPath = product.category ? catPathMap.get(product.category.id) ?? null : null;
 
-// Price display
-const currency = "USD"; // TODO: resolve from globals/region
-const onSale = isOnSale(product.price, product.compare_at_price);
-const price = formatPrice(product.price, locale, currency);
-const compareAt = formatPrice(product.compare_at_price, locale, currency);
-const unitLabel = formatUnit(product.unit, locale);
+const currency = "USD";
 
-// Variants — pre-compute everything in frontmatter to avoid Astro JSX parser issues with < and <=
 const variantRows = (product.variants ?? [])
   .filter((v) => v.status === "published")
   .map((variant) => {
     const vtx = getTranslation(variant.translations, locale);
-    const effectiveUnit = variant.unit_override ?? product.unit;
-    const vUnitLabel = formatUnit(effectiveUnit, locale);
-    const vOnSale = isOnSale(variant.price ?? product.price, variant.compare_at_price);
-    const vPrice = formatPrice(variant.price ?? product.price, locale, currency);
-    const vCompareAt = formatPrice(variant.compare_at_price, locale, currency);
-    const stockNum = Number(variant.stock);
-    const threshold = variant.low_stock_threshold != null ? Number(variant.low_stock_threshold) : null;
-    const isLowStock = threshold !== null && stockNum !== 0 && stockNum <= threshold;
-    const outOfStock = stockNum === 0;
-    return { variant, vtx, vUnitLabel, vOnSale, vPrice, vCompareAt, isLowStock, outOfStock };
+    return { variant, vtx };
   });
 
-// eCl@ss classification
-const eclassInfo = resolveEclassCode(product, product.category ?? null);
-
-// Related products
 const relatedProducts = (product.related_products ?? [])
   .map((r) => r.related_products_id)
   .filter(Boolean);
+
+const mainImageUrl = product.image
+  ? `${DIRECTUS_URL}/assets/${product.image}?width=900&height=1000&fit=cover`
+  : null;
+
+const categoryTx = product.category ? getTranslation(product.category.translations, locale) : null;
+const specLayout = product.spec_layout ?? product.page_template?.spec_layout ?? product.category?.spec_layout ?? template.spec_layout;
+
+const brandLogoUrl = product.brand?.logo
+  ? `${DIRECTUS_URL}/assets/${product.brand.logo}?width=160&height=80&fit=contain`
+  : null;
+
+// Separate feature blocks from other blocks for ordered rendering
+const sortedBlocks = [...(product.blocks ?? [])].sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0));
+const featureBlocks = sortedBlocks.filter(b => !b.hide_block && b.collection === "block_features_grid");
+const otherBlocks = sortedBlocks.filter(b => !b.hide_block && b.collection !== "block_features_grid");
+
+// Category tagline: first word accent, rest normal
+const catWords = (categoryTx?.name ?? "").split(" ");
+const catTaglineFirst = catWords[0] ?? "";
+const catTaglineRest = catWords.slice(1).join(" ");
 ---
 
-<div class="max-w-6xl mx-auto px-6 py-12">
-
-  <!-- Breadcrumb -->
+<div>
+  {/* ─── BREADCRUMB BAR (white, above the dark section) ─────────────────── */}
   {template.show_breadcrumb && categoryPath && allCategories.length > 0 && (
-    <div class="mb-8">
-      <CategoryBreadcrumb
-        {categoryPath}
-        {productsPagePermalink}
-        {locale}
-        {allCategories}
-      />
+    <div class="bg-white border-b border-slate-100">
+      <div class="px-6 md:px-16 py-3 flex items-center justify-between gap-4">
+        <div class="text-slate-500 text-sm">
+          <CategoryBreadcrumb
+            {categoryPath}
+            {productsPagePermalink}
+            {locale}
+            {allCategories}
+          />
+        </div>
+        <a
+          href="/contact"
+          class="shrink-0 px-5 py-2.5 rounded-lg bg-(--accent) text-white text-sm font-semibold whitespace-nowrap hover:opacity-90 transition-opacity"
+        >
+          Information & Request Form
+        </a>
+      </div>
     </div>
   )}
 
-  {/* Back link fallback when no category breadcrumb */}
-  {(!template.show_breadcrumb || !categoryPath) && (
-    <nav class="mb-8 text-sm text-slate-500">
-      <a href={`/${locale}${productsPagePermalink}`} class="hover:text-(--accent) transition-colors">
-        ← {productsPagePermalink.replace(/^\//, "")}
-      </a>
-    </nav>
-  )}
+  {/* ─── HERO (dark section — image fills full height from top) ─────────── */}
+  <section class="bg-zinc-950 text-white">
 
-  <div class="grid md:grid-cols-2 gap-12 items-start">
+    {/* Two-column hero: text left | image right (full bleed, no top offset) */}
+    <div class="grid md:grid-cols-[45%_55%] min-h-[85vh]">
 
-    <!-- Gallery section -->
-    {sections.includes("gallery") && (
-      <ProductGallery
-        mainImage={product.image}
-        gallery={product.gallery}
-        alt={tx?.name ?? ""}
-        layout={template.gallery_layout}
-      />
-    )}
+      {/* Left: text */}
+      <div class="flex flex-col justify-center gap-6 px-6 md:px-20 py-20">
 
-    <!-- Info column -->
-    <div class="flex flex-col gap-5">
+        {/* Category tagline */}
+        {categoryTx?.name && (
+          <p class="text-xs font-bold tracking-[0.2em] uppercase">
+            <span class="text-(--accent)">{catTaglineFirst}</span>
+            {catTaglineRest && <span class="text-white/50"> {catTaglineRest}</span>}
+          </p>
+        )}
 
-      <!-- Category label -->
-      {product.category && (
-        <p class="text-xs font-semibold tracking-widest uppercase text-(--accent)">
-          {getTranslation(product.category.translations, locale)?.name}
-        </p>
-      )}
+        {/* Product name */}
+        {tx?.name && (
+          <h1 class="text-4xl md:text-5xl lg:text-[3.25rem] font-extrabold leading-[1.1] text-white">
+            {tx.name}
+          </h1>
+        )}
 
-      <!-- Product name -->
-      {tx?.name && (
-        <h1 class="text-3xl md:text-4xl font-extrabold leading-tight text-slate-900">
-          {tx.name}
-        </h1>
-      )}
+        {/* Tagline */}
+        {tx?.tagline && (
+          <p class="text-base text-white/50 leading-relaxed max-w-sm">
+            {tx.tagline}
+          </p>
+        )}
 
-      <!-- Tags (always shown near title if present) -->
-      {(product.tags ?? []).length > 0 && (
-        <ProductTags tags={product.tags} {locale} />
-      )}
+        {/* Model range */}
+        {tx?.model_range && (
+          <div class="flex items-center gap-3 text-sm text-white/60">
+            <span class="text-(--accent) font-bold text-2xl leading-none">›</span>
+            <span class="tracking-wide">{tx.model_range}</span>
+          </div>
+        )}
 
-      <!-- Brand section -->
-      {sections.includes("brand") && product.brand && (
-        <ProductBrandBadge brand={product.brand} {locale} />
-      )}
-
-      <!-- eCl@ss badge -->
-      {eclassInfo && (
-        <EclassBadge code={eclassInfo.code} version={eclassInfo.version} />
-      )}
-
-      <!-- Price section -->
-      {sections.includes("price") && !product.rfq_enabled && price && (
-        <div class="flex items-center gap-3 flex-wrap">
-          <span class="text-2xl font-bold text-slate-900">{price}</span>
-          {unitLabel && (
-            <span class="text-sm text-slate-400">/ {unitLabel}</span>
-          )}
-          {onSale && (
-            <>
-              <span class="text-lg text-slate-400 line-through">{compareAt}</span>
-              <span class="text-sm font-semibold px-2 py-0.5 rounded bg-red-100 text-red-600">Sale</span>
-            </>
-          )}
-        </div>
-      )}
-
-      <!-- RFQ CTA -->
-      {product.rfq_enabled && (
-        <div class="flex flex-col gap-2 p-4 rounded-xl bg-slate-50 border border-slate-200">
-          <p class="text-sm font-semibold text-slate-800">Price on Request</p>
-          {product.rfq_min_quantity && (
-            <p class="text-xs text-slate-500">Minimum order: {product.rfq_min_quantity} units</p>
-          )}
-          {product.rfq_lead_time_days && (
-            <p class="text-xs text-slate-500">Lead time: ~{product.rfq_lead_time_days} business days</p>
-          )}
+        {/* CTA buttons */}
+        <div class="flex flex-wrap gap-4 mt-2">
           <a
-            href={`mailto:?subject=Quote Request: ${tx?.name ?? product.slug}`}
-            class="mt-1 inline-flex items-center justify-center px-4 py-2 rounded-lg bg-(--accent) text-white text-sm font-semibold hover:opacity-90 transition-opacity"
+            href="/contact"
+            class="inline-flex items-center px-6 py-3 rounded-lg border border-white/25 text-white font-semibold text-sm hover:bg-white/10 transition-colors"
           >
-            Request a Quote
+            Information & Request Form
+          </a>
+          <a
+            href="#key-features"
+            class="inline-flex items-center gap-2 text-white/50 text-sm font-medium hover:text-white/80 transition-colors"
+          >
+            Key Features
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
           </a>
         </div>
-      )}
 
-      <!-- SKU section -->
-      {sections.includes("sku") && product.sku && (
-        <p class="text-xs font-mono text-slate-400">SKU: {product.sku}</p>
-      )}
+      </div>
 
-      <!-- Description section -->
-      {sections.includes("description") && tx?.description && (
-        <p class="text-base text-slate-600 leading-relaxed">{tx.description}</p>
-      )}
-
-      <!-- Variants section -->
-      {sections.includes("variants") && variantRows.length > 0 && (
-        <div class="flex flex-col gap-3 pt-2">
-          <p class="text-sm font-semibold text-slate-700">Options</p>
-          <div class="flex flex-col gap-2">
-            {variantRows.map(({ variant, vtx, vUnitLabel, vOnSale, vPrice, vCompareAt, isLowStock, outOfStock }) => (
-              <div class="flex items-center justify-between gap-3 rounded-lg border border-slate-200 px-4 py-3 hover:border-(--accent) transition-colors cursor-pointer">
-                <div class="flex flex-col gap-0.5">
-                  <span class="text-sm font-medium text-slate-800">{vtx?.name ?? variant.sku}</span>
-                  {variant.options && variant.options.length > 0 && (
-                    <span class="text-xs text-slate-400">
-                      {variant.options.map((o) => `${o.attribute}: ${o.value}`).join(" · ")}
-                    </span>
-                  )}
-                </div>
-                <div class="flex items-center gap-2 shrink-0 flex-wrap justify-end">
-                  {!product.rfq_enabled && vPrice && (
-                    <span class="text-sm font-bold">{vPrice}{vUnitLabel ? ` / ${vUnitLabel}` : ""}</span>
-                  )}
-                  {vOnSale && <span class="text-xs text-slate-400 line-through">{vCompareAt}</span>}
-                  {outOfStock && <span class="text-xs text-slate-400">Out of stock</span>}
-                  {isLowStock && <span class="text-xs text-orange-500 font-medium">Low stock</span>}
-                </div>
-              </div>
-            ))}
+      {/* Right: full-bleed product image */}
+      <div class="relative min-h-72 md:min-h-full">
+        {mainImageUrl ? (
+          <img
+            src={mainImageUrl}
+            alt={tx?.name ?? ""}
+            class="absolute inset-0 w-full h-full object-cover object-center"
+            loading="eager"
+          />
+        ) : (
+          <div class="absolute inset-0 bg-zinc-800" />
+        )}
+        {brandLogoUrl && (
+          <div class="absolute bottom-8 left-8 z-10">
+            <img src={brandLogoUrl} alt="" class="h-14 w-auto" loading="eager" />
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
     </div>
-  </div>
+  </section>
 
-  <!-- Below-the-fold sections driven by template order -->
-
-  {sections.includes("specs") && (product.specs ?? []).length > 0 && (
-    <div class="mt-16">
-      <h2 class="text-xl font-bold text-slate-900 mb-6">Specifications</h2>
-      <ProductSpecs
-        specs={product.specs}
+  {/* ─── KEY FEATURES (block_features_grid from product blocks) ────────────── */}
+  {sections.includes("content_blocks") && featureBlocks.length > 0 && (
+    <div id="key-features">
+      <PageBlocks
+        blocks={featureBlocks as PageBlock[]}
         {locale}
-        layout={template.spec_layout}
+        pagePermalink={productsPagePermalink}
       />
     </div>
   )}
 
+  {/* ─── TECHNICAL SPECIFICATIONS ──────────────────────────────────────────── */}
+  {sections.includes("specs") && (product.specs ?? []).length > 0 && (
+    <section class="py-20 bg-white">
+      <div class="max-w-7xl mx-auto px-6 md:px-16">
+
+        {/* Section header */}
+        <div class="mb-12">
+          <p class="text-xs font-bold tracking-[0.2em] uppercase mb-4 text-slate-400">
+            <span class="text-(--accent)">TECHNICAL</span> SPECIFICATIONS
+          </p>
+          {tx?.description && (
+            <p class="text-xl md:text-2xl font-medium leading-snug text-slate-800 max-w-3xl">
+              {tx.description}
+            </p>
+          )}
+        </div>
+
+        {/* 2-column: drawings left | specs accordion right */}
+        <div class:list={[
+          "grid gap-12 items-start",
+          (product.gallery ?? []).length > 0 ? "md:grid-cols-[260px_1fr]" : ""
+        ]}>
+
+          {/* Left: engineering drawings (spec_drawing_1/2/3 fields) */}
+          {(product.spec_drawing_1 || product.spec_drawing_2 || product.spec_drawing_3) && (
+            <div class="hidden md:flex flex-col gap-10 sticky top-24">
+              {[product.spec_drawing_1, product.spec_drawing_2, product.spec_drawing_3]
+                .filter(Boolean)
+                .map(uuid => (
+                  <img
+                    src={`${DIRECTUS_URL}/assets/${uuid}?width=260&fit=contain&format=webp`}
+                    alt=""
+                    class="w-full object-contain opacity-70 mix-blend-multiply"
+                    loading="lazy"
+                  />
+                ))}
+            </div>
+          )}
+
+          {/* Right: spec groups as accordions */}
+          <ProductSpecs
+            specs={product.specs}
+            variants={variantRows.map(r => r.variant)}
+{locale}
+            layout={specLayout as "table" | "accordion" | "comparison"}
+          />
+
+        </div>
+      </div>
+    </section>
+  )}
+
+  {/* ─── PHOTO GALLERY STRIP ───────────────────────────────────────────────── */}
+  {sections.includes("gallery") && (product.gallery ?? []).length > 0 && (
+    <div class="overflow-x-auto flex gap-1 bg-white">
+      {(product.gallery ?? []).map(g => (
+        <img
+          src={`${DIRECTUS_URL}/assets/${g.directus_files_id}?width=700&height=500&fit=cover`}
+          alt=""
+          class="h-56 md:h-80 w-auto flex-none object-cover"
+          loading="lazy"
+        />
+      ))}
+    </div>
+  )}
+
+  {/* ─── CTA BANNER & OTHER BLOCKS ─────────────────────────────────────────── */}
+  {sections.includes("content_blocks") && otherBlocks.length > 0 && (
+    <PageBlocks
+      blocks={otherBlocks as PageBlock[]}
+      {locale}
+      pagePermalink={productsPagePermalink}
+    />
+  )}
+
+  {/* ─── CERTIFICATIONS ────────────────────────────────────────────────────── */}
   {sections.includes("certifications") && (product.certifications ?? []).length > 0 && (
-    <div class="mt-16">
+    <div class="max-w-6xl mx-auto px-6 md:px-16 py-12">
       <h2 class="text-xl font-bold text-slate-900 mb-6">Certifications</h2>
       <ProductCertifications certifications={product.certifications} {locale} />
     </div>
   )}
 
+  {/* ─── VOLUME PRICING ────────────────────────────────────────────────────── */}
   {sections.includes("pricing_table") && (product.pricing_tiers ?? []).length > 0 && (
-    <div class="mt-16">
+    <div class="max-w-6xl mx-auto px-6 md:px-16 py-12">
       <h2 class="text-xl font-bold text-slate-900 mb-6">Volume Pricing</h2>
       <ProductPricingTable tiers={product.pricing_tiers} {locale} {currency} />
     </div>
   )}
 
-  {sections.includes("description") && tx?.content && (
-    <div
-      class="mt-16 prose prose-lg max-w-none prose-headings:font-bold prose-a:text-(--accent)"
-      set:html={tx.content}
-    />
-  )}
-
+  {/* ─── RELATED PRODUCTS ──────────────────────────────────────────────────── */}
   {sections.includes("related") && relatedProducts.length > 0 && (
-    <div class="mt-16">
+    <div class="max-w-6xl mx-auto px-6 md:px-16 py-12">
       <h2 class="text-xl font-bold text-slate-900 mb-6">Related Products</h2>
       <ul class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 list-none p-0 m-0">
         {relatedProducts.map((rel) => {
@@ -266,7 +293,7 @@ const relatedProducts = (product.related_products ?? [])
                 {relImageUrl ? (
                   <img src={relImageUrl} alt={relTx?.name ?? ""} class="w-full aspect-square object-cover" />
                 ) : (
-                  <div class="w-full aspect-square bg-slate-100 flex items-center justify-center text-3xl text-slate-300">📦</div>
+                  <div class="w-full aspect-square bg-slate-100 flex items-center justify-center text-3xl text-slate-300">⚙</div>
                 )}
               </a>
               <div class="p-3 flex flex-col gap-1">
@@ -290,16 +317,6 @@ const relatedProducts = (product.related_products ?? [])
           );
         })}
       </ul>
-    </div>
-  )}
-
-  {sections.includes("content_blocks") && (product.blocks ?? []).length > 0 && (
-    <div class="mt-16">
-      <PageBlocks
-        blocks={product.blocks as PageBlock[]}
-        {locale}
-        pagePermalink={productsPagePermalink}
-      />
     </div>
   )}
 

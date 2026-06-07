@@ -1,90 +1,200 @@
 ---
-import type { Globals, Page } from "../lib/directus";
+import type { Globals } from "../lib/directus";
 import { DIRECTUS_URL } from "../lib/directus";
 import type { Language } from "../lib/i18n";
+import type { Navigation } from "../lib/directus";
 
 interface Props {
   globals: Globals;
-  navPages: Pick<Page, "permalink" | "title">[];
+  navigation: Navigation | null;
   language: Language;
   languages: Language[];
   currentPath: string;
 }
 
-const { globals, navPages, language, languages, currentPath } = Astro.props;
+const { globals, navigation, language, languages, currentPath } = Astro.props;
 
-const logoUrl = globals.logo ? `${DIRECTUS_URL}/assets/${globals.logo}` : null;
+const logoUrl = globals.logo_dark_mode
+  ? `${DIRECTUS_URL}/assets/${globals.logo_dark_mode}`
+  : globals.logo
+    ? `${DIRECTUS_URL}/assets/${globals.logo}`
+    : null;
+
 const siteTitle = globals.title ?? "Barkomas";
 
-function pageHref(permalink: string) {
-  return permalink === "/" ? `/${language.code}` : `/${language.code}${permalink}`;
+function localeHref(locale: string) {
+  return currentPath.replace(`/${language.code}`, `/${locale}`) || `/${locale}`;
 }
 
-function localeHref(locale: string) {
-  // Swap the locale segment in the current path: /en-US/about → /fr-FR/about
-  return currentPath.replace(`/${language.code}`, `/${locale}`) || `/${locale}`;
+const topItems = (navigation?.items ?? []).sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0));
+
+function navHref(url: string | null | undefined): string {
+  if (!url) return "#";
+  if (url.startsWith("http") || url.startsWith("mailto:") || url.startsWith("tel:")) return url;
+  return `/${language.code}${url}`;
 }
 ---
 
-<header class="sticky top-0 z-50 bg-white/90 backdrop-blur-sm border-b border-slate-200">
+<header data-navbar class="fixed top-0 z-50 w-full border-b border-transparent transition-colors duration-300">
   <div class="max-w-6xl mx-auto px-6 h-16 flex items-center gap-8">
-    <!-- Logo / site title -->
     <a href={`/${language.code}`} class="flex items-center gap-2.5 shrink-0 no-underline">
-      {
-        logoUrl ? (
-          <img src={logoUrl} alt={siteTitle} class="h-8 w-auto" />
-        ) : (
-          <span class="text-lg font-bold text-slate-900">{siteTitle}</span>
-        )
-      }
+      {logoUrl ? (
+        <img src={logoUrl} alt={siteTitle} class="h-8 w-auto" />
+      ) : (
+        <span class="text-lg font-bold text-white">{siteTitle}</span>
+      )}
     </a>
 
-    <!-- Nav links -->
-    <nav class="flex items-center gap-1 flex-1" aria-label="Main navigation">
-      {
-        navPages.map((page) => {
-          const href = pageHref(page.permalink);
-          const isActive = currentPath === href;
-          return (
-            <a
-              href={href}
-              aria-current={isActive ? "page" : undefined}
-              class:list={[
-                "px-3 py-1.5 rounded-md text-sm font-medium no-underline transition-colors",
-                isActive
-                  ? "bg-slate-100 text-slate-900"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-50",
-              ]}
+    <nav class="hidden md:flex items-center gap-1 flex-1" aria-label="Main navigation">
+      {topItems.map((item) => {
+        const hasChildren = item.type === "group" && (item.children ?? []).length > 0;
+        const children = (item.children ?? []).sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0));
+
+        return hasChildren ? (
+          <div class="relative group">
+            <button
+              class="flex items-center gap-1 px-3 py-1.5 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition-colors"
+              aria-haspopup="true"
             >
-              {page.title}
-            </a>
-          );
-        })
-      }
+              {item.title}
+              <span class="text-xs opacity-60 group-hover:rotate-180 transition-transform">▾</span>
+            </button>
+            <div class="absolute top-full left-0 mt-1 w-56 rounded-lg bg-slate-800 border border-slate-700 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50">
+              {children.map((child) => (
+                <a
+                  href={navHref(child.url)}
+                  class="block px-4 py-2.5 text-sm text-slate-300 hover:text-white hover:bg-slate-700 first:rounded-t-lg last:rounded-b-lg transition-colors"
+                >
+                  {child.title}
+                </a>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <a
+            href={navHref(item.url)}
+            class:list={[
+              "px-3 py-1.5 rounded-md text-sm font-medium no-underline transition-colors",
+              currentPath.includes(item.url ?? "____")
+                ? "bg-slate-700 text-white"
+                : "text-slate-300 hover:text-white hover:bg-slate-800",
+            ]}
+          >
+            {item.title}
+          </a>
+        );
+      })}
     </nav>
 
-    <!-- Locale dropdown -->
-    <div class="shrink-0">
+    <div class="hidden md:block shrink-0">
       <select
         id="locale-switcher"
         aria-label="Switch language"
-        class="text-sm font-medium text-slate-700 bg-transparent border border-slate-200 rounded-md px-2 py-1.5 cursor-pointer hover:border-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-300"
+        class="text-xs font-medium text-slate-300 bg-slate-800 border border-slate-700 rounded-md px-2 py-1.5 cursor-pointer hover:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500"
       >
-        {
-          languages.map((lang) => (
+        {languages.map((lang) => (
+          <option value={localeHref(lang.code)} selected={lang.code === language.code}>
+            {lang.name}
+          </option>
+        ))}
+      </select>
+    </div>
+
+    <button
+      id="mobile-menu-toggle"
+      class="md:hidden ml-auto flex flex-col gap-1.5 w-7 h-7 items-center justify-center"
+      aria-label="Toggle mobile menu"
+      aria-expanded="false"
+    >
+      <span class="hamburger-bar block w-5 h-0.5 bg-white transition-all"></span>
+      <span class="hamburger-bar block w-5 h-0.5 bg-white transition-all"></span>
+      <span class="hamburger-bar block w-5 h-0.5 bg-white transition-all"></span>
+    </button>
+  </div>
+
+  <div
+    id="mobile-menu"
+    class="md:hidden hidden border-t border-slate-800 bg-slate-900"
+    aria-hidden="true"
+  >
+    <div class="px-6 py-4 flex flex-col gap-1">
+      {topItems.map((item) => {
+        const children = item.type === "group" ? (item.children ?? []).sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0)) : [];
+        return (
+          <div>
+            {item.type === "group" ? (
+              <>
+                <p class="text-xs font-semibold tracking-widest uppercase text-slate-500 px-3 py-2 mt-2">
+                  {item.title}
+                </p>
+                {children.map((child) => (
+                  <a
+                    href={navHref(child.url)}
+                    class="block px-3 py-2 text-sm text-slate-300 hover:text-white hover:bg-slate-800 rounded-md transition-colors"
+                  >
+                    {child.title}
+                  </a>
+                ))}
+              </>
+            ) : (
+              <a
+                href={navHref(item.url)}
+                class="block px-3 py-2 text-sm text-slate-300 hover:text-white hover:bg-slate-800 rounded-md transition-colors"
+              >
+                {item.title}
+              </a>
+            )}
+          </div>
+        );
+      })}
+
+      <div class="mt-4 pt-4 border-t border-slate-800">
+        <select
+          id="locale-switcher-mobile"
+          aria-label="Switch language"
+          class="w-full text-sm font-medium text-slate-300 bg-slate-800 border border-slate-700 rounded-md px-3 py-2 cursor-pointer"
+        >
+          {languages.map((lang) => (
             <option value={localeHref(lang.code)} selected={lang.code === language.code}>
               {lang.name}
             </option>
-          ))
-        }
-      </select>
+          ))}
+        </select>
+      </div>
     </div>
   </div>
 </header>
 
 <script>
-  const select = document.getElementById("locale-switcher") as HTMLSelectElement | null;
-  select?.addEventListener("change", () => {
-    if (select.value) window.location.href = select.value;
+  const nav = document.querySelector("[data-navbar]") as HTMLElement | null;
+  function updateNav() {
+    if (window.scrollY > 60) {
+      nav?.classList.add("bg-slate-900", "border-slate-800", "shadow-lg");
+      nav?.classList.remove("border-transparent");
+    } else {
+      nav?.classList.remove("bg-slate-900", "border-slate-800", "shadow-lg");
+      nav?.classList.add("border-transparent");
+    }
+  }
+  window.addEventListener("scroll", updateNav, { passive: true });
+  updateNav();
+
+  const toggle = document.getElementById("mobile-menu-toggle");
+  const menu = document.getElementById("mobile-menu");
+
+  toggle?.addEventListener("click", () => {
+    const isOpen = menu?.classList.toggle("hidden") === false;
+    toggle.setAttribute("aria-expanded", String(isOpen));
+    menu?.setAttribute("aria-hidden", String(!isOpen));
+  });
+
+  const desktop = document.getElementById("locale-switcher") as HTMLSelectElement | null;
+  desktop?.addEventListener("change", () => {
+    if (desktop.value) window.location.href = desktop.value;
+  });
+
+  const mobile = document.getElementById("locale-switcher-mobile") as HTMLSelectElement | null;
+  mobile?.addEventListener("change", () => {
+    if (mobile.value) window.location.href = mobile.value;
   });
 </script>

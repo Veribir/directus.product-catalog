@@ -1,0 +1,301 @@
+---
+import type { BlockFeaturesGrid } from "../../lib/directus";
+import { DIRECTUS_URL } from "../../lib/directus";
+import { getTranslation } from "../../lib/i18n";
+
+interface Props {
+  block: BlockFeaturesGrid;
+  background: "light" | "dark";
+  locale: string;
+  pagePermalink: string;
+}
+
+const { block, background, locale } = Astro.props;
+const tx = getTranslation(block.translations, locale);
+const isDark = background === "dark";
+const isShowcase = block.layout === "showcase_left" || block.layout === "showcase_right";
+const isGrid2 = !isShowcase && block.layout === "grid_2";
+const isStandardGrid = !isShowcase && !isGrid2;
+const imageOnRight = block.layout === "showcase_right";
+
+const items = (block.items ?? []).sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0));
+
+const imageUrl = block.image
+  ? `${DIRECTUS_URL}/assets/${block.image}?width=800&height=900&fit=cover`
+  : null;
+
+const colClass: Record<string, string> = {
+  grid_3: "sm:grid-cols-2 lg:grid-cols-3",
+  grid_4: "sm:grid-cols-2 lg:grid-cols-4",
+};
+
+// Tagline: first word in accent, rest in muted
+const taglineParts = (tx?.tagline ?? "").split(" ");
+const taglineFirst = taglineParts.shift() ?? "";
+const taglineRest = taglineParts.join(" ");
+
+// For grid_2: group items into pairs for row-divider layout
+const itemPairs: (typeof items)[] = [];
+for (let i = 0; i < items.length; i += 2) {
+  itemPairs.push(items.slice(i, i + 2));
+}
+---
+
+{/* ── SHOWCASE: two-column image card + feature list ────────────────────── */}
+{isShowcase && (
+  <section
+    data-animate
+    class:list={["py-20 md:py-28 px-6 md:px-16", isDark ? "bg-zinc-900 text-slate-50" : "bg-white text-slate-900"]}
+  >
+    <div class="max-w-7xl mx-auto">
+      <div class:list={["grid lg:gap-0 items-stretch min-h-140", imageOnRight ? "lg:grid-cols-[58%_42%]" : "lg:grid-cols-[42%_58%]"]}>
+
+        {/* Image card (left) */}
+        {!imageOnRight && (
+          <div class="relative rounded-3xl overflow-hidden bg-slate-800 min-h-72 lg:min-h-full mr-0 lg:mr-12">
+            {imageUrl
+              ? <img src={imageUrl} alt={tx?.image_title ?? ""} class="absolute inset-0 w-full h-full object-cover" loading="eager" />
+              : <div class="absolute inset-0 bg-slate-700" />
+            }
+            <div class="absolute inset-0 bg-linear-to-t from-black/70 via-black/10 to-transparent" />
+            {block.image_link && (
+              <a href={block.image_link} class="absolute top-5 right-5 w-9 h-9 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/25 transition-colors" aria-label="Learn more">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"/><path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"/></svg>
+              </a>
+            )}
+            {tx?.image_title && (
+              <p class="absolute bottom-6 left-6 right-6 text-white text-xl font-bold leading-snug">{tx.image_title}</p>
+            )}
+          </div>
+        )}
+
+        {/* Content */}
+        <div class:list={["flex flex-col justify-center py-4", imageOnRight ? "pr-0 lg:pr-12" : "pl-0 lg:pl-4"]}>
+          {taglineFirst && (
+            <p class="text-xs font-semibold tracking-[0.2em] uppercase mb-4 text-slate-500">
+              <span class="text-(--accent)">{taglineFirst}</span>
+              {taglineRest && <span> {taglineRest}</span>}
+            </p>
+          )}
+          {tx?.description && (
+            <p class:list={["text-2xl md:text-3xl font-medium leading-snug mb-8 max-w-lg", isDark ? "text-slate-100" : "text-slate-800"]}>
+              {tx.description}
+            </p>
+          )}
+
+          {/* Feature items — 2 shown at a time via JS */}
+          <div class="grid grid-cols-2 gap-x-10 gap-y-7 mb-8" id="fg-grid">
+            {items.map((item, index) => {
+              const itx = getTranslation(item.translations, locale);
+              const iconUrl = item.image
+                ? `${DIRECTUS_URL}/assets/${item.image}?width=64&height=64&fit=contain`
+                : null;
+              return (
+                <div class="fg-item flex flex-col gap-3" data-idx={index} style={index >= 2 ? "display:none" : ""}>
+                  {iconUrl
+                    ? <img src={iconUrl} alt="" class="w-8 h-8 object-contain" loading="lazy" />
+                    : <div class="w-8 h-8 rounded bg-slate-200 flex items-center justify-center text-xs font-bold text-slate-500">{index + 1}</div>
+                  }
+                  <p class:list={["text-sm font-medium leading-snug", isDark ? "text-slate-300" : "text-slate-700"]}>{itx?.headline}</p>
+                </div>
+              );
+            })}
+          </div>
+
+          <div class:list={["flex items-center justify-between pt-5 border-t", isDark ? "border-slate-700" : "border-slate-200"]}>
+            {tx?.cta_label && block.cta_url && (
+              <a href={block.cta_url} class="text-sm font-semibold text-(--accent) hover:underline inline-flex items-center gap-1">
+                {tx.cta_label} <span aria-hidden="true">→</span>
+              </a>
+            )}
+            {items.length > 2 && (
+              <div class="flex gap-2 ml-auto">
+                <button
+                  id="fg-prev"
+                  class:list={["w-9 h-9 rounded-full border flex items-center justify-center transition-colors", isDark ? "border-slate-600 text-slate-300 hover:border-white hover:text-white" : "border-slate-300 text-slate-500 hover:border-slate-800 hover:text-slate-900"]}
+                  aria-label="Previous"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                </button>
+                <button
+                  id="fg-next"
+                  class:list={["w-9 h-9 rounded-full border flex items-center justify-center transition-colors", isDark ? "border-slate-600 text-slate-300 hover:border-white hover:text-white" : "border-slate-300 text-slate-500 hover:border-slate-800 hover:text-slate-900"]}
+                  aria-label="Next"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Image card (right) */}
+        {imageOnRight && (
+          <div class="relative rounded-3xl overflow-hidden bg-slate-800 min-h-72 lg:min-h-full ml-0 lg:ml-12">
+            {imageUrl
+              ? <img src={imageUrl} alt={tx?.image_title ?? ""} class="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+              : <div class="absolute inset-0 bg-slate-700" />
+            }
+            <div class="absolute inset-0 bg-linear-to-t from-black/70 via-black/10 to-transparent" />
+            {block.image_link && (
+              <a href={block.image_link} class="absolute top-5 right-5 w-9 h-9 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/25 transition-colors" aria-label="Learn more">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"/><path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"/></svg>
+              </a>
+            )}
+            {tx?.image_title && (
+              <p class="absolute bottom-6 left-6 right-6 text-white text-xl font-bold leading-snug">{tx.image_title}</p>
+            )}
+          </div>
+        )}
+
+      </div>
+    </div>
+  </section>
+)}
+
+{/* ── GRID 2: numbered product-features layout — image above, content below ── */}
+{isGrid2 && (
+  <section
+    data-animate
+    class:list={["py-20 md:py-28 px-6 md:px-16", isDark ? "bg-zinc-900 text-slate-50" : "bg-white text-slate-900"]}
+  >
+    <div class="max-w-6xl mx-auto">
+      {(tx?.tagline || tx?.headline || tx?.description) && (
+        <div class="mb-14 text-center max-w-3xl mx-auto">
+          {/* Decorative section mark — use block.image if set (small logo-mark style) */}
+          {block.image && (
+            <img
+              src={`${DIRECTUS_URL}/assets/${block.image}?width=44&height=88&fit=contain`}
+              alt=""
+              class="w-5 h-10 mx-auto mb-5 object-contain opacity-50"
+              loading="lazy"
+            />
+          )}
+          {tx?.tagline && (
+            <p class="text-xs font-bold tracking-[0.2em] uppercase mb-4">
+              <span class="text-(--accent)">{taglineFirst}</span>
+              {taglineRest && <span class:list={[isDark ? "text-slate-400" : "text-slate-400"]}> {taglineRest}</span>}
+            </p>
+          )}
+          {tx?.headline && (
+            <h2 class:list={["text-3xl md:text-4xl font-bold leading-snug mb-4", isDark ? "text-slate-50" : "text-slate-900"]}>
+              {tx.headline}
+            </h2>
+          )}
+          {tx?.description && (
+            <p class:list={["text-base md:text-lg leading-relaxed", isDark ? "text-slate-300" : "text-slate-600"]}>
+              {tx.description}
+            </p>
+          )}
+        </div>
+      )}
+
+      {/* 2-column grid — each item: hr → image (224×180, rounded) → number → title → desc */}
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-16 gap-y-22.5">
+        {items.map((item, globalIdx) => {
+          const itx = getTranslation(item.translations, locale);
+          const thumbUrl = item.image
+            ? `${DIRECTUS_URL}/assets/${item.image}?width=448&height=360&fit=cover`
+            : null;
+          return (
+            <div class="flex flex-col">
+              <hr class:list={["border-0 border-t mb-8", isDark ? "border-slate-700" : "border-slate-200"]} />
+              {thumbUrl && (
+                <img
+                  src={thumbUrl}
+                  alt=""
+                  class="w-56 h-44 rounded-2xl object-cover mb-5"
+                  loading="lazy"
+                />
+              )}
+              <div class="flex flex-col gap-2">
+                <span class:list={["text-2xl font-bold leading-none text-(--accent)"]}>
+                  {String(globalIdx + 1).padStart(2, "0")}
+                </span>
+                {itx?.headline && (
+                  <h3 class:list={["text-base font-bold leading-snug", isDark ? "text-slate-100" : "text-slate-900"]}>
+                    {itx.headline}
+                  </h3>
+                )}
+                {itx?.description && (
+                  <p class:list={["text-sm leading-relaxed mt-1", isDark ? "text-slate-400" : "text-slate-500"]}>
+                    {itx.description}
+                  </p>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+)}
+
+{/* ── STANDARD GRID: grid_3 / grid_4 card layout ───────────────────────── */}
+{isStandardGrid && (
+  <section
+    data-animate
+    class:list={["py-20 md:py-28 px-6 md:px-16", isDark ? "bg-zinc-900 text-slate-50" : "bg-white text-slate-900"]}
+  >
+    <div class="max-w-6xl mx-auto">
+      {(tx?.tagline || tx?.headline) && (
+        <div class="mb-12">
+          {tx?.tagline && (
+            <p class="text-xs font-semibold tracking-[0.2em] uppercase mb-3">
+              <span class="text-(--accent)">{taglineFirst}</span>
+              {taglineRest && <span class:list={[isDark ? "text-slate-400" : "text-slate-500"]}> {taglineRest}</span>}
+            </p>
+          )}
+          {tx?.headline && (
+            <h2 class="text-3xl md:text-4xl font-bold leading-snug">{tx.headline}</h2>
+          )}
+          {tx?.description && (
+            <p class:list={["mt-3 text-base leading-relaxed max-w-2xl", isDark ? "text-slate-300" : "text-slate-600"]}>
+              {tx.description}
+            </p>
+          )}
+        </div>
+      )}
+      <div class:list={["grid gap-8", colClass[block.layout ?? "grid_3"] ?? colClass.grid_3]}>
+        {items.map((item, index) => {
+          const itx = getTranslation(item.translations, locale);
+          const iconUrl = item.image
+            ? `${DIRECTUS_URL}/assets/${item.image}?width=80&height=80&fit=contain`
+            : null;
+          return (
+            <div class="flex flex-col gap-4">
+              {iconUrl
+                ? <img src={iconUrl} alt="" class="w-12 h-12 object-contain" loading="lazy" />
+                : <div class:list={["w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold text-(--accent)", isDark ? "bg-slate-800" : "bg-slate-100"]}>{index + 1}</div>
+              }
+              {itx?.headline && <h3 class="text-lg font-bold leading-snug">{itx.headline}</h3>}
+              {itx?.description && (
+                <p class:list={["text-sm leading-relaxed", isDark ? "text-slate-300" : "text-slate-600"]}>{itx.description}</p>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+)}
+
+<script>
+  const grid = document.getElementById("fg-grid");
+  if (grid) {
+    const allItems = grid.querySelectorAll<HTMLElement>(".fg-item");
+    const total = allItems.length;
+    if (total > 2) {
+      let page = 0;
+      const pages = Math.ceil(total / 2);
+      function showPage(p: number) {
+        page = (p + pages) % pages;
+        allItems.forEach((el, i) => {
+          el.style.display = i >= page * 2 && i < page * 2 + 2 ? "" : "none";
+        });
+      }
+      document.getElementById("fg-prev")?.addEventListener("click", () => showPage(page - 1));
+      document.getElementById("fg-next")?.addEventListener("click", () => showPage(page + 1));
+    }
+  }
+</script>

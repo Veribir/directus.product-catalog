@@ -1,0 +1,168 @@
+---
+import type { BlockHeroSlider } from "../../lib/directus";
+import { DIRECTUS_URL } from "../../lib/directus";
+import { getTranslation } from "../../lib/i18n";
+
+interface Props {
+  block: BlockHeroSlider;
+  background: "light" | "dark";
+  locale: string;
+  pagePermalink: string;
+}
+
+const { block, locale } = Astro.props;
+
+const slides = (block.slides ?? [])
+  .filter((s) => s.status === "published")
+  .sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0));
+
+const brandLogoUrl = block.brand_logo
+  ? `${DIRECTUS_URL}/assets/${block.brand_logo}?width=200&height=80&fit=contain`
+  : null;
+---
+
+<section class="relative min-h-screen flex items-center overflow-hidden bg-zinc-950 -mt-16">
+  {slides.map((slide, index) => {
+    const tx = getTranslation(slide.translations, locale);
+    const videoUrl = slide.video ? `${DIRECTUS_URL}/assets/${slide.video}` : null;
+    const imageUrl = slide.image
+      ? `${DIRECTUS_URL}/assets/${slide.image}?width=1920&height=1080&fit=cover`
+      : null;
+    return (
+      <div
+        class:list={[
+          "hero-slide absolute inset-0 flex items-end transition-opacity duration-700",
+          index === 0 ? "opacity-100 z-10" : "opacity-0 z-0",
+        ]}
+        data-slide={index}
+      >
+        {videoUrl ? (
+          <video
+            src={videoUrl}
+            autoplay
+            muted
+            loop
+            playsinline
+            class="absolute inset-0 w-full h-full object-cover"
+          />
+        ) : imageUrl ? (
+          <img
+            src={imageUrl}
+            alt=""
+            class="absolute inset-0 w-full h-full object-cover"
+            loading={index === 0 ? "eager" : "lazy"}
+          />
+        ) : null}
+        <div class="absolute inset-0 bg-linear-to-r from-black/75 via-black/40 to-transparent" />
+        <div class="relative z-10 w-full max-w-6xl mx-auto px-6 md:px-16 pb-32 md:pb-36">
+          {tx?.tagline && (
+            <p class="text-xs font-semibold tracking-[0.2em] uppercase mb-4 text-slate-400">
+              {tx.tagline}
+            </p>
+          )}
+          {tx?.headline && (
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight text-white max-w-2xl mb-6">
+              {tx.headline}
+            </h1>
+          )}
+          {tx?.description && (
+            <p class="text-sm md:text-base text-slate-300 max-w-md mb-8 leading-relaxed">
+              {tx.description}
+            </p>
+          )}
+          {tx?.cta_label && tx.cta_url && (
+            <a
+              href={tx.cta_url}
+              class="inline-flex items-center gap-2 px-7 py-3.5 rounded-lg bg-(--accent) text-white font-semibold text-sm hover:opacity-90 transition-opacity"
+            >
+              {tx.cta_label}
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </a>
+          )}
+        </div>
+      </div>
+    );
+  })}
+
+  {/* Pagination: numbered circles + horizontal line */}
+  {slides.length > 1 && (
+    <div class="absolute bottom-8 left-6 md:left-16 z-20 flex items-center gap-3" style="width: calc(100% - 3rem)">
+      {slides.map((_, index) => (
+        <button
+          class:list={[
+            "hero-dot w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all shrink-0",
+            index === 0
+              ? "border-2 text-white"
+              : "text-white/40 hover:text-white/70",
+          ]}
+          style={index === 0 ? "border-color: var(--accent)" : "border: 1px solid rgba(255,255,255,0.2)"}
+          data-dot={index}
+          aria-label={`Go to slide ${index + 1}`}
+        >
+          {index + 1}
+        </button>
+      ))}
+      <div class="h-px bg-white/20 flex-1" />
+    </div>
+  )}
+
+  {/* Brand logo bottom-right */}
+  {brandLogoUrl && (
+    block.brand_logo_link ? (
+      <a
+        href={block.brand_logo_link}
+        class="absolute bottom-8 right-6 md:right-16 z-20"
+      >
+        <img src={brandLogoUrl} alt="" class="h-10 w-auto" loading="lazy" />
+      </a>
+    ) : (
+      <div class="absolute bottom-8 right-6 md:right-16 z-20">
+        <img src={brandLogoUrl} alt="" class="h-10 w-auto" loading="lazy" />
+      </div>
+    )
+  )}
+</section>
+
+<script>
+  const slides = document.querySelectorAll<HTMLElement>(".hero-slide");
+  const dots = document.querySelectorAll<HTMLButtonElement>(".hero-dot");
+  const total = slides.length;
+
+  if (total > 1) {
+    let current = 0;
+    let timer: ReturnType<typeof setInterval>;
+
+    function goTo(index: number) {
+      slides[current].classList.remove("opacity-100", "z-10");
+      slides[current].classList.add("opacity-0", "z-0");
+      dots[current].style.borderColor = "";
+      dots[current].style.border = "1px solid rgba(255,255,255,0.2)";
+      dots[current].classList.remove("text-white");
+      dots[current].classList.add("text-white/40");
+
+      current = (index + total) % total;
+
+      slides[current].classList.remove("opacity-0", "z-0");
+      slides[current].classList.add("opacity-100", "z-10");
+      dots[current].style.border = "";
+      dots[current].style.borderWidth = "2px";
+      dots[current].style.borderStyle = "solid";
+      dots[current].style.borderColor = `var(--accent)`;
+      dots[current].classList.remove("text-white/40");
+      dots[current].classList.add("text-white");
+    }
+
+    function startTimer() {
+      timer = setInterval(() => goTo(current + 1), 6000);
+    }
+    function resetTimer() { clearInterval(timer); startTimer(); }
+
+    dots.forEach((dot) => {
+      dot.addEventListener("click", () => { goTo(Number(dot.dataset.dot)); resetTimer(); });
+    });
+
+    startTimer();
+  }
+</script>
