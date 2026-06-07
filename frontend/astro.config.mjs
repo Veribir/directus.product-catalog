@@ -22,7 +22,7 @@ export default defineConfig({
   // Site is fully static (no SSR). Set ASTRO_ADAPTER=cloudflare in .env to deploy via
   // the Cloudflare adapter — it makes Cloudflare deploy as static assets correctly
   // instead of guessing via generic framework detection.
-  adapter: ASTRO_ADAPTER === "cloudflare" ? cloudflare({ imageService: "passthrough" }) : undefined,
+  adapter: ASTRO_ADAPTER === "cloudflare" ? cloudflare({ imageService: "passthrough", sessionKVBindingName: "BARKOMAS_MOMENTUM_SESSION" }) : undefined,
 
   integrations: [sitemap()],
 
