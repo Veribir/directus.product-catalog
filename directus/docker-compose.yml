@@ -1,0 +1,36 @@
+services:
+  directus:
+    image: directus/directus:11.17.4
+    container_name: barkomas_directus
+    restart: unless-stopped
+    ports:
+      - "8055:8055"
+    environment:
+      SECRET: ${SECRET}
+
+      # Neon serverless PostgreSQL — uses a single connection string
+      DB_CLIENT: pg
+      DB_CONNECTION_STRING: ${DB_CONNECTION_STRING}
+      DB_SSL__REJECT_UNAUTHORIZED: "false"
+
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+
+      PUBLIC_URL: ${PUBLIC_URL}
+
+      CORS_ENABLED: "true"
+      CORS_ORIGIN: ${CORS_ORIGIN}
+
+      STORAGE_LOCATIONS: ${STORAGE_LOCATIONS}
+      STORAGE_S3_BUCKET: ${STORAGE_S3_BUCKET}
+      STORAGE_S3_ROOT: ${STORAGE_S3_ROOT}
+      STORAGE_S3_DRIVER: ${STORAGE_S3_DRIVER}
+      STORAGE_S3_KEY: ${STORAGE_S3_KEY}
+      STORAGE_S3_SECRET: ${STORAGE_S3_SECRET}
+      STORAGE_S3_ENDPOINT: ${STORAGE_S3_ENDPOINT}
+      STORAGE_S3_REGION: ${STORAGE_S3_REGION}
+    volumes:
+      - ./uploads:/directus/uploads
+      - ./extensions:/directus/extensions
+
+

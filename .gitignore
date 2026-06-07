@@ -1,5 +1,9 @@
-# Directus (tracked separately later)
-directus/
+directus/*
+!directus/extensions
+!directus/docker-compose.yml
+!directus/Dockerfile
+!directus/fly.toml
+!directus/README.md
 
 # Frontend build output & deps
 frontend/node_modules/
