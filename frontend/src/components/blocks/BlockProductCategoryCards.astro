@@ -1,6 +1,6 @@
 ---
 import type { BlockProductCategoryCards } from "../../lib/directus";
-import { ASSETS_URL } from "../../lib/directus";
+import { assetUrl } from "../../lib/assets";
 import { getTranslation } from "../../lib/i18n";
 
 interface Props {
@@ -16,7 +16,7 @@ const tx = getTranslation(block.translations, locale);
 const cards = (block.cards ?? []).sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0));
 
 const brandLogoUrl = block.brand_logo
-  ? `${ASSETS_URL}/${block.brand_logo}?width=200&height=80&fit=contain`
+  ? assetUrl(block.brand_logo, "width=200&height=80&fit=contain")
   : null;
 
 const taglineParts = (tx?.tagline ?? "").split(" ");
@@ -48,10 +48,10 @@ const taglineRest = taglineParts.join(" ");
       {cards.map((card) => {
         const ctx = getTranslation(card.translations, locale);
         const imageUrl = card.image
-          ? `${ASSETS_URL}/${card.image}?width=960&height=720&fit=cover`
+          ? assetUrl(card.image, "width=960&height=720&fit=cover")
           : null;
         const videoUrl = card.video
-          ? `${ASSETS_URL}/${card.video}`
+          ? assetUrl(card.video)
           : null;
         const rawHref = card.link_url ?? "#";
         const href = rawHref !== "#" && !rawHref.startsWith("http")

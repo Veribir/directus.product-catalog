@@ -1,6 +1,6 @@
 ---
 import type { BlockFeaturesGrid } from "../../lib/directus";
-import { ASSETS_URL } from "../../lib/directus";
+import { assetUrl } from "../../lib/assets";
 import { getTranslation } from "../../lib/i18n";
 
 interface Props {
@@ -21,7 +21,7 @@ const imageOnRight = block.layout === "showcase_right";
 const items = (block.items ?? []).sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0));
 
 const imageUrl = block.image
-  ? `${ASSETS_URL}/${block.image}?width=800&height=900&fit=cover`
+  ? assetUrl(block.image, "width=800&height=900&fit=cover")
   : null;
 
 const colClass: Record<string, string> = {
@@ -88,7 +88,7 @@ for (let i = 0; i < items.length; i += 2) {
             {items.map((item, index) => {
               const itx = getTranslation(item.translations, locale);
               const iconUrl = item.image
-                ? `${ASSETS_URL}/${item.image}?width=64&height=64&fit=contain`
+                ? assetUrl(item.image, "width=64&height=64&fit=contain")
                 : null;
               return (
                 <div class="fg-item flex flex-col gap-3" data-idx={index} style={index >= 2 ? "display:none" : ""}>
@@ -165,7 +165,7 @@ for (let i = 0; i < items.length; i += 2) {
           {/* Decorative section mark — use block.image if set (small logo-mark style) */}
           {block.image && (
             <img
-              src={`${ASSETS_URL}/${block.image}?width=44&height=88&fit=contain`}
+              src={assetUrl(block.image, "width=44&height=88&fit=contain")}
               alt=""
               class="w-5 h-10 mx-auto mb-5 object-contain opacity-50"
               loading="lazy"
@@ -195,7 +195,7 @@ for (let i = 0; i < items.length; i += 2) {
         {items.map((item, globalIdx) => {
           const itx = getTranslation(item.translations, locale);
           const thumbUrl = item.image
-            ? `${ASSETS_URL}/${item.image}?width=448&height=360&fit=cover`
+            ? assetUrl(item.image, "width=448&height=360&fit=cover")
             : null;
           return (
             <div class="flex flex-col">
@@ -260,7 +260,7 @@ for (let i = 0; i < items.length; i += 2) {
         {items.map((item, index) => {
           const itx = getTranslation(item.translations, locale);
           const iconUrl = item.image
-            ? `${ASSETS_URL}/${item.image}?width=80&height=80&fit=contain`
+            ? assetUrl(item.image, "width=80&height=80&fit=contain")
             : null;
           return (
             <div class="flex flex-col gap-4">

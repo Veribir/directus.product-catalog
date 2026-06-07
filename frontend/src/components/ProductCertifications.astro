@@ -1,6 +1,6 @@
 ---
 import type { ProductCertification } from "../lib/directus";
-import { ASSETS_URL } from "../lib/directus";
+import { assetUrl } from "../lib/assets";
 import { getTranslation } from "../lib/i18n";
 
 interface Props {
@@ -22,7 +22,7 @@ function formatDate(iso: string | null): string | null {
   {certifications.map(({ product_certifications_id: cert, obtained_at }) => {
     const tx = getTranslation(cert.translations, locale);
     const docUrl = cert.document
-      ? `${ASSETS_URL}/${cert.document}`
+      ? assetUrl(cert.document)
       : null;
     const isExpired = cert.expires_at ? new Date(cert.expires_at) < new Date() : false;
 

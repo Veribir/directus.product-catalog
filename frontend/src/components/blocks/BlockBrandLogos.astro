@@ -1,6 +1,6 @@
 ---
 import type { BlockBrandLogos } from "../../lib/directus";
-import { ASSETS_URL } from "../../lib/directus";
+import { assetUrl } from "../../lib/assets";
 import { getTranslation } from "../../lib/i18n";
 
 interface Props {
@@ -16,7 +16,7 @@ const tx = getTranslation(block.translations, locale);
 const logos = (block.logos ?? []).sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0));
 
 const blockImageUrl = block.image
-  ? `${ASSETS_URL}/${block.image}?width=700&height=700&fit=cover`
+  ? assetUrl(block.image, "width=700&height=700&fit=cover")
   : null;
 ---
 

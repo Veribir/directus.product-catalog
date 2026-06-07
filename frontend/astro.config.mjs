@@ -8,6 +8,8 @@ import tailwindcss from "@tailwindcss/vite";
 
 const { ASTRO_ADAPTER, SITE_URL } = loadEnv(process.env.NODE_ENV ?? "production", process.cwd(), "");
 
+console.log(`Using ASTRO_ADAPTER=${ASTRO_ADAPTER}, SITE_URL=${SITE_URL}`);
+
 // https://astro.build/config
 export default defineConfig({
   // Locales are driven dynamically by the Directus `languages` collection.

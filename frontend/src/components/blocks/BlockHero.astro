@@ -1,6 +1,6 @@
 ---
 import type { BlockHero } from "../../lib/directus";
-import { ASSETS_URL } from "../../lib/directus";
+import { assetUrl } from "../../lib/assets";
 import { getTranslation } from "../../lib/i18n";
 
 interface Props {
@@ -11,7 +11,7 @@ interface Props {
 
 const { block, background, locale } = Astro.props;
 const tx = getTranslation(block.translations, locale);
-const imageUrl = block.image ? `${ASSETS_URL}/${block.image}` : null;
+const imageUrl = block.image ? assetUrl(block.image) : null;
 const isDark = background === "dark";
 const isCenter = block.layout === "image_center" || !block.layout;
 const isRight = block.layout === "image_right";

@@ -1,6 +1,6 @@
 ---
 import type { BlockProductCategories } from "../../lib/directus";
-import { ASSETS_URL } from "../../lib/directus";
+import { assetUrl } from "../../lib/assets";
 import { fetchCategoriesByParent, fetchAllCategories } from "../../lib/api";
 import { getTranslation } from "../../lib/i18n";
 import { buildCategoryPaths } from "../../lib/catalog";
@@ -65,10 +65,10 @@ const catPathMap = buildCategoryPaths(allCategories, locale);
         const catPath = catPathMap.get(cat.id);
         const href = catPath ? `/${locale}${productsPagePermalink}/${catPath}` : null;
         const imageUrl = cat.image
-          ? `${ASSETS_URL}/${cat.image}?width=600&height=400&fit=cover`
+          ? assetUrl(cat.image, "width=600&height=400&fit=cover")
           : null;
         const coverUrl = cat.cover_image
-          ? `${ASSETS_URL}/${cat.cover_image}?width=600&height=400&fit=cover`
+          ? assetUrl(cat.cover_image, "width=600&height=400&fit=cover")
           : null;
         const displayUrl = imageUrl ?? coverUrl;
 

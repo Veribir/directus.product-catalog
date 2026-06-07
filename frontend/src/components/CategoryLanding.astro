@@ -1,6 +1,6 @@
 ---
 import type { ProductCategory, Product, PageBlock, ProductUrlStructure } from "../lib/directus";
-import { ASSETS_URL } from "../lib/directus";
+import { assetUrl } from "../lib/assets";
 import { getTranslation } from "../lib/i18n";
 import { buildCategoryPaths, getProductFullPath } from "../lib/catalog";
 import CategoryBreadcrumb from "./CategoryBreadcrumb.astro";
@@ -23,11 +23,11 @@ const tx = getTranslation(category.translations, locale);
 const catPathMap = buildCategoryPaths(allCategories, locale);
 
 const coverUrl = category.cover_image
-  ? `${ASSETS_URL}/${category.cover_image}?width=1920&height=800&fit=cover`
+  ? assetUrl(category.cover_image, "width=1920&height=800&fit=cover")
   : null;
 
 const brandLogoUrl = category.brand?.logo
-  ? `${ASSETS_URL}/${category.brand.logo}?width=160&height=60&fit=contain`
+  ? assetUrl(category.brand.logo, "width=160&height=60&fit=contain")
   : null;
 
 const children = allCategories.filter((c) => c.parent === category.id);
@@ -110,7 +110,7 @@ const blocksBelow = visibleBlocks.filter((b) => b.position === "below");
         {products.map((product) => {
           const ptx = getTranslation(product.translations, locale);
           const imageUrl = product.image
-            ? `${ASSETS_URL}/${product.image}?width=500&height=667&fit=cover`
+            ? assetUrl(product.image, "width=500&height=667&fit=cover")
             : null;
           const fullPath = getProductFullPath(
             product.slug,

@@ -1,6 +1,6 @@
 ---
 import type { Globals, Navigation } from "../lib/directus";
-import { ASSETS_URL } from "../lib/directus";
+import { assetUrl } from "../lib/assets";
 import type { Language } from "../lib/i18n";
 
 interface Props {
@@ -12,13 +12,13 @@ interface Props {
 const { globals, navigation, language } = Astro.props;
 
 const logoUrl = globals.logo_dark_mode
-  ? `${ASSETS_URL}/${globals.logo_dark_mode}`
+  ? assetUrl(globals.logo_dark_mode)
   : globals.logo
-    ? `${ASSETS_URL}/${globals.logo}`
+    ? assetUrl(globals.logo)
     : null;
 
 const footerImageUrl = globals.footer_image
-  ? `${ASSETS_URL}/${globals.footer_image}?width=600&fit=contain`
+  ? assetUrl(globals.footer_image, "width=600&fit=contain")
   : null;
 
 const siteTitle = globals.title ?? "Barkomas";
