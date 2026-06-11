@@ -201,6 +201,48 @@ export type BlockNumberedList = {
   items: BlockNumberedListItem[];
 };
 
+export type BlockProductSpecs = {
+  id: string;
+  status: string;
+  layout:
+    | "table"
+    | "accordion"
+    | "comparison_table"
+    | "comparison_accordion"
+    | "numbered_list"
+    | "feature_grid"
+    | null;
+  spec_group: string | null;
+  show_media: boolean;
+  media_position: "left" | "right" | "both" | null;
+};
+
+// ─── Product page layout blocks ──────────────────────────────────────────────
+
+export type BlockProductHero = {
+  id: string;
+  status: string;
+  show_breadcrumb: boolean;
+};
+
+export type BlockProductCardGrid = {
+  id: string;
+  status: string;
+  source: "highlights" | "capabilities" | "certifications" | "options" | "custom_items";
+};
+
+export type ProductTemplateBlock = {
+  id: string;
+  sort: number | null;
+  collection: string;
+  hide_block: boolean;
+  item:
+    | BlockProductHero
+    | BlockProductCardGrid
+    | BlockProductSpecs
+    | Record<string, unknown>;
+};
+
 export type BlockBrandLogosTranslation = {
   languages_code: string;
   tagline: string | null;
@@ -385,26 +427,24 @@ export type ProductRegionalPrice = {
   compare_at_price: number | null;
 };
 
-export type ProductPageSection =
-  | "gallery"
-  | "price"
-  | "variants"
-  | "specs"
-  | "certifications"
-  | "pricing_table"
-  | "related"
-  | "description"
-  | "content_blocks"
-  | "brand"
-  | "sku";
+export type ProductPageTabTranslation = {
+  languages_code: string;
+  label: string;
+};
+
+export type ProductPageTab = {
+  id: string;
+  key: string;
+  icon: string | null;
+  sort: number | null;
+  translations: ProductPageTabTranslation[];
+  blocks: ProductTemplateBlock[];
+};
 
 export type ProductPageTemplate = {
   id: string;
   name: string;
-  gallery_layout: "thumbnails" | "carousel" | "grid";
-  spec_layout: "table" | "accordion" | "comparison";
-  show_breadcrumb: boolean;
-  sections: { section: ProductPageSection; enabled: boolean }[];
+  tabs: ProductPageTab[];
 };
 
 export type ProductCategoryTranslation = {
@@ -423,7 +463,6 @@ export type ProductCategory = {
   image: string | null;
   cover_image: string | null;
   parent: string | null;
-  spec_layout: string | null;
   listing_layout: string | null;
   show_subcategories_bar: boolean;
   eclass_code: string | null;
@@ -476,6 +515,21 @@ export type ProductTranslation = {
   model_range: string | null;
 };
 
+export type ProductMediaTranslation = {
+  languages_code: string;
+  caption: string | null;
+};
+
+export type ProductMedia = {
+  id: string;
+  sort: number | null;
+  status: string;
+  image: string | null;
+  purpose: string;
+  position: "left" | "right" | "center" | null;
+  translations: ProductMediaTranslation[];
+};
+
 export type ProductSpecVariantValue = {
   id: string;
   spec: string;
@@ -487,7 +541,6 @@ export type ProductCategoryRef = {
   id: string;
   slug: string;
   parent: string | null;
-  spec_layout: string | null;
   listing_layout: string | null;
   eclass_code: string | null;
   eclass_version: string | null;
@@ -521,12 +574,9 @@ export type Product = {
   related_products: { related_products_id: Pick<Product, "id" | "slug" | "sku" | "price" | "compare_at_price" | "image" | "translations"> }[];
   certifications: { product_certifications_id: ProductCertification; obtained_at: string | null }[];
   specs: ProductSpec[];
-  spec_layout: "table" | "accordion" | "comparison" | null;
-  spec_drawing_1: string | null;
-  spec_drawing_2: string | null;
-  spec_drawing_3: string | null;
   pricing_tiers: ProductPricingTier[];
   regional_prices: ProductRegionalPrice[];
+  media: ProductMedia[];
   page_template: ProductPageTemplate | null;
   blocks: PageBlock[] | null;
 };
@@ -548,6 +598,7 @@ export type PageBlock = {
     | "block_brands_logos"
     | "block_cta_banner"
     | "block_product_category_cards"
+    | "block_product_specs"
     | string;
   hide_block: boolean;
   background: "light" | "dark";
@@ -563,6 +614,7 @@ export type PageBlock = {
     | BlockBrandLogos
     | BlockCtaBanner
     | BlockProductCategoryCards
+    | BlockProductSpecs
     | Record<string, unknown>;
 };
 

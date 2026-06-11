@@ -1,25 +1,62 @@
-import type { ProductPageTemplate, ProductPageSection, Product, ProductCategoryRef, ProductUrlStructure } from "./types";
+import type { ProductPageTemplate, ProductTemplateBlock, Product, ProductCategoryRef, ProductUrlStructure } from "./types";
 
 // ─── Default template ─────────────────────────────────────────────────────────
 
+/**
+ * Code-level fallback used when a product has no `page_template` and its
+ * category has no `default_page_template`. Mirrors the legacy
+ * DEFAULT_PRODUCT_PAGE_TEMPLATE sections (gallery, certifications, related,
+ * content blocks, breadcrumb — pricing table off by default) using the new
+ * tabs/blocks shape.
+ */
 export const DEFAULT_PRODUCT_PAGE_TEMPLATE: ProductPageTemplate = {
   id: "__default__",
   name: "Default",
-  gallery_layout: "thumbnails",
-  spec_layout: "table",
-  show_breadcrumb: true,
-  sections: [
-    { section: "gallery", enabled: true },
-    { section: "price", enabled: true },
-    { section: "brand", enabled: true },
-    { section: "sku", enabled: true },
-    { section: "variants", enabled: true },
-    { section: "description", enabled: true },
-    { section: "specs", enabled: true },
-    { section: "certifications", enabled: true },
-    { section: "pricing_table", enabled: false },
-    { section: "related", enabled: true },
-    { section: "content_blocks", enabled: true },
+  tabs: [
+    {
+      id: "__default_tab__",
+      key: "overview",
+      icon: null,
+      sort: 1,
+      translations: [],
+      blocks: [
+        {
+          id: "__default_hero__",
+          sort: 1,
+          collection: "block_product_hero",
+          hide_block: false,
+          item: { id: "__default_hero__", status: "published", show_breadcrumb: true },
+        },
+        {
+          id: "__default_content_slot__",
+          sort: 2,
+          collection: "block_product_content_slot",
+          hide_block: false,
+          item: { id: "__default_content_slot__", status: "published" },
+        },
+        {
+          id: "__default_gallery__",
+          sort: 3,
+          collection: "block_product_gallery",
+          hide_block: false,
+          item: { id: "__default_gallery__", status: "published" },
+        },
+        {
+          id: "__default_cert_cards__",
+          sort: 4,
+          collection: "block_product_card_grid",
+          hide_block: false,
+          item: { id: "__default_cert_cards__", status: "published", source: "certifications" },
+        },
+        {
+          id: "__default_related__",
+          sort: 5,
+          collection: "block_product_related",
+          hide_block: false,
+          item: { id: "__default_related__", status: "published" },
+        },
+      ],
+    },
   ],
 };
 
@@ -144,8 +181,12 @@ export function resolveTemplate(
 }
 
 /**
- * Returns the sections that are enabled, in editor-defined order.
+ * Flattens all tabs of a template into a single ordered list of visible
+ * layout blocks (hidden blocks excluded).
  */
-export function getEnabledSections(template: ProductPageTemplate): ProductPageSection[] {
-  return template.sections.filter((s) => s.enabled).map((s) => s.section);
+export function getTemplateBlocks(template: ProductPageTemplate): ProductTemplateBlock[] {
+  return template.tabs
+    .flatMap((tab) => tab.blocks ?? [])
+    .filter((b) => !b.hide_block)
+    .sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0));
 }

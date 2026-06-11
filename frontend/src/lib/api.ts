@@ -4,13 +4,31 @@ import type { Page, Globals, Post, Product, ProductCategory, Navigation } from "
 
 // ─── Shared field sets ────────────────────────────────────────────────────────
 
+// Layout block fields needed by ProductDetail.astro to decide which sections
+// of the page to render. Only the fields actually consumed are fetched —
+// other block_product_* collections are presence-checked via `collection`.
+const PRODUCT_TEMPLATE_BLOCK_ITEM_FIELDS = [
+  "tabs.blocks.id",
+  "tabs.blocks.sort",
+  "tabs.blocks.collection",
+  "tabs.blocks.hide_block",
+  "tabs.blocks.item:block_product_hero.id",
+  "tabs.blocks.item:block_product_hero.show_breadcrumb",
+  "tabs.blocks.item:block_product_card_grid.id",
+  "tabs.blocks.item:block_product_card_grid.source",
+  "tabs.blocks.item:block_product_gallery.id",
+  "tabs.blocks.item:block_product_related.id",
+  "tabs.blocks.item:block_product_content_slot.id",
+  "tabs.blocks.item:block_product_pricing_table.id",
+  "tabs.blocks.item:block_product_specs.id",
+];
+
 const PRODUCT_PAGE_TEMPLATE_FIELDS = [
   "id",
   "name",
-  "gallery_layout",
-  "spec_layout",
-  "show_breadcrumb",
-  "sections",
+  "tabs.id",
+  "tabs.sort",
+  ...PRODUCT_TEMPLATE_BLOCK_ITEM_FIELDS,
 ];
 
 const PRODUCT_CARD_FIELDS = [
@@ -152,6 +170,13 @@ const BLOCK_ITEM_FIELDS = [
   "blocks.item:block_cta_banner.translations.headline",
   "blocks.item:block_cta_banner.translations.primary_cta_label",
   "blocks.item:block_cta_banner.translations.secondary_cta_label",
+  // block_product_specs
+  "blocks.item:block_product_specs.id",
+  "blocks.item:block_product_specs.status",
+  "blocks.item:block_product_specs.layout",
+  "blocks.item:block_product_specs.spec_group",
+  "blocks.item:block_product_specs.show_media",
+  "blocks.item:block_product_specs.media_position",
   // block_product_category_cards
   "blocks.item:block_product_category_cards.id",
   "blocks.item:block_product_category_cards.status",
@@ -380,7 +405,6 @@ export async function fetchProductBySlug(slug: string): Promise<Product | null> 
         "category.id",
         "category.slug",
         "category.parent",
-        "category.spec_layout",
         "category.listing_layout",
         "category.eclass_code",
         "category.eclass_version",
@@ -464,11 +488,6 @@ export async function fetchProductBySlug(slug: string): Promise<Product | null> 
         // spec variant values — nested under each spec via O2M backlink
         "specs.spec_variant_values.variant",
         "specs.spec_variant_values.value",
-        // spec layout override and drawings (engineering line art for left column)
-        "spec_layout",
-        "spec_drawing_1",
-        "spec_drawing_2",
-        "spec_drawing_3",
         // pricing tiers (O2M)
         "pricing_tiers.id",
         "pricing_tiers.status",
@@ -491,6 +510,15 @@ export async function fetchProductBySlug(slug: string): Promise<Product | null> 
         "regional_prices.region.code",
         "regional_prices.region.name",
         "regional_prices.region.currency",
+        // media (O2M) — generic tagged assets (engineering drawings, etc.)
+        "media.id",
+        "media.sort",
+        "media.status",
+        "media.image",
+        "media.purpose",
+        "media.position",
+        "media.translations.languages_code",
+        "media.translations.caption",
         // product page blocks M2A
         ...PAGE_BLOCK_JUNCTION_FIELDS,
         ...BLOCK_ITEM_FIELDS,
@@ -514,7 +542,6 @@ export async function fetchAllCategories(): Promise<ProductCategory[]> {
         "image",
         "cover_image",
         "parent",
-        "spec_layout",
         "listing_layout",
         "show_subcategories_bar",
         "eclass_code",
@@ -544,7 +571,6 @@ export async function fetchCategoryById(id: string): Promise<ProductCategory | n
         "image",
         "cover_image",
         "parent",
-        "spec_layout",
         "listing_layout",
         "show_subcategories_bar",
         "eclass_code",

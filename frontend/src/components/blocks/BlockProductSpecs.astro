@@ -1,0 +1,73 @@
+---
+import type { BlockProductSpecs, ProductMedia, ProductSpec, ProductVariant } from "../../lib/directus";
+import { assetUrl } from "../../lib/assets";
+import ProductSpecs from "../ProductSpecs.astro";
+
+interface Props {
+  block: BlockProductSpecs;
+  specs: ProductSpec[];
+  variants: ProductVariant[];
+  media: ProductMedia[];
+  locale: string;
+}
+
+const { block, specs, variants, media, locale } = Astro.props;
+
+const filteredSpecs = block.spec_group
+  ? specs.filter((s) => s.group?.id === block.spec_group)
+  : specs;
+
+const published = filteredSpecs.filter((s) => s.status === "published");
+if (published.length === 0) return;
+
+const drawings = block.show_media
+  ? media
+      .filter((m) => m.status === "published" && m.purpose === "spec_drawing" && m.image)
+      .sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0))
+  : [];
+
+const mediaPosition = block.media_position ?? "left";
+const leftDrawings =
+  mediaPosition === "both" ? drawings.filter((d) => (d.position ?? "left") === "left") : mediaPosition === "left" ? drawings : [];
+const rightDrawings =
+  mediaPosition === "both" ? drawings.filter((d) => d.position === "right") : mediaPosition === "right" ? drawings : [];
+
+const layout = block.layout ?? "table";
+---
+
+<div
+  class:list={[
+    "grid gap-12 items-start",
+    leftDrawings.length > 0 && "md:grid-cols-[260px_1fr]",
+    rightDrawings.length > 0 && "md:grid-cols-[1fr_260px]",
+    leftDrawings.length > 0 && rightDrawings.length > 0 && "md:grid-cols-[260px_1fr_260px]",
+  ]}
+>
+  {leftDrawings.length > 0 && (
+    <div class="hidden md:flex flex-col gap-10 sticky top-24">
+      {leftDrawings.map((d) => (
+        <img
+          src={assetUrl(d.image, "width=260&fit=contain&format=webp")}
+          alt=""
+          class="w-full object-contain opacity-70 mix-blend-multiply"
+          loading="lazy"
+        />
+      ))}
+    </div>
+  )}
+
+  <ProductSpecs specs={filteredSpecs} {variants} {locale} {layout} />
+
+  {rightDrawings.length > 0 && (
+    <div class="hidden md:flex flex-col gap-10 sticky top-24">
+      {rightDrawings.map((d) => (
+        <img
+          src={assetUrl(d.image, "width=260&fit=contain&format=webp")}
+          alt=""
+          class="w-full object-contain opacity-70 mix-blend-multiply"
+          loading="lazy"
+        />
+      ))}
+    </div>
+  )}
+</div>
