@@ -1,0 +1,199 @@
+[
+  {
+    "slug": "surface-drilling-rigs",
+    "name_en": "Surface Drilling Rigs",
+    "name_tr": "Yüzey Sondaj Makineleri",
+    "description_en": "Heavy-duty drilling rigs engineered for surface applications with high torque hydraulic systems, modular designs, and ATEX-certified solutions for mining and geotechnical operations.",
+    "tagline_en": "Engineered for Excellence",
+    "url": "/en/products/surface-drilling-rigs/",
+    "image_url": "https://barkomas.com/wp-content/uploads/2025/11/bd-tophead-drive-img1.png",
+    "parent": null,
+    "subcategories": [
+      {
+        "slug": "top-head-drive-drilling-rigs",
+        "name_en": "Top-Head Drive Drilling Rigs",
+        "name_tr": "Üstten Tahrikli Sondaj Makineleri",
+        "description_en": "The BullDrill Top-Head Drive series features robust construction designed for challenging field conditions, with user-friendly systems and mobile track capability.",
+        "tagline_en": "High torque, safe control, maximum efficiency.",
+        "url": "/en/product/top-head-drive-drilling-rigs/",
+        "models": ["BD400T", "BD800T", "BD1500T", "BD2500T"],
+        "image_url": "https://barkomas.com/wp-content/uploads/2025/11/bd-tophead-drive-img1.png",
+        "gallery": [
+          "https://barkomas.com/wp-content/uploads/2025/11/bd-tophead-drive-img1.png",
+          "https://barkomas.com/wp-content/uploads/2025/11/bd-tophead-drive-img2.png",
+          "https://barkomas.com/wp-content/uploads/2025/11/bd-tophead-drive-img3.png"
+        ]
+      },
+      {
+        "slug": "spindle-drive-drilling-rigs",
+        "name_en": "Spindle Drive Drilling Rigs",
+        "name_tr": "Milden Tahrikli Sondaj Makineleri",
+        "description_en": "The BullDrill Spindle Drive series delivers superior performance in challenging field conditions, featuring a robust structure, 4-gear transmission, and gas-operated rod holder.",
+        "tagline_en": "Spindle drive, high precision, seamless control.",
+        "url": "/en/product/spindle-drive-drilling-rigs/",
+        "models": ["BD1500S", "BD2500S"],
+        "image_url": null
+      },
+      {
+        "slug": "multi-purpose-drilling-rigs",
+        "name_en": "Multi-Purpose Drilling Rigs",
+        "name_tr": "Çok Amaçlı Sondaj Makineleri",
+        "description_en": "Combines reverse circulation and diamond core drilling capabilities in a single platform, delivering flexibility, power, and reliability across different drilling methods.",
+        "tagline_en": "Dual mode, single platform, uninterrupted flexibility.",
+        "url": "/en/product/multi-purpose-drilling-rigs/",
+        "models": ["BD1500M", "BD2500M"],
+        "image_url": null
+      }
+    ]
+  },
+  {
+    "slug": "underground-drilling-rigs",
+    "name_en": "Underground Drilling Rigs",
+    "name_tr": "Yer Altı Sondaj Makineleri",
+    "description_en": "Compact, high-torque underground drilling rigs engineered for confined spaces, with electric motors, telescopic mast structures, and ATEX-certified ex-proof options.",
+    "tagline_en": "Engineered for Excellence",
+    "url": "/en/products/underground-drilling-rigs/",
+    "image_url": null,
+    "parent": null,
+    "subcategories": [
+      {
+        "slug": "skid-mounted-drilling-rigs",
+        "name_en": "Skid-Mounted Drilling Rigs",
+        "name_tr": "Kızak Tipi Sondaj Makineleri",
+        "description_en": "Compact underground drilling systems featuring ABB/SIEMENS electric motors, KAWASAKI hydraulic pumps, telescopic mast structure, and 360° drilling capability for confined space operations.",
+        "tagline_en": "Compact power, full control, maximum torque.",
+        "url": "/en/product/skid-mounted-drilling-rigs/",
+        "models": ["BDU200", "BDU500", "BDU700", "BDU1500"],
+        "image_url": "https://barkomas.com/wp-content/uploads/2025/11/bdu200-teknikcizim.png",
+        "gallery": [
+          "https://barkomas.com/wp-content/uploads/2025/11/bdu200-teknikcizim.png",
+          "https://barkomas.com/wp-content/uploads/2025/11/bdu200-teknikcizim02.png",
+          "https://barkomas.com/wp-content/uploads/2025/11/bdu200-teknikcizim03.png"
+        ]
+      },
+      {
+        "slug": "track-mounted-drilling-rigs",
+        "name_en": "Track-Mounted Drilling Rigs",
+        "name_tr": "Paletli Sondaj Makineleri",
+        "description_en": "Designed for challenging underground conditions with USTEC crawler track systems, high-torque spindle heads, PERKINS diesel tramming engine, and robust construction for maneuverability.",
+        "tagline_en": "Strong ground grip, full control, high torque.",
+        "url": "/en/product/track-mounted-drilling-rigs/",
+        "models": ["BDU500C", "BDU700C", "BDU1500C"],
+        "image_url": null
+      },
+      {
+        "slug": "ex-proof-drilling-rigs",
+        "name_en": "Ex-Proof Drilling Rigs",
+        "name_tr": "Ex-Proof Sondaj Makineleri",
+        "description_en": "Türkiye's first and only ATEX-certified explosion-proof drilling rigs, designed for environments with methane emissions. Features CEMP/ABB Ex-proof motors, fire-resistant hydraulic tank, methane detector, and D-type explosion-proof electrical enclosure.",
+        "tagline_en": "Harsh environments, full protection, high performance.",
+        "url": "/en/product/ex-proof-drilling-rigs/",
+        "models": ["BDU500EXC", "BDU700EXC", "BDU1500EXC"],
+        "image_url": null,
+        "certifications": ["ATEX"]
+      }
+    ]
+  },
+  {
+    "slug": "drilling-equipment",
+    "name_en": "Drilling Equipment",
+    "name_tr": "Sondaj Ekipmanları",
+    "description_en": "High-performance drilling accessories and consumables manufactured from high-quality materials, ensuring exceptional durability and precision even in the hardest rock formations.",
+    "tagline_en": "Engineered for Excellence",
+    "url": "/en/products/drilling-equipment/",
+    "image_url": null,
+    "parent": null,
+    "subcategories": [
+      {
+        "slug": "drill-rods-and-casings",
+        "name_en": "Drill Rods & Casings",
+        "name_tr": "Sondaj Boruları ve Muhafaza Boruları",
+        "description_en": "Heat-treated drill rods and casings with high surface hardness and tough core for wireline and conventional drilling systems.",
+        "tagline_en": "Heat-treated for surface hardness and core toughness.",
+        "url": "/en/product/drill-rods-and-casings/",
+        "product_types": ["Wireline Drill Rods", "Conventional Drill Rods", "Casings", "Special Types"],
+        "image_url": null
+      },
+      {
+        "slug": "core-barrels-and-overshots",
+        "name_en": "Core Barrels & Overshots",
+        "name_tr": "Karotiyerler ve Overshotlar",
+        "description_en": "Reliable and efficient sample recovery with single and double tube options across a wide diameter range.",
+        "tagline_en": "Reliable sample recovery across all diameters.",
+        "url": "/en/product/core-barrels-and-overshots/",
+        "product_types": ["Core Barrels", "Overshots", "B Single Tube", "T Double Tube", "WG Single Tube", "WM Double Tube"],
+        "image_url": null
+      },
+      {
+        "slug": "tungsten-carbide-tools",
+        "name_en": "Tungsten Carbide Tools",
+        "name_tr": "Tungsten Karbür Aletleri",
+        "description_en": "TC-based tools designed for fast, efficient, and wear-resistant sample drilling in mineral exploration and geotechnical applications.",
+        "tagline_en": "Fast, efficient, and wear-resistant drilling.",
+        "url": "/en/product/tungsten-carbide-tools/",
+        "product_types": ["TC Bits", "TC Reaming Shells", "TC Casing Shoes"],
+        "image_url": null
+      },
+      {
+        "slug": "drilling-accessories",
+        "name_en": "Drilling Accessories",
+        "name_tr": "Sondaj Aksesuarları",
+        "description_en": "An optimised set of auxiliary equipment for fast setup, safe lifting, and uninterrupted field operations.",
+        "tagline_en": "Fast setup, safe lifting, uninterrupted operations.",
+        "url": "/en/product/drilling-accessories/",
+        "product_types": ["Lifting & Handling", "Fluid & Swivel Systems", "Cutting & Recovery", "Clamping Systems", "Adapters & Portable Tools"],
+        "image_url": null
+      },
+      {
+        "slug": "core-trays",
+        "name_en": "Core Trays",
+        "name_tr": "Karot Taşıma Kutuları",
+        "description_en": "Durable, stackable, and long-lasting core trays for field use, available in plastic and galvanised steel options.",
+        "tagline_en": "Durable, stackable, built for the field.",
+        "url": "/en/product/core-trays/",
+        "product_types": ["Plastic Core Trays", "Galvanised Core Trays", "Accessories (Lids & Markers)"],
+        "image_url": null
+      },
+      {
+        "slug": "core-cutting-machine",
+        "name_en": "Core Cutting Machine",
+        "name_tr": "Karot Kesme Makinesi",
+        "description_en": "A water-cooled diamond-blade cutting system designed to cut core samples safely, quickly, and cleanly.",
+        "tagline_en": "Safe, fast, and clean core sample cutting.",
+        "url": "/en/product/core-cutting-machine/",
+        "product_types": ["Electric Core Cutting Machine", "Diesel Core Cutting Machine"],
+        "image_url": null
+      },
+      {
+        "slug": "flush-pumps-and-mud-mixers",
+        "name_en": "Flush Pumps & Mud Mixers",
+        "name_tr": "Tahliye Pompaları ve Çamur Mikserleri",
+        "description_en": "Powerful flush pumps and mud mixers that ensure continuous circulation and optimal drilling fluid mixture during operations.",
+        "tagline_en": "Continuous circulation, optimal mixture.",
+        "url": "/en/product/flush-pumps-and-mud-mixers/",
+        "product_types": ["Electric Flush Pump", "Diesel Flush Pump", "Mud Mixing Unit"],
+        "image_url": null
+      },
+      {
+        "slug": "geotechnical-equipment",
+        "name_en": "Geotechnical Equipment",
+        "name_tr": "Geoteknik Ekipmanlar",
+        "description_en": "A reliable and durable range of geotechnical equipment developed for soil sampling and in-situ testing.",
+        "tagline_en": "Reliable soil sampling and in-situ testing.",
+        "url": "/en/product/geotechnical-equipment/",
+        "product_types": ["SPT Split Tube Samplers", "SPT Hydraulic Hammers", "Automatic Drive Hammers", "Shelby Tube Samplers", "Auger Rods & Bits", "Drive Heads & Hammers"],
+        "image_url": null
+      },
+      {
+        "slug": "rock-drilling-tools",
+        "name_en": "Rock Drilling Tools",
+        "name_tr": "Kaya Sondaj Ekipmanları",
+        "description_en": "Rock drilling equipment designed for high penetration and durability in mineral exploration, geotechnical, and quarry drilling operations.",
+        "tagline_en": "High penetration, built for hard rock.",
+        "url": "/en/product/rock-drilling-tools/",
+        "product_types": ["Button Bits", "Cross Bits", "Chisel Bits", "Coupling Sleeves", "Shank Adapters", "Extension Rods"],
+        "image_url": null
+      }
+    ]
+  }
+]

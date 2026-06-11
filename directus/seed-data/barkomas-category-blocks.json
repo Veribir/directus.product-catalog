@@ -1,0 +1,826 @@
+{
+  "_notes": {
+    "purpose": "Page builder blocks for product category listing pages. These blocks attach to product_categories via the category_blocks M2A junction (position: 'above' or 'below' the product listing).",
+    "position": "'above' = rendered before the product grid, 'below' = rendered after",
+    "background": "light | dark — matches the page_blocks junction background field",
+    "image_fields": "All image_url values should be imported to Directus files. null = user uploads manually."
+  },
+
+  "category_pages": [
+
+    {
+      "category_slug": "surface-drilling-rigs",
+      "category_name_en": "Surface Drilling Rigs",
+      "blocks": [
+        {
+          "collection": "block_hero",
+          "position": "above",
+          "background": "dark",
+          "sort": 1,
+          "data": {
+            "layout": "image_center",
+            "image_url": "https://barkomas.com/wp-content/uploads/2025/11/bd1500m-bg-photo01.png",
+            "translations": {
+              "en-US": {
+                "tagline": "BULLDRILL DRILLING RIGS",
+                "headline": "Surface Drilling Rigs",
+                "description": "With heavy-duty hydraulic systems, modular designs, and ATEX-certified solutions, BullDrill Drilling Rigs deliver superior performance even in the most demanding mining and geotechnical sites."
+              },
+              "tr-TR": {
+                "tagline": "BULLDRILL SONDAJ MAKİNELERİ",
+                "headline": "Yüzey Sondaj Makineleri",
+                "description": "Ağır hizmet hidrolik sistemleri, modüler tasarımlar ve ATEX sertifikalı çözümlerle BullDrill Sondaj Makineleri, en zorlu madencilik ve geoteknik sahalarında bile üstün performans sunar."
+              }
+            }
+          }
+        },
+        {
+          "collection": "block_numbered_list",
+          "position": "below",
+          "background": "dark",
+          "sort": 1,
+          "data": {
+            "layout": "image_left",
+            "image_url": "https://barkomas.com/wp-content/uploads/2025/11/satis-sonrasi-destek-bg1.jpg",
+            "image_link": "/support",
+            "translations": {
+              "en-US": {
+                "headline": "With After-Sales Support, We Stand by You for Operational Continuity",
+                "description": "BARKOM's expert service team is always by your side to ensure your machine operates at peak performance without interruption.",
+                "image_title": "After Sales Support"
+              },
+              "tr-TR": {
+                "headline": "Satış Sonrası Destekle Operasyonel Sürekliliğiniz için Yanınızdayız",
+                "description": "BARKOM'un uzman servis ekibi, makinenizin kesintisiz olarak en yüksek performansta çalışmasını sağlamak için her zaman yanınızdadır.",
+                "image_title": "Satış Sonrası Destek"
+              }
+            },
+            "items": [
+              {"sort": 1, "translations": {"en-US": {"title": "On Site Service Within 48 Hours"}, "tr-TR": {"title": "48 Saat İçinde Yerinde Servis"}}},
+              {"sort": 2, "translations": {"en-US": {"title": "24/7 Technical Support"}, "tr-TR": {"title": "7/24 Teknik Destek"}}},
+              {"sort": 3, "translations": {"en-US": {"title": "On-Site Delivery & Orientation Assistance"}, "tr-TR": {"title": "Sahada Teslim ve Oryantasyon Desteği"}}},
+              {"sort": 4, "translations": {"en-US": {"title": "Easy Access to Spare Parts"}, "tr-TR": {"title": "Kolay Yedek Parça Erişimi"}}}
+            ]
+          }
+        },
+        {
+          "collection": "block_numbered_list",
+          "position": "below",
+          "background": "light",
+          "sort": 2,
+          "data": {
+            "layout": "image_right",
+            "image_url": "https://barkomas.com/wp-content/uploads/2025/11/projeye-ozel-tasarim-bg.jpg",
+            "translations": {
+              "en-US": {
+                "headline": "Innovative Solutions Driven by Our R&D Center",
+                "description": "With its R&D Center approved by the Republic of Türkiye Ministry of Industry and Technology, BARKOM is among the few manufacturers capable of designing customized drilling rigs.",
+                "image_title": "Project Based Design"
+              },
+              "tr-TR": {
+                "headline": "Ar-Ge Merkezimizden Yenilikçi Çözümler",
+                "description": "T.C. Sanayi ve Teknoloji Bakanlığı tarafından onaylanan Ar-Ge Merkezi ile BARKOM, özelleştirilmiş sondaj makineleri tasarlayabilen az sayıdaki üreticiden biridir.",
+                "image_title": "Proje Bazlı Tasarım"
+              }
+            },
+            "items": [
+              {"sort": 1, "translations": {"en-US": {"title": "Site Specific Engineering Solutions"}, "tr-TR": {"title": "Sahaya Özgü Mühendislik Çözümleri"}}},
+              {"sort": 2, "translations": {"en-US": {"title": "Configuration Based on Operational Efficiency"}, "tr-TR": {"title": "Operasyonel Verimliliğe Dayalı Konfigürasyon"}}},
+              {"sort": 3, "translations": {"en-US": {"title": "Customization Beyond Standard Production"}, "tr-TR": {"title": "Standart Üretimin Ötesinde Özelleştirme"}}},
+              {"sort": 4, "translations": {"en-US": {"title": "Use of High Quality Raw Materials"}, "tr-TR": {"title": "Yüksek Kaliteli Hammadde Kullanımı"}}}
+            ]
+          }
+        },
+        {
+          "collection": "block_brands_logos",
+          "position": "below",
+          "background": "light",
+          "sort": 3,
+          "data": {
+            "image_url": "https://barkomas.com/wp-content/uploads/2025/11/global-is-ortaklarimiz-bg.jpg",
+            "translations": {
+              "en-US": {
+                "headline": "The Most Prestigious International Brands, Represented by BARKOM",
+                "description": "BARKOM is the Turkish distributor of the world's most prestigious international brands in the mining and drilling industry.",
+                "image_title": "Global Business Partners"
+              },
+              "tr-TR": {
+                "headline": "BARKOM Tarafından Temsil Edilen En Prestijli Uluslararası Markalar",
+                "description": "BARKOM, madencilik ve sondaj sektöründe dünyanın en prestijli uluslararası markalarının Türkiye distribütörüdür.",
+                "image_title": "Küresel İş Ortakları"
+              }
+            },
+            "logos": [
+              {"sort": 1, "name": "AMC", "url": null},
+              {"sort": 2, "name": "MONARK", "url": null},
+              {"sort": 3, "name": "DEVICO & REFLEX", "url": null},
+              {"sort": 4, "name": "JET-LUBE", "url": null},
+              {"sort": 5, "name": "DIAMANTINA CHRISTENSEN", "url": null},
+              {"sort": 6, "name": "GEOSIGHT CMS", "url": null}
+            ]
+          }
+        },
+        {
+          "collection": "block_cta_banner",
+          "position": "below",
+          "background": "light",
+          "sort": 4,
+          "data": {
+            "primary_cta_url": "/contact",
+            "secondary_cta_url": "/contact",
+            "translations": {
+              "en-US": {
+                "tagline": "CONTACT US",
+                "headline": "Discover BARKOM's innovative solutions for faster, safer, and more efficient drilling operations.",
+                "primary_cta_label": "Information & Request Form",
+                "secondary_cta_label": "Contact Us"
+              },
+              "tr-TR": {
+                "tagline": "BİZİMLE İLETİŞİME GEÇİN",
+                "headline": "Daha hızlı, daha güvenli ve daha verimli sondaj için BARKOM çözümlerini keşfedin.",
+                "primary_cta_label": "Bilgi ve Talep Formu",
+                "secondary_cta_label": "Bize Ulaşın"
+              }
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "category_slug": "underground-drilling-rigs",
+      "category_name_en": "Underground Drilling Rigs",
+      "blocks": [
+        {
+          "collection": "block_hero",
+          "position": "above",
+          "background": "dark",
+          "sort": 1,
+          "data": {
+            "layout": "image_center",
+            "image_url": "https://barkomas.com/wp-content/uploads/2025/11/tophead-drive-galeri1.jpg",
+            "translations": {
+              "en-US": {
+                "tagline": "BULLDRILL DRILLING RIGS",
+                "headline": "Underground Drilling Rigs",
+                "description": "With heavy-duty hydraulic systems, modular designs, and ATEX-certified solutions, BullDrill Drilling Rigs deliver superior performance even in the most demanding mining and geotechnical sites."
+              },
+              "tr-TR": {
+                "tagline": "BULLDRILL SONDAJ MAKİNELERİ",
+                "headline": "Yer Altı Sondaj Makineleri",
+                "description": "Ağır hizmet hidrolik sistemleri, modüler tasarımlar ve ATEX sertifikalı çözümlerle BullDrill Sondaj Makineleri en zorlu madencilik ve geoteknik sahalarında üstün performans sunar."
+              }
+            }
+          }
+        },
+        {
+          "collection": "block_numbered_list",
+          "position": "below",
+          "background": "dark",
+          "sort": 1,
+          "data": {
+            "layout": "image_left",
+            "image_url": "https://barkomas.com/wp-content/uploads/2025/11/satis-sonrasi-destek-bg1.jpg",
+            "image_link": "/support",
+            "translations": {
+              "en-US": {
+                "headline": "With After-Sales Support, We Stand by You for Operational Continuity",
+                "description": "BARKOM's expert service team is always by your side to ensure your machine operates at peak performance without interruption.",
+                "image_title": "After Sales Support"
+              },
+              "tr-TR": {
+                "headline": "Satış Sonrası Destekle Operasyonel Sürekliliğiniz için Yanınızdayız",
+                "description": "BARKOM'un uzman servis ekibi, makinenizin kesintisiz çalışmasını sağlamak için her zaman yanınızdadır.",
+                "image_title": "Satış Sonrası Destek"
+              }
+            },
+            "items": [
+              {"sort": 1, "translations": {"en-US": {"title": "On Site Service Within 48 Hours"}, "tr-TR": {"title": "48 Saat İçinde Yerinde Servis"}}},
+              {"sort": 2, "translations": {"en-US": {"title": "24/7 Technical Support"}, "tr-TR": {"title": "7/24 Teknik Destek"}}},
+              {"sort": 3, "translations": {"en-US": {"title": "On-Site Delivery & Orientation Assistance"}, "tr-TR": {"title": "Sahada Teslim ve Oryantasyon Desteği"}}},
+              {"sort": 4, "translations": {"en-US": {"title": "Easy Access to Spare Parts"}, "tr-TR": {"title": "Kolay Yedek Parça Erişimi"}}}
+            ]
+          }
+        },
+        {
+          "collection": "block_numbered_list",
+          "position": "below",
+          "background": "light",
+          "sort": 2,
+          "data": {
+            "layout": "image_right",
+            "image_url": "https://barkomas.com/wp-content/uploads/2025/11/projeye-ozel-tasarim-bg.jpg",
+            "translations": {
+              "en-US": {
+                "headline": "Innovative Solutions Driven by Our R&D Center",
+                "description": "With its R&D Center approved by the Republic of Türkiye Ministry of Industry and Technology, BARKOM is among the few manufacturers capable of designing customized drilling rigs.",
+                "image_title": "Project Based Design"
+              },
+              "tr-TR": {
+                "headline": "Ar-Ge Merkezimizden Yenilikçi Çözümler",
+                "description": "T.C. Sanayi ve Teknoloji Bakanlığı tarafından onaylanan Ar-Ge Merkezi ile BARKOM, özelleştirilmiş sondaj makineleri tasarlayabilen az sayıdaki üreticiden biridir.",
+                "image_title": "Proje Bazlı Tasarım"
+              }
+            },
+            "items": [
+              {"sort": 1, "translations": {"en-US": {"title": "Site Specific Engineering Solutions"}, "tr-TR": {"title": "Sahaya Özgü Mühendislik Çözümleri"}}},
+              {"sort": 2, "translations": {"en-US": {"title": "Configuration Based on Operational Efficiency"}, "tr-TR": {"title": "Operasyonel Verimliliğe Dayalı Konfigürasyon"}}},
+              {"sort": 3, "translations": {"en-US": {"title": "Customization Beyond Standard Production"}, "tr-TR": {"title": "Standart Üretimin Ötesinde Özelleştirme"}}},
+              {"sort": 4, "translations": {"en-US": {"title": "Use of High Quality Raw Materials"}, "tr-TR": {"title": "Yüksek Kaliteli Hammadde Kullanımı"}}}
+            ]
+          }
+        },
+        {
+          "collection": "block_brands_logos",
+          "position": "below",
+          "background": "light",
+          "sort": 3,
+          "data": {
+            "image_url": "https://barkomas.com/wp-content/uploads/2025/11/global-is-ortaklarimiz-bg.jpg",
+            "translations": {
+              "en-US": {
+                "headline": "The Most Prestigious International Brands, Represented by BARKOM",
+                "description": "BARKOM is the Turkish distributor of the world's most prestigious international brands in the mining and drilling industry.",
+                "image_title": "Global Business Partners"
+              },
+              "tr-TR": {
+                "headline": "BARKOM Tarafından Temsil Edilen En Prestijli Uluslararası Markalar",
+                "description": "BARKOM, madencilik ve sondaj sektöründe dünyanın en prestijli uluslararası markalarının Türkiye distribütörüdür.",
+                "image_title": "Küresel İş Ortakları"
+              }
+            },
+            "logos": [
+              {"sort": 1, "name": "AMC", "url": null},
+              {"sort": 2, "name": "MONARK", "url": null},
+              {"sort": 3, "name": "DEVICO & REFLEX", "url": null},
+              {"sort": 4, "name": "JET-LUBE", "url": null},
+              {"sort": 5, "name": "DIAMANTINA CHRISTENSEN", "url": null},
+              {"sort": 6, "name": "GEOSIGHT CMS", "url": null}
+            ]
+          }
+        },
+        {
+          "collection": "block_cta_banner",
+          "position": "below",
+          "background": "light",
+          "sort": 4,
+          "data": {
+            "primary_cta_url": "/contact",
+            "secondary_cta_url": "/contact",
+            "translations": {
+              "en-US": {
+                "tagline": "CONTACT US",
+                "headline": "Discover BARKOM's innovative solutions for faster, safer, and more efficient drilling operations.",
+                "primary_cta_label": "Information & Request Form",
+                "secondary_cta_label": "Contact Us"
+              },
+              "tr-TR": {
+                "tagline": "BİZİMLE İLETİŞİME GEÇİN",
+                "headline": "Daha hızlı, daha güvenli ve daha verimli sondaj için BARKOM çözümlerini keşfedin.",
+                "primary_cta_label": "Bilgi ve Talep Formu",
+                "secondary_cta_label": "Bize Ulaşın"
+              }
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "category_slug": "drilling-equipment",
+      "category_name_en": "Drilling Equipment",
+      "blocks": [
+        {
+          "collection": "block_hero",
+          "position": "above",
+          "background": "dark",
+          "sort": 1,
+          "data": {
+            "layout": "image_center",
+            "image_url": "https://barkomas.com/wp-content/uploads/2025/12/top-head-drive-bg-photo-new.png",
+            "translations": {
+              "en-US": {
+                "tagline": "BARKOM DRILLING EQUIPMENT",
+                "headline": "Drilling Equipment",
+                "description": "High-performance drilling accessories and consumables manufactured from high-quality materials, ensuring exceptional durability and precision even in the hardest rock formations."
+              },
+              "tr-TR": {
+                "tagline": "BARKOM SONDAJ EKIPMANLARI",
+                "headline": "Sondaj Ekipmanları",
+                "description": "Yüksek kaliteli malzemelerden üretilen, en sert kaya formasyonlarında bile olağanüstü dayanıklılık ve hassasiyet sağlayan yüksek performanslı sondaj aksesuarları ve sarf malzemeleri."
+              }
+            }
+          }
+        },
+        {
+          "collection": "block_cta_banner",
+          "position": "below",
+          "background": "light",
+          "sort": 1,
+          "data": {
+            "primary_cta_url": "/contact",
+            "secondary_cta_url": "/contact",
+            "translations": {
+              "en-US": {
+                "tagline": "CONTACT US",
+                "headline": "Discover BARKOM's innovative solutions for faster, safer, and more efficient drilling operations.",
+                "primary_cta_label": "Information & Request Form",
+                "secondary_cta_label": "Contact Us"
+              },
+              "tr-TR": {
+                "tagline": "BİZİMLE İLETİŞİME GEÇİN",
+                "headline": "Daha hızlı, daha güvenli ve daha verimli sondaj için BARKOM çözümlerini keşfedin.",
+                "primary_cta_label": "Bilgi ve Talep Formu",
+                "secondary_cta_label": "Bize Ulaşın"
+              }
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "category_slug": "top-head-drive-drilling-rigs",
+      "category_name_en": "Top-Head Drive Drilling Rigs",
+      "blocks": [
+        {
+          "collection": "block_hero",
+          "position": "above",
+          "background": "dark",
+          "sort": 1,
+          "data": {
+            "layout": "image_right",
+            "image_url": "https://barkomas.com/wp-content/uploads/2025/11/bd-tophead-drive-img1.png",
+            "translations": {
+              "en-US": {
+                "tagline": "HIGH TORQUE, SAFE CONTROL, MAXIMUM EFFICIENCY.",
+                "headline": "Top-Head Drive Drilling Rigs",
+                "description": "BD400T — BD800T — BD1500T — BD2500T"
+              },
+              "tr-TR": {
+                "tagline": "YÜKSEK TORK, GÜVENLİ KONTROL, MAKSİMUM VERİM.",
+                "headline": "Üstten Tahrikli Sondaj Makineleri",
+                "description": "BD400T — BD800T — BD1500T — BD2500T"
+              }
+            }
+          }
+        },
+        {
+          "collection": "block_numbered_list",
+          "position": "above",
+          "background": "light",
+          "sort": 2,
+          "data": {
+            "layout": "image_right",
+            "image_url": "https://barkomas.com/wp-content/uploads/2025/11/bd-tophead-drive-img2.png",
+            "image_link": null,
+            "translations": {
+              "en-US": {
+                "tagline": "KEY FEATURES",
+                "headline": "Why Choose the BullDrill Top-Head Drive Series?",
+                "image_title": "BD Series — Top-Head Drive"
+              },
+              "tr-TR": {
+                "tagline": "TEMEL ÖZELLİKLER",
+                "headline": "Neden BullDrill Üstten Tahrikli Serisi?",
+                "image_title": "BD Serisi — Üstten Tahrik"
+              }
+            },
+            "items": [
+              {"sort": 1, "translations": {"en-US": {"title": "Conquer Any Terrain with Confidence", "description": "The robust steel track design enables effortless mobility even in the harshest ground conditions. Combined with a remote-control option, you can ensure maximum safety and ease of operation for tramming."}, "tr-TR": {"title": "Her Arazide Güvenle Hareket Et", "description": "Sağlam çelik palet tasarımı, en zorlu zemin koşullarında bile zahmetsiz manevra imkânı sağlar. Uzaktan kumanda seçeneği ile tramving sırasında maksimum güvenlik ve kolaylık sağlarsınız."}}},
+              {"sort": 2, "translations": {"en-US": {"title": "Seamless Adaptability with Top-Head Rotary Unit", "description": "The top-head system is compatible with the B-N-H-P drill rod set. It enables fast adaptation in the field and minimizes downtime."}, "tr-TR": {"title": "Üstten Tahrikli Döner Ünite ile Kusursuz Uyum", "description": "Üstten tahrik sistemi B-N-H-P sondaj borusu setiyle uyumludur. Sahada hızlı adaptasyon sağlar ve duruş süresini minimuma indirir."}}},
+              {"sort": 3, "translations": {"en-US": {"title": "PLC Monitoring for Enhanced Efficiency", "description": "Equipped with a reliable control and warning system. The 10-inch touchscreen PLC display provides real-time updates on engine performance and alerts for potential issues."}, "tr-TR": {"title": "Gelişmiş Verimlilik için PLC İzleme", "description": "Güvenilir kontrol ve uyarı sistemi ile donatılmıştır. 10 inçlik dokunmatik PLC ekran motor performansını gerçek zamanlı gösterir."}}},
+              {"sort": 4, "translations": {"en-US": {"title": "Unstoppable Power", "description": "Driven by a powerful diesel engine, our rig delivers consistent and reliable performance for even the most demanding operations."}, "tr-TR": {"title": "Durdurulamaz Güç", "description": "Güçlü dizel motor ile çalışan makine, en zorlu operasyonlarda bile tutarlı ve güvenilir performans sunar."}}},
+              {"sort": 5, "translations": {"en-US": {"title": "Optimized Cooling for Peak Performance", "description": "A high-capacity cooling system ensures smooth operation, even during intensive drilling sessions."}, "tr-TR": {"title": "Optimum Performans için Gelişmiş Soğutma", "description": "Yüksek kapasiteli soğutma sistemi, yoğun sondaj seanslarında bile sorunsuz çalışma sağlar."}}},
+              {"sort": 6, "translations": {"en-US": {"title": "Effortless Self-Loading Capability", "description": "Lifts itself up to 1.4 meters, allowing for fast and easy loading without the need for a platform. Hydraulic jack stabilizers ensure easy setup and stability on sloping and challenging terrains."}, "tr-TR": {"title": "Zahmetsiz Kendinden Yükleme Kabiliyeti", "description": "Platform ihtiyacı olmadan hızlı ve kolay yükleme için 1,4 metreye kadar kendi kendini kaldırır."}}},
+              {"sort": 7, "translations": {"en-US": {"title": "Semi-Automatic Rod Handling System", "description": "A hydraulic arm enables semi-automatic rod handling, reducing operation time while increasing safety and efficiency."}, "tr-TR": {"title": "Yarı Otomatik Boru Taşıma Sistemi", "description": "Hidrolik kol, yarı otomatik boru taşımayı mümkün kılarak operasyon süresini azaltır."}}},
+              {"sort": 8, "translations": {"en-US": {"title": "User-Friendly Control Panel", "description": "Enjoy simplicity and convenience with our easy-to-use control interface, designed to keep you focused on the task."}, "tr-TR": {"title": "Kullanıcı Dostu Kontrol Paneli", "description": "Göreve odaklı kalmanız için tasarlanmış, kullanımı kolay kontrol arayüzü ile sadelik ve rahatlığın tadını çıkarın."}}},
+              {"sort": 9, "translations": {"en-US": {"title": "Advanced Safety Features", "description": "Equipped with a safety cage and emergency stop buttons, ensuring safer drilling operations. The automatic locking system of the main winch offers a safe and reliable lifting solution."}, "tr-TR": {"title": "Gelişmiş Güvenlik Özellikleri", "description": "Güvenlik kafesi ve acil stop düğmeleriyle donatılmış olup daha güvenli sondaj operasyonları sağlar."}}}
+            ]
+          }
+        },
+        {
+          "collection": "block_cta_banner",
+          "position": "below",
+          "background": "light",
+          "sort": 1,
+          "data": {
+            "primary_cta_url": "/contact",
+            "secondary_cta_url": "/contact",
+            "translations": {
+              "en-US": {
+                "tagline": "CONTACT US",
+                "headline": "Discover BARKOM's innovative solutions for faster, safer, and more efficient drilling operations.",
+                "primary_cta_label": "Information & Request Form",
+                "secondary_cta_label": "Contact Us"
+              },
+              "tr-TR": {
+                "tagline": "BİZİMLE İLETİŞİME GEÇİN",
+                "headline": "Daha hızlı, daha güvenli ve daha verimli sondaj için BARKOM çözümlerini keşfedin.",
+                "primary_cta_label": "Bilgi ve Talep Formu",
+                "secondary_cta_label": "Bize Ulaşın"
+              }
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "category_slug": "spindle-drive-drilling-rigs",
+      "category_name_en": "Spindle Drive Drilling Rigs",
+      "blocks": [
+        {
+          "collection": "block_hero",
+          "position": "above",
+          "background": "dark",
+          "sort": 1,
+          "data": {
+            "layout": "image_right",
+            "image_url": "https://barkomas.com/wp-content/uploads/2025/11/bd1500s-product-bg.png",
+            "translations": {
+              "en-US": {
+                "tagline": "SPINDLE DRIVE, HIGH PRECISION, SEAMLESS CONTROL.",
+                "headline": "Spindle Drive Drilling Rigs",
+                "description": "BD1500S — BD2500S"
+              },
+              "tr-TR": {
+                "tagline": "MİL TAHRİĞİ, YÜKSEK HASSASİYET, KESİNTİSİZ KONTROL.",
+                "headline": "Milden Tahrikli Sondaj Makineleri",
+                "description": "BD1500S — BD2500S"
+              }
+            }
+          }
+        },
+        {
+          "collection": "block_numbered_list",
+          "position": "above",
+          "background": "light",
+          "sort": 2,
+          "data": {
+            "layout": "image_right",
+            "image_url": "https://barkomas.com/wp-content/uploads/2025/11/bd1500s-bg-photo.png",
+            "translations": {
+              "en-US": {
+                "tagline": "KEY FEATURES",
+                "headline": "Why Choose the BullDrill Spindle Drive Series?",
+                "image_title": "BD Series — Spindle Drive"
+              },
+              "tr-TR": {
+                "tagline": "TEMEL ÖZELLİKLER",
+                "headline": "Neden BullDrill Milden Tahrikli Serisi?",
+                "image_title": "BD Serisi — Mil Tahriği"
+              }
+            },
+            "items": [
+              {"sort": 1, "translations": {"en-US": {"title": "Conquer Any Terrain with Confidence", "description": "The robust steel track design enables effortless mobility even in the harshest ground conditions. Remote-control tramming options enhance operator safety."}, "tr-TR": {"title": "Her Arazide Güvenle Hareket Et", "description": "Sağlam çelik palet tasarımı zorlu zeminlerde zahmetsiz manevra sağlar."}}},
+              {"sort": 2, "translations": {"en-US": {"title": "PLC Monitoring for Enhanced Efficiency", "description": "10-inch touchscreen PLC display provides real-time engine monitoring and alerts for potential issues."}, "tr-TR": {"title": "Gelişmiş Verimlilik için PLC İzleme", "description": "10 inçlik dokunmatik PLC ekran gerçek zamanlı motor izleme sağlar."}}},
+              {"sort": 3, "translations": {"en-US": {"title": "Unstoppable Power", "description": "Driven by a powerful diesel engine delivering consistent and reliable performance."}, "tr-TR": {"title": "Durdurulamaz Güç", "description": "Güçlü dizel motor tutarlı ve güvenilir performans sunar."}}},
+              {"sort": 4, "translations": {"en-US": {"title": "Optimized Cooling for Peak Performance", "description": "A high-capacity cooling system ensures smooth operation even during intensive drilling sessions."}, "tr-TR": {"title": "Optimum Performans için Soğutma", "description": "Yüksek kapasiteli soğutma sistemi yoğun sondajda bile sorunsuz çalışma sağlar."}}},
+              {"sort": 5, "translations": {"en-US": {"title": "Powerful Gearbox with Sliding System", "description": "A high-performance sliding mechanism and robust gearbox ensure superior performance in challenging operations."}, "tr-TR": {"title": "Kaymalı Sistemli Güçlü Vites Kutusu", "description": "Yüksek performanslı kayma mekanizması ve sağlam vites kutusu üstün performans sağlar."}}},
+              {"sort": 6, "translations": {"en-US": {"title": "Effortless Self-Loading Capability", "description": "Lifts itself up to 1.4 meters. Hydraulic stabilizers support setup on challenging terrain."}, "tr-TR": {"title": "Zahmetsiz Kendinden Yükleme", "description": "1,4 metreye kadar kendi kendini kaldırır. Hidrolik stabilizatörler zorlu arazi kurulumunu destekler."}}},
+              {"sort": 7, "translations": {"en-US": {"title": "User-Friendly Control Panel", "description": "Intuitive interface design prioritizes operator focus and operational simplicity."}, "tr-TR": {"title": "Kullanıcı Dostu Kontrol Paneli", "description": "Sezgisel arayüz tasarımı operatör odağını ve operasyonel sadeliği ön plana çıkarır."}}},
+              {"sort": 8, "translations": {"en-US": {"title": "Advanced Safety Features", "description": "Safety cages and emergency stop buttons ensure maximum team safety. Main winch features automatic locking."}, "tr-TR": {"title": "Gelişmiş Güvenlik Özellikleri", "description": "Güvenlik kafesleri ve acil stop düğmeleri ekip güvenliğini maksimize eder."}}},
+              {"sort": 9, "translations": {"en-US": {"title": "Robust Transmission System with 4 Gears", "description": "Provides maximum power flexibility across all drilling applications."}, "tr-TR": {"title": "4 Vitesli Güçlü Transmisyon Sistemi", "description": "Tüm sondaj uygulamalarında maksimum güç esnekliği sağlar."}}},
+              {"sort": 10, "translations": {"en-US": {"title": "Gas-Operated Strong Rod Holder", "description": "High-end rod holder operated by gas pressure provides exceptional gripping strength."}, "tr-TR": {"title": "Gaz Kumandalı Güçlü Boru Tutucu", "description": "Gaz basıncıyla çalışan üst düzey boru tutucu olağanüstü kavrama gücü sağlar."}}},
+              {"sort": 11, "translations": {"en-US": {"title": "Seamless Transportation with Extendable Mast", "description": "The telescopically extendable mast design folds for convenient transport."}, "tr-TR": {"title": "Uzatılabilir Direkle Kolay Nakliye", "description": "Teleskopik uzatılabilir direk tasarımı kolay nakliye için katlanır."}}}
+            ]
+          }
+        },
+        {
+          "collection": "block_cta_banner",
+          "position": "below",
+          "background": "light",
+          "sort": 1,
+          "data": {
+            "primary_cta_url": "/contact",
+            "secondary_cta_url": "/contact",
+            "translations": {
+              "en-US": {"tagline": "CONTACT US", "headline": "Discover BARKOM's innovative solutions for faster, safer, and more efficient drilling operations.", "primary_cta_label": "Information & Request Form", "secondary_cta_label": "Contact Us"},
+              "tr-TR": {"tagline": "BİZİMLE İLETİŞİME GEÇİN", "headline": "Daha hızlı, daha güvenli ve daha verimli sondaj için BARKOM çözümlerini keşfedin.", "primary_cta_label": "Bilgi ve Talep Formu", "secondary_cta_label": "Bize Ulaşın"}
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "category_slug": "multi-purpose-drilling-rigs",
+      "category_name_en": "Multi-Purpose Drilling Rigs",
+      "blocks": [
+        {
+          "collection": "block_hero",
+          "position": "above",
+          "background": "dark",
+          "sort": 1,
+          "data": {
+            "layout": "image_right",
+            "image_url": "https://barkomas.com/wp-content/uploads/2025/12/multi-purpose-bg-photo-new.png",
+            "translations": {
+              "en-US": {"tagline": "DUAL MODE, SINGLE PLATFORM, UNINTERRUPTED FLEXIBILITY.", "headline": "Multi-Purpose Drilling Rigs", "description": "BD1500M — BD2500M"},
+              "tr-TR": {"tagline": "ÇİFT MOD, TEK PLATFORM, KESİNTİSİZ ESNEKLİK.", "headline": "Çok Amaçlı Sondaj Makineleri", "description": "BD1500M — BD2500M"}
+            }
+          }
+        },
+        {
+          "collection": "block_numbered_list",
+          "position": "above",
+          "background": "light",
+          "sort": 2,
+          "data": {
+            "layout": "image_right",
+            "image_url": "https://barkomas.com/wp-content/uploads/2025/11/bd200-product-bg01.png",
+            "translations": {
+              "en-US": {"tagline": "KEY FEATURES", "headline": "Why Choose the BullDrill Multi-Purpose Series?", "image_title": "BD Series — Multi-Purpose"},
+              "tr-TR": {"tagline": "TEMEL ÖZELLİKLER", "headline": "Neden BullDrill Çok Amaçlı Serisi?", "image_title": "BD Serisi — Çok Amaçlı"}
+            },
+            "items": [
+              {"sort": 1, "translations": {"en-US": {"title": "Conquer Any Terrain with Confidence", "description": "The robust steel track design enables effortless mobility even in the harshest ground conditions. Combined with a remote-control option, you can ensure maximum safety and ease of operation for tramming."}, "tr-TR": {"title": "Her Arazide Güvenle Hareket Et", "description": "Sağlam çelik palet tasarımı zorlu zeminlerde zahmetsiz manevra sağlar."}}},
+              {"sort": 2, "translations": {"en-US": {"title": "Seamless Adaptability with Top-Head Rotary Unit", "description": "The innovative top-head rotary unit design simplifies working with the B-N-H-P drill rod set, making operations faster and more versatile."}, "tr-TR": {"title": "Üstten Tahrikli Döner Ünite ile Kusursuz Uyum", "description": "Yenilikçi üstten tahrikli döner ünite tasarımı B-N-H-P sondaj borusu setiyle çalışmayı kolaylaştırır."}}},
+              {"sort": 3, "translations": {"en-US": {"title": "PLC Monitoring for Enhanced Efficiency", "description": "Equipped with a reliable control and warning system. The 10-inch touchscreen PLC display provides real-time updates on engine performance."}, "tr-TR": {"title": "Gelişmiş Verimlilik için PLC İzleme", "description": "10 inçlik dokunmatik PLC ekran motor performansını gerçek zamanlı gösterir."}}},
+              {"sort": 4, "translations": {"en-US": {"title": "Unstoppable Power", "description": "Driven by a powerful diesel engine, our rig delivers consistent and reliable performance."}, "tr-TR": {"title": "Durdurulamaz Güç", "description": "Güçlü dizel motor tutarlı ve güvenilir performans sunar."}}},
+              {"sort": 5, "translations": {"en-US": {"title": "Optimized Cooling for Peak Performance", "description": "A high-capacity cooling system ensures smooth operation even during intensive drilling sessions."}, "tr-TR": {"title": "Optimum Performans için Soğutma", "description": "Yüksek kapasiteli soğutma sistemi yoğun sondajda bile sorunsuz çalışma sağlar."}}},
+              {"sort": 6, "translations": {"en-US": {"title": "Effortless Self-Loading Capability", "description": "Lifts itself up to 1.4 meters. Hydraulic jack stabilizers ensure stability on sloping terrain."}, "tr-TR": {"title": "Zahmetsiz Kendinden Yükleme", "description": "1,4 metreye kadar kendi kendini kaldırır."}}},
+              {"sort": 7, "translations": {"en-US": {"title": "Semi-Automatic Rod Handling System", "description": "A hydraulic arm enables semi-automatic rod handling, reducing operation time while increasing safety."}, "tr-TR": {"title": "Yarı Otomatik Boru Taşıma Sistemi", "description": "Hidrolik kol yarı otomatik boru taşımayı mümkün kılar."}}},
+              {"sort": 8, "translations": {"en-US": {"title": "User-Friendly Control Panel", "description": "Easy-to-use control interface designed to keep you focused on the task at hand."}, "tr-TR": {"title": "Kullanıcı Dostu Kontrol Paneli", "description": "Göreve odaklı kalmanız için tasarlanmış kullanımı kolay kontrol arayüzü."}}},
+              {"sort": 9, "translations": {"en-US": {"title": "Advanced Safety Features", "description": "Safety cages, emergency stop buttons, and automatic main winch locking for crew protection."}, "tr-TR": {"title": "Gelişmiş Güvenlik Özellikleri", "description": "Ekip koruması için güvenlik kafesi, acil stop ve otomatik vinç kilitleme."}}},
+              {"sort": 10, "translations": {"en-US": {"title": "High-End Dust Cyclone", "description": "A high-quality dust collection unit tailored specifically for RC drilling applications."}, "tr-TR": {"title": "Üst Düzey Toz Siklonu", "description": "RC sondaj uygulamalarına özel yüksek kaliteli toz toplama ünitesi."}}}
+            ]
+          }
+        },
+        {
+          "collection": "block_cta_banner",
+          "position": "below",
+          "background": "light",
+          "sort": 1,
+          "data": {
+            "primary_cta_url": "/contact",
+            "secondary_cta_url": "/contact",
+            "translations": {
+              "en-US": {"tagline": "CONTACT US", "headline": "Discover BARKOM's innovative solutions for faster, safer, and more efficient drilling operations.", "primary_cta_label": "Information & Request Form", "secondary_cta_label": "Contact Us"},
+              "tr-TR": {"tagline": "BİZİMLE İLETİŞİME GEÇİN", "headline": "Daha hızlı, daha güvenli ve daha verimli sondaj için BARKOM çözümlerini keşfedin.", "primary_cta_label": "Bilgi ve Talep Formu", "secondary_cta_label": "Bize Ulaşın"}
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "category_slug": "skid-mounted-drilling-rigs",
+      "category_name_en": "Skid-Mounted Drilling Rigs",
+      "blocks": [
+        {
+          "collection": "block_hero",
+          "position": "above",
+          "background": "dark",
+          "sort": 1,
+          "data": {
+            "layout": "image_right",
+            "image_url": "https://barkomas.com/wp-content/uploads/2025/11/bdu200-teknikcizim.png",
+            "translations": {
+              "en-US": {"tagline": "COMPACT POWER, FULL CONTROL, MAXIMUM TORQUE.", "headline": "Skid-Mounted Drilling Rigs", "description": "BDU200 — BDU500 — BDU700 — BDU1500"},
+              "tr-TR": {"tagline": "KOMPAKT GÜÇ, TAM KONTROL, MAKSİMUM TORK.", "headline": "Kızak Tipi Sondaj Makineleri", "description": "BDU200 — BDU500 — BDU700 — BDU1500"}
+            }
+          }
+        },
+        {
+          "collection": "block_numbered_list",
+          "position": "above",
+          "background": "light",
+          "sort": 2,
+          "data": {
+            "layout": "image_right",
+            "image_url": "https://barkomas.com/wp-content/uploads/2025/11/bdu200-teknikcizim02.png",
+            "translations": {
+              "en-US": {"tagline": "KEY FEATURES", "headline": "Why Choose the BullDrill Skid-Mounted Series?", "image_title": "BDU Series — Skid-Mounted"},
+              "tr-TR": {"tagline": "TEMEL ÖZELLİKLER", "headline": "Neden BullDrill Kızak Tipi Serisi?", "image_title": "BDU Serisi — Kızak Tipi"}
+            },
+            "items": [
+              {"sort": 1, "translations": {"en-US": {"title": "High-End Electric Motor", "description": "Powered by ABB or SIEMENS electric motors, 55–110 kW, up to 1480 rpm, delivering efficient and consistent drilling capability."}, "tr-TR": {"title": "Üst Düzey Elektrik Motoru", "description": "ABB veya SIEMENS elektrik motorlar, 55-110 kW, 1480 rpm'e kadar."}}},
+              {"sort": 2, "translations": {"en-US": {"title": "Robust Hydraulic Pumps", "description": "Four KAWASAKI pumps in tandem at 280–315 bar, cooled by HYDAC water-cooling and PARKER/AKG air-cooling systems."}, "tr-TR": {"title": "Güçlü Hidrolik Pompalar", "description": "HYDAC su ve PARKER/AKG hava soğutmalı 280-315 bar'da dört KAWASAKI tandem pompa."}}},
+              {"sort": 3, "translations": {"en-US": {"title": "Vigorous Rotary Head", "description": "Open-feed spindle reaching 1200 rpm with torque of 1020–2060 Nm, powered by PARKER or REXROTH hydromotors."}, "tr-TR": {"title": "Güçlü Döner Başlık", "description": "PARKER veya REXROTH hidromotor destekli, 1200 rpm ve 1020-2060 Nm tork."}}},
+              {"sort": 4, "translations": {"en-US": {"title": "Easy Navigation With Double Reducers", "description": "Two hydraulically-controlled reducers enable effortless 360° drilling in underground operations."}, "tr-TR": {"title": "Çift Redüktedör ile Kolay Navigasyon", "description": "İki hidrolik kumandarlı redüktedör 360° sondaj imkânı sağlar."}}},
+              {"sort": 5, "translations": {"en-US": {"title": "Wireline System With Automatic Winding Feature", "description": "Reduces manual handling risks, prevents cable snapping, and improves core retrieval speed and accuracy."}, "tr-TR": {"title": "Otomatik Sarmalı Wireline Sistemi", "description": "Manuel taşıma risklerini azaltır, kablo kopmasını önler ve karot geri alma hızını artırır."}}},
+              {"sort": 6, "translations": {"en-US": {"title": "High-Strength Rod Holder", "description": "Gas-pressure-operated rod holder with TC insert jaws providing 70–130 kN axial holding force."}, "tr-TR": {"title": "Yüksek Dayanımlı Boru Tutucu", "description": "TC uç çeneli gaz basınçlı tutucu 70-130 kN eksenel kuvvet sağlar."}}},
+              {"sort": 7, "translations": {"en-US": {"title": "User-Friendly Control Panel", "description": "Intuitive control panel allows precise control while maintaining advanced functionality."}, "tr-TR": {"title": "Kullanıcı Dostu Kontrol Paneli", "description": "Sezgisel kontrol paneli gelişmiş işlevselliği korurken hassas kontrol sağlar."}}},
+              {"sort": 8, "translations": {"en-US": {"title": "Safety Cage For Sound Operations", "description": "Mechanically or hydraulically controlled safety cage enhances operator safety during drilling."}, "tr-TR": {"title": "Sağlıklı Operasyonlar için Güvenlik Kafesi", "description": "Mekanik veya hidrolik kumandalı güvenlik kafesi sondaj sırasında operatör güvenliğini artırır."}}},
+              {"sort": 9, "translations": {"en-US": {"title": "Dual Emergency Stop System", "description": "Control panel emergency button plus wire emergency stop on mast for immediate shutdown."}, "tr-TR": {"title": "Çift Acil Durdurma Sistemi", "description": "Kontrol panelindeki ve direk üzerindeki acil stop sistemi anında kapanma sağlar."}}}
+            ]
+          }
+        },
+        {
+          "collection": "block_cta_banner",
+          "position": "below",
+          "background": "light",
+          "sort": 1,
+          "data": {
+            "primary_cta_url": "/contact",
+            "secondary_cta_url": "/contact",
+            "translations": {
+              "en-US": {"tagline": "CONTACT US", "headline": "Discover BARKOM's innovative solutions for faster, safer, and more efficient drilling operations.", "primary_cta_label": "Information & Request Form", "secondary_cta_label": "Contact Us"},
+              "tr-TR": {"tagline": "BİZİMLE İLETİŞİME GEÇİN", "headline": "Daha hızlı, daha güvenli ve daha verimli sondaj için BARKOM çözümlerini keşfedin.", "primary_cta_label": "Bilgi ve Talep Formu", "secondary_cta_label": "Bize Ulaşın"}
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "category_slug": "track-mounted-drilling-rigs",
+      "category_name_en": "Track-Mounted Drilling Rigs",
+      "blocks": [
+        {
+          "collection": "block_hero",
+          "position": "above",
+          "background": "dark",
+          "sort": 1,
+          "data": {
+            "layout": "image_right",
+            "image_url": "https://barkomas.com/wp-content/uploads/2025/11/bdu500-product-bg.png",
+            "translations": {
+              "en-US": {"tagline": "STRONG GROUND GRIP, FULL CONTROL, HIGH TORQUE.", "headline": "Track-Mounted Drilling Rigs", "description": "BDU500C — BDU700C — BDU1500C"},
+              "tr-TR": {"tagline": "GÜÇLÜ ZEMİN TUTUŞU, TAM KONTROL, YÜKSEK TORK.", "headline": "Paletli Sondaj Makineleri", "description": "BDU500C — BDU700C — BDU1500C"}
+            }
+          }
+        },
+        {
+          "collection": "block_numbered_list",
+          "position": "above",
+          "background": "light",
+          "sort": 2,
+          "data": {
+            "layout": "image_right",
+            "image_url": "https://barkomas.com/wp-content/uploads/2025/11/bdu500c-bg-photo01.png",
+            "translations": {
+              "en-US": {"tagline": "KEY FEATURES", "headline": "Why Choose the BullDrill Track-Mounted Series?", "image_title": "BDU Series — Track-Mounted"},
+              "tr-TR": {"tagline": "TEMEL ÖZELLİKLER", "headline": "Neden BullDrill Paletli Serisi?", "image_title": "BDU Serisi — Paletli"}
+            },
+            "items": [
+              {"sort": 1, "translations": {"en-US": {"title": "High-End Electric Motor", "description": "ABB or SIEMENS motors, 55–110 kW, 1480 rpm for consistent drilling performance."}, "tr-TR": {"title": "Üst Düzey Elektrik Motoru", "description": "ABB veya SIEMENS, 55-110 kW, 1480 rpm."}}},
+              {"sort": 2, "translations": {"en-US": {"title": "Robust Hydraulic Pumps", "description": "Four KAWASAKI pumps in tandem at 280–315 bar, HYDAC and PARKER/AKG cooling."}, "tr-TR": {"title": "Güçlü Hidrolik Pompalar", "description": "280-315 bar'da dört KAWASAKI tandem pompa."}}},
+              {"sort": 3, "translations": {"en-US": {"title": "Vigorous Rotary Head", "description": "Open-feed spindle at 1200 rpm, 1020–2060 Nm torque, PARKER or REXROTH hydromotors."}, "tr-TR": {"title": "Güçlü Döner Başlık", "description": "1200 rpm, 1020-2060 Nm tork."}}},
+              {"sort": 4, "translations": {"en-US": {"title": "Easy Navigation With Double Reducers", "description": "360° drilling capability via two hydraulically-controlled reducers."}, "tr-TR": {"title": "Çift Redüktedör ile Kolay Navigasyon", "description": "İki hidrolik kumandarlı redüktedör ile 360° sondaj."}}},
+              {"sort": 5, "translations": {"en-US": {"title": "Wireline System With Automatic Winding Feature", "description": "Reduces manual handling risks, prevents cable snapping, improves core retrieval speed."}, "tr-TR": {"title": "Otomatik Sarmalı Wireline Sistemi", "description": "Manuel taşıma risklerini azaltır, kablo kopmasını önler."}}},
+              {"sort": 6, "translations": {"en-US": {"title": "High-Strength Rod Holder", "description": "TC insert jaws, 70–130 kN axial holding force."}, "tr-TR": {"title": "Yüksek Dayanımlı Boru Tutucu", "description": "TC uç çeneleri, 70-130 kN eksenel kuvvet."}}},
+              {"sort": 7, "translations": {"en-US": {"title": "User-Friendly Control Panel", "description": "Intuitive control panel allows precise control over drilling operations."}, "tr-TR": {"title": "Kullanıcı Dostu Kontrol Paneli", "description": "Sezgisel kontrol paneli hassas kontrol sağlar."}}},
+              {"sort": 8, "translations": {"en-US": {"title": "Highly Efficient Diesel Engine for Tramming", "description": "PERKINS 4-cylinder diesel, 37 kW / 50 hp, powers reliable underground movement."}, "tr-TR": {"title": "Tramving için Verimli Dizel Motor", "description": "PERKINS 4 silindirli dizel, 37 kW / 50 bg."}}},
+              {"sort": 9, "translations": {"en-US": {"title": "High-Quality Crawler System", "description": "USTEC crawler delivers excellent traction and stability up to 3.4 km/h."}, "tr-TR": {"title": "Yüksek Kaliteli Palet Sistemi", "description": "USTEC paletler 3,4 km/sa'a kadar mükemmel traksiyon sağlar."}}},
+              {"sort": 10, "translations": {"en-US": {"title": "Integrated Flush Pump", "description": "Triplex mud pump, 90–140 l/min at 60–70 bar."}, "tr-TR": {"title": "Entegre Tahliye Pompası", "description": "Triplex çamur pompası, 90-140 l/dak, 60-70 bar."}}},
+              {"sort": 11, "translations": {"en-US": {"title": "Safety Cage for Sound Operations", "description": "Mechanically or hydraulically controlled safety cage enhances operator safety."}, "tr-TR": {"title": "Güvenlik Kafesi", "description": "Mekanik veya hidrolik kumandalı güvenlik kafesi operatör güvenliğini artırır."}}},
+              {"sort": 12, "translations": {"en-US": {"title": "Dual Emergency Stop System", "description": "Control panel and mast-mounted wire emergency stop for immediate shutdown."}, "tr-TR": {"title": "Çift Acil Durdurma", "description": "Kontrol paneli ve direk üzerinde telli acil stop."}}}
+            ]
+          }
+        },
+        {
+          "collection": "block_cta_banner",
+          "position": "below",
+          "background": "light",
+          "sort": 1,
+          "data": {
+            "primary_cta_url": "/contact",
+            "secondary_cta_url": "/contact",
+            "translations": {
+              "en-US": {"tagline": "CONTACT US", "headline": "Discover BARKOM's innovative solutions for faster, safer, and more efficient drilling operations.", "primary_cta_label": "Information & Request Form", "secondary_cta_label": "Contact Us"},
+              "tr-TR": {"tagline": "BİZİMLE İLETİŞİME GEÇİN", "headline": "Daha hızlı, daha güvenli ve daha verimli sondaj için BARKOM çözümlerini keşfedin.", "primary_cta_label": "Bilgi ve Talep Formu", "secondary_cta_label": "Bize Ulaşın"}
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "category_slug": "ex-proof-drilling-rigs",
+      "category_name_en": "Ex-Proof Drilling Rigs",
+      "blocks": [
+        {
+          "collection": "block_hero",
+          "position": "above",
+          "background": "dark",
+          "sort": 1,
+          "data": {
+            "layout": "image_right",
+            "image_url": "https://barkomas.com/wp-content/uploads/2025/11/bdu700exc-bg-photo.png",
+            "translations": {
+              "en-US": {"tagline": "HARSH ENVIRONMENTS, FULL PROTECTION, HIGH PERFORMANCE.", "headline": "Ex-Proof Drilling Rigs", "description": "BDU500EXC — BDU700EXC — BDU1500EXC"},
+              "tr-TR": {"tagline": "ZORLU ORTAMLAR, TAM KORUMA, YÜKSEK PERFORMANS.", "headline": "Ex-Proof Sondaj Makineleri", "description": "BDU500EXC — BDU700EXC — BDU1500EXC"}
+            }
+          }
+        },
+        {
+          "collection": "block_numbered_list",
+          "position": "above",
+          "background": "light",
+          "sort": 2,
+          "data": {
+            "layout": "image_right",
+            "image_url": "https://barkomas.com/wp-content/uploads/2025/11/bdu700exc-bg-photo01.png",
+            "translations": {
+              "en-US": {"tagline": "KEY FEATURES", "headline": "Why Choose the BullDrill Ex-Proof Series?", "image_title": "BDU Series — Ex-Proof"},
+              "tr-TR": {"tagline": "TEMEL ÖZELLİKLER", "headline": "Neden BullDrill Ex-Proof Serisi?", "image_title": "BDU Serisi — Ex-Proof"}
+            },
+            "items": [
+              {"sort": 1, "translations": {"en-US": {"title": "100% Explosion-Proof Drilling Rigs", "description": "BARKOM is Türkiye's first and only manufacturer of ATEX-certified explosion-proof drilling rigs, designed for environments with methane gas emissions."}, "tr-TR": {"title": "%100 Patlamaya Dayanıklı Sondaj Makineleri", "description": "BARKOM, Türkiye'nin ilk ve tek ATEX sertifikalı patlamaya dayanıklı sondaj makinesi üreticisidir."}}},
+              {"sort": 2, "translations": {"en-US": {"title": "ATEX-Certified Electric Motor", "description": "Ex-proof ABB or CEMP motors, 55–110 kW, 660V or 1100V, up to 1480 rpm."}, "tr-TR": {"title": "ATEX Sertifikalı Elektrik Motoru", "description": "Ex-proof ABB veya CEMP motorlar, 55-110 kW, 660V veya 1100V."}}},
+              {"sort": 3, "translations": {"en-US": {"title": "ATEX-Certified Hydraulic Pumps", "description": "Four ex-proof KAWASAKI pumps in tandem, 280–315 bar, HYDAC water-cooling."}, "tr-TR": {"title": "ATEX Sertifikalı Hidrolik Pompalar", "description": "Dört ex-proof KAWASAKI tandem pompa, 280-315 bar."}}},
+              {"sort": 4, "translations": {"en-US": {"title": "Vigorous Rotary Head", "description": "Open-feed spindle at 1200 rpm, 1020–2060 Nm, PARKER or REXROTH ex-proof hydromotors."}, "tr-TR": {"title": "Güçlü Döner Başlık", "description": "1200 rpm, 1020-2060 Nm, ex-proof hidromotor."}}},
+              {"sort": 5, "translations": {"en-US": {"title": "D-Type Explosion-Proof Electrical Box", "description": "Flameproof enclosure prevents internal sparks from igniting external gases or dust."}, "tr-TR": {"title": "D Tipi Patlamaya Dayanıklı Elektrik Kutusu", "description": "Aleve dayanıklı muhafaza iç kıvılcımların dış gazları tutuşturmasını önler."}}},
+              {"sort": 6, "translations": {"en-US": {"title": "Methane Gas Detector", "description": "Continuously monitors CH₄ levels, preventing dangerous gas buildup in coal mine operations."}, "tr-TR": {"title": "Metan Gaz Dedektörü", "description": "CH₄ düzeylerini sürekli izler, kömür madenlerinde tehlikeli gaz birikimine karşı koruma sağlar."}}},
+              {"sort": 7, "translations": {"en-US": {"title": "Integrated Thermocouple Protection", "description": "Continuously monitors hydraulic oil temperature. Auto-shutdown at 120°C to prevent overheating."}, "tr-TR": {"title": "Entegre Termostat Koruması", "description": "Hidrolik yağ sıcaklığını sürekli izler. 120°C'de otomatik kapatır."}}},
+              {"sort": 8, "translations": {"en-US": {"title": "Fire-Resistant Hydraulic Tank", "description": "130-liter tank with HFD-U 68 fire-resistant synthetic hydraulic fluid."}, "tr-TR": {"title": "Aleve Dayanıklı Hidrolik Tank", "description": "HFD-U 68 yangına dayanıklı sentetik hidrolik akışkanlı 130 litrelik tank."}}},
+              {"sort": 9, "translations": {"en-US": {"title": "Explosion-Proof Power Input System", "description": "Ex-proof power input box contains internal sparks and prevents propagation of explosions."}, "tr-TR": {"title": "Patlamaya Dayanıklı Güç Girişi", "description": "Ex-proof güç giriş kutusu iç kıvılcımları tutar ve patlamanın yayılmasını önler."}}},
+              {"sort": 10, "translations": {"en-US": {"title": "High-Quality ATEX Crawler System", "description": "USTEC ex-proof crawler delivers excellent traction and stability up to 3.4 km/h."}, "tr-TR": {"title": "Yüksek Kaliteli ATEX Palet Sistemi", "description": "USTEC ex-proof paletler 3,4 km/sa'a kadar mükemmel traksiyon sağlar."}}},
+              {"sort": 11, "translations": {"en-US": {"title": "Dual Emergency Stop System", "description": "Control panel and mast-mounted wire emergency stop for immediate shutdown."}, "tr-TR": {"title": "Çift Acil Durdurma Sistemi", "description": "Kontrol paneli ve direk üzerinde telli acil stop."}}}
+            ]
+          }
+        },
+        {
+          "collection": "block_cta_banner",
+          "position": "below",
+          "background": "light",
+          "sort": 1,
+          "data": {
+            "primary_cta_url": "/contact",
+            "secondary_cta_url": "/contact",
+            "translations": {
+              "en-US": {"tagline": "CONTACT US", "headline": "Discover BARKOM's innovative solutions for faster, safer, and more efficient drilling operations.", "primary_cta_label": "Information & Request Form", "secondary_cta_label": "Contact Us"},
+              "tr-TR": {"tagline": "BİZİMLE İLETİŞİME GEÇİN", "headline": "Daha hızlı, daha güvenli ve daha verimli sondaj için BARKOM çözümlerini keşfedin.", "primary_cta_label": "Bilgi ve Talep Formu", "secondary_cta_label": "Bize Ulaşın"}
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "_note": "Drilling equipment subcategories all share the same simple structure: hero + CTA. Their product types come from the product listing itself.",
+      "category_slug": "drill-rods-and-casings",
+      "blocks": [
+        {"collection": "block_hero", "position": "above", "background": "dark", "sort": 1, "data": {"layout": "image_center", "translations": {"en-US": {"tagline": "DRILLING EQUIPMENT", "headline": "Drill Rods & Casings", "description": "Heat-treated drill rods and casings with high surface hardness and tough core for wireline and conventional drilling systems."}, "tr-TR": {"tagline": "SONDAJ EKIPMANLARI", "headline": "Sondaj Boruları ve Muhafaza Boruları", "description": "Wireline ve konvansiyonel sondaj sistemleri için yüksek yüzey sertliğine ve sağlam çekirdeğe sahip ısıl işlem görmüş sondaj boruları."}}}},
+        {"collection": "block_cta_banner", "position": "below", "background": "light", "sort": 1, "data": {"primary_cta_url": "/contact", "secondary_cta_url": "/contact", "translations": {"en-US": {"tagline": "CONTACT US", "headline": "Request a quote or download our catalogue.", "primary_cta_label": "Information & Request Form", "secondary_cta_label": "Contact Us"}, "tr-TR": {"tagline": "BİZİMLE İLETİŞİME GEÇİN", "headline": "Teklif isteyin veya kataloğumuzu indirin.", "primary_cta_label": "Bilgi ve Talep Formu", "secondary_cta_label": "Bize Ulaşın"}}}}
+      ]
+    },
+
+    {
+      "category_slug": "core-barrels-and-overshots",
+      "blocks": [
+        {"collection": "block_hero", "position": "above", "background": "dark", "sort": 1, "data": {"layout": "image_center", "translations": {"en-US": {"tagline": "DRILLING EQUIPMENT", "headline": "Core Barrels & Overshots", "description": "Reliable and efficient sample recovery with single and double tube options across a wide diameter range."}, "tr-TR": {"tagline": "SONDAJ EKIPMANLARI", "headline": "Karotiyerler ve Overshotlar", "description": "Geniş bir çap aralığında tek ve çift tüp seçenekleriyle güvenilir ve verimli örnek geri alımı."}}}},
+        {"collection": "block_cta_banner", "position": "below", "background": "light", "sort": 1, "data": {"primary_cta_url": "/contact", "secondary_cta_url": "/contact", "translations": {"en-US": {"tagline": "CONTACT US", "headline": "Request a quote or download our catalogue.", "primary_cta_label": "Information & Request Form", "secondary_cta_label": "Contact Us"}, "tr-TR": {"tagline": "BİZİMLE İLETİŞİME GEÇİN", "headline": "Teklif isteyin veya kataloğumuzu indirin.", "primary_cta_label": "Bilgi ve Talep Formu", "secondary_cta_label": "Bize Ulaşın"}}}}
+      ]
+    },
+
+    {
+      "category_slug": "tungsten-carbide-tools",
+      "blocks": [
+        {"collection": "block_hero", "position": "above", "background": "dark", "sort": 1, "data": {"layout": "image_center", "translations": {"en-US": {"tagline": "DRILLING EQUIPMENT", "headline": "Tungsten Carbide Tools", "description": "TC-based tools designed for fast, efficient, and wear-resistant sample drilling in mineral exploration and geotechnical applications."}, "tr-TR": {"tagline": "SONDAJ EKIPMANLARI", "headline": "Tungsten Karbür Aletleri", "description": "Maden arama ve geoteknik uygulamalarda hızlı, verimli ve aşınmaya dayanıklı örnek sondajı için TC tabanlı aletler."}}}},
+        {"collection": "block_cta_banner", "position": "below", "background": "light", "sort": 1, "data": {"primary_cta_url": "/contact", "secondary_cta_url": "/contact", "translations": {"en-US": {"tagline": "CONTACT US", "headline": "Request a quote or download our catalogue.", "primary_cta_label": "Information & Request Form", "secondary_cta_label": "Contact Us"}, "tr-TR": {"tagline": "BİZİMLE İLETİŞİME GEÇİN", "headline": "Teklif isteyin veya kataloğumuzu indirin.", "primary_cta_label": "Bilgi ve Talep Formu", "secondary_cta_label": "Bize Ulaşın"}}}}
+      ]
+    },
+
+    {
+      "category_slug": "drilling-accessories",
+      "blocks": [
+        {"collection": "block_hero", "position": "above", "background": "dark", "sort": 1, "data": {"layout": "image_center", "translations": {"en-US": {"tagline": "DRILLING EQUIPMENT", "headline": "Drilling Accessories", "description": "An optimized set of auxiliary equipment for fast setup, safe lifting, and uninterrupted field operations."}, "tr-TR": {"tagline": "SONDAJ EKIPMANLARI", "headline": "Sondaj Aksesuarları", "description": "Hızlı kurulum, güvenli kaldırma ve kesintisiz saha operasyonları için optimize edilmiş yardımcı ekipman seti."}}}},
+        {"collection": "block_cta_banner", "position": "below", "background": "light", "sort": 1, "data": {"primary_cta_url": "/contact", "secondary_cta_url": "/contact", "translations": {"en-US": {"tagline": "CONTACT US", "headline": "Request a quote or download our catalogue.", "primary_cta_label": "Information & Request Form", "secondary_cta_label": "Contact Us"}, "tr-TR": {"tagline": "BİZİMLE İLETİŞİME GEÇİN", "headline": "Teklif isteyin veya kataloğumuzu indirin.", "primary_cta_label": "Bilgi ve Talep Formu", "secondary_cta_label": "Bize Ulaşın"}}}}
+      ]
+    },
+
+    {
+      "category_slug": "core-trays",
+      "blocks": [
+        {"collection": "block_hero", "position": "above", "background": "dark", "sort": 1, "data": {"layout": "image_center", "translations": {"en-US": {"tagline": "DRILLING EQUIPMENT", "headline": "Core Trays", "description": "Durable, stackable, and long-lasting core trays for field use, available in plastic and galvanised steel options."}, "tr-TR": {"tagline": "SONDAJ EKIPMANLARI", "headline": "Karot Taşıma Kutuları", "description": "Plastik ve galvanizli çelik seçeneklerinde saha kullanımı için dayanıklı, istiflenmebilir ve uzun ömürlü karot taşıma kutuları."}}}},
+        {"collection": "block_cta_banner", "position": "below", "background": "light", "sort": 1, "data": {"primary_cta_url": "/contact", "secondary_cta_url": "/contact", "translations": {"en-US": {"tagline": "CONTACT US", "headline": "Request a quote or download our catalogue.", "primary_cta_label": "Information & Request Form", "secondary_cta_label": "Contact Us"}, "tr-TR": {"tagline": "BİZİMLE İLETİŞİME GEÇİN", "headline": "Teklif isteyin veya kataloğumuzu indirin.", "primary_cta_label": "Bilgi ve Talep Formu", "secondary_cta_label": "Bize Ulaşın"}}}}
+      ]
+    },
+
+    {
+      "category_slug": "core-cutting-machine",
+      "blocks": [
+        {"collection": "block_hero", "position": "above", "background": "dark", "sort": 1, "data": {"layout": "image_center", "translations": {"en-US": {"tagline": "DRILLING EQUIPMENT", "headline": "Core Cutting Machine", "description": "A water-cooled diamond-blade cutting system designed to cut core samples safely, quickly, and cleanly."}, "tr-TR": {"tagline": "SONDAJ EKIPMANLARI", "headline": "Karot Kesme Makinesi", "description": "Karot örneklerini güvenli, hızlı ve temiz bir şekilde kesmek için tasarlanmış su soğutmalı elmas bıçaklı kesme sistemi."}}}},
+        {"collection": "block_cta_banner", "position": "below", "background": "light", "sort": 1, "data": {"primary_cta_url": "/contact", "secondary_cta_url": "/contact", "translations": {"en-US": {"tagline": "CONTACT US", "headline": "Request a quote or download our catalogue.", "primary_cta_label": "Information & Request Form", "secondary_cta_label": "Contact Us"}, "tr-TR": {"tagline": "BİZİMLE İLETİŞİME GEÇİN", "headline": "Teklif isteyin veya kataloğumuzu indirin.", "primary_cta_label": "Bilgi ve Talep Formu", "secondary_cta_label": "Bize Ulaşın"}}}}
+      ]
+    },
+
+    {
+      "category_slug": "flush-pumps-and-mud-mixers",
+      "blocks": [
+        {"collection": "block_hero", "position": "above", "background": "dark", "sort": 1, "data": {"layout": "image_center", "translations": {"en-US": {"tagline": "DRILLING EQUIPMENT", "headline": "Flush Pumps & Mud Mixers", "description": "Powerful flush pumps and mud mixers that ensure continuous circulation and optimal drilling fluid mixture during operations."}, "tr-TR": {"tagline": "SONDAJ EKIPMANLARI", "headline": "Tahliye Pompaları ve Çamur Mikserleri", "description": "Operasyonlar sırasında sürekli sirkülasyon ve optimal sondaj sıvısı karışımı sağlayan güçlü tahliye pompaları ve çamur mikserleri."}}}},
+        {"collection": "block_cta_banner", "position": "below", "background": "light", "sort": 1, "data": {"primary_cta_url": "/contact", "secondary_cta_url": "/contact", "translations": {"en-US": {"tagline": "CONTACT US", "headline": "Request a quote or download our catalogue.", "primary_cta_label": "Information & Request Form", "secondary_cta_label": "Contact Us"}, "tr-TR": {"tagline": "BİZİMLE İLETİŞİME GEÇİN", "headline": "Teklif isteyin veya kataloğumuzu indirin.", "primary_cta_label": "Bilgi ve Talep Formu", "secondary_cta_label": "Bize Ulaşın"}}}}
+      ]
+    },
+
+    {
+      "category_slug": "geotechnical-equipment",
+      "blocks": [
+        {"collection": "block_hero", "position": "above", "background": "dark", "sort": 1, "data": {"layout": "image_center", "translations": {"en-US": {"tagline": "DRILLING EQUIPMENT", "headline": "Geotechnical Equipment", "description": "A reliable and durable range of geotechnical equipment developed for soil sampling and in-situ testing."}, "tr-TR": {"tagline": "SONDAJ EKIPMANLARI", "headline": "Geoteknik Ekipmanlar", "description": "Zemin örneklemesi ve yerinde testler için geliştirilmiş güvenilir ve dayanıklı geoteknik ekipman yelpazesi."}}}},
+        {"collection": "block_cta_banner", "position": "below", "background": "light", "sort": 1, "data": {"primary_cta_url": "/contact", "secondary_cta_url": "/contact", "translations": {"en-US": {"tagline": "CONTACT US", "headline": "Request a quote or download our catalogue.", "primary_cta_label": "Information & Request Form", "secondary_cta_label": "Contact Us"}, "tr-TR": {"tagline": "BİZİMLE İLETİŞİME GEÇİN", "headline": "Teklif isteyin veya kataloğumuzu indirin.", "primary_cta_label": "Bilgi ve Talep Formu", "secondary_cta_label": "Bize Ulaşın"}}}}
+      ]
+    },
+
+    {
+      "category_slug": "rock-drilling-tools",
+      "blocks": [
+        {"collection": "block_hero", "position": "above", "background": "dark", "sort": 1, "data": {"layout": "image_center", "translations": {"en-US": {"tagline": "DRILLING EQUIPMENT", "headline": "Rock Drilling Tools", "description": "Rock drilling equipment designed for high penetration and durability in mineral exploration, geotechnical, and quarry drilling operations."}, "tr-TR": {"tagline": "SONDAJ EKIPMANLARI", "headline": "Kaya Sondaj Ekipmanları", "description": "Maden arama, geoteknik ve taş ocakları sondaj operasyonlarında yüksek penetrasyon ve dayanıklılık için tasarlanmış kaya sondaj ekipmanları."}}}},
+        {"collection": "block_cta_banner", "position": "below", "background": "light", "sort": 1, "data": {"primary_cta_url": "/contact", "secondary_cta_url": "/contact", "translations": {"en-US": {"tagline": "CONTACT US", "headline": "Request a quote or download our catalogue.", "primary_cta_label": "Information & Request Form", "secondary_cta_label": "Contact Us"}, "tr-TR": {"tagline": "BİZİMLE İLETİŞİME GEÇİN", "headline": "Teklif isteyin veya kataloğumuzu indirin.", "primary_cta_label": "Bilgi ve Talep Formu", "secondary_cta_label": "Bize Ulaşın"}}}}
+      ]
+    }
+  ]
+}

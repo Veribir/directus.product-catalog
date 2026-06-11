@@ -1,0 +1,355 @@
+{
+  "_notes": {
+    "purpose": "Reusable block content that appears identically (or near-identically) across homepage, category pages, and product pages. Seed these once in Directus and reuse the same block IDs across multiple pages/categories.",
+    "usage": "Each shared block has a 'used_on' list showing where it appears. When seeding, create the block once, then reference its ID in the relevant page_blocks / category_blocks / product_blocks junction rows.",
+    "variations": "Some blocks have minor variations (e.g. CTA headline changes per page). These are noted with 'variant_of'."
+  },
+
+  "shared_blocks": [
+
+    {
+      "id": "shared_after_sales_dark",
+      "collection": "block_numbered_list",
+      "background": "dark",
+      "description": "After-Sales Support section — dark card, image left, 4-item list. Appears on homepage, surface/underground category pages, and all rig product pages.",
+      "used_on": [
+        {"type": "page", "permalink": "/", "sort": 5},
+        {"type": "category", "slug": "surface-drilling-rigs", "position": "below", "sort": 1},
+        {"type": "category", "slug": "underground-drilling-rigs", "position": "below", "sort": 1}
+      ],
+      "data": {
+        "layout": "image_left",
+        "image": "https://barkomas.com/wp-content/uploads/2025/11/satis-sonrasi-destek-bg1.jpg",
+        "image_link": "/support",
+        "translations": {
+          "en-US": {
+            "headline": "With After-Sales Support, We Stand by You for Operational Continuity",
+            "description": "BARKOM's expert service team is always by your side to ensure your machine operates at peak performance without interruption.",
+            "image_title": "After Sales Support"
+          },
+          "tr-TR": {
+            "headline": "Satış Sonrası Destekle, Operasyonel Sürekliliğiniz için Yanınızdayız",
+            "description": "BARKOM'un uzman servis ekibi, makinenizin kesintisiz olarak en yüksek performansta çalışmasını sağlamak için her zaman yanınızdadır.",
+            "image_title": "Satış Sonrası Destek"
+          }
+        },
+        "items": [
+          {"sort": 1, "translations": {"en-US": {"title": "On Site Service Within 48 Hours"}, "tr-TR": {"title": "48 Saat İçinde Yerinde Servis"}}},
+          {"sort": 2, "translations": {"en-US": {"title": "24/7 Technical Support"}, "tr-TR": {"title": "7/24 Teknik Destek"}}},
+          {"sort": 3, "translations": {"en-US": {"title": "On-Site Delivery & Orientation Assistance"}, "tr-TR": {"title": "Sahada Teslim ve Oryantasyon Desteği"}}},
+          {"sort": 4, "translations": {"en-US": {"title": "Easy Access to Spare Parts"}, "tr-TR": {"title": "Kolay Yedek Parça Erişimi"}}}
+        ]
+      }
+    },
+
+    {
+      "id": "shared_rnd_light",
+      "collection": "block_numbered_list",
+      "background": "light",
+      "description": "R&D Center section — white bg, image right, 4-item list. Appears on homepage, surface/underground category pages.",
+      "used_on": [
+        {"type": "page", "permalink": "/", "sort": 6},
+        {"type": "category", "slug": "surface-drilling-rigs", "position": "below", "sort": 2},
+        {"type": "category", "slug": "underground-drilling-rigs", "position": "below", "sort": 2}
+      ],
+      "data": {
+        "layout": "image_right",
+        "image": "https://barkomas.com/wp-content/uploads/2025/11/projeye-ozel-tasarim-bg.jpg",
+        "image_link": "/products",
+        "translations": {
+          "en-US": {
+            "headline": "Innovative Solutions Driven by Our R&D Center",
+            "description": "With its R&D Center approved by the Republic of Türkiye Ministry of Industry and Technology, BARKOM is among the few manufacturers capable of designing customized drilling rigs.",
+            "image_title": "Project Based Design"
+          },
+          "tr-TR": {
+            "headline": "Ar-Ge Merkezimizden Yenilikçi Çözümler",
+            "description": "T.C. Sanayi ve Teknoloji Bakanlığı tarafından onaylanan Ar-Ge Merkezi ile BARKOM, özelleştirilmiş sondaj makineleri tasarlayabilen az sayıdaki üreticiden biridir.",
+            "image_title": "Proje Bazlı Tasarım"
+          }
+        },
+        "items": [
+          {"sort": 1, "translations": {"en-US": {"title": "Site Specific Engineering Solutions"}, "tr-TR": {"title": "Sahaya Özgü Mühendislik Çözümleri"}}},
+          {"sort": 2, "translations": {"en-US": {"title": "Configuration Based on Operational Efficiency"}, "tr-TR": {"title": "Operasyonel Verimliliğe Dayalı Konfigürasyon"}}},
+          {"sort": 3, "translations": {"en-US": {"title": "Customization Beyond Standard Production"}, "tr-TR": {"title": "Standart Üretimin Ötesinde Özelleştirme"}}},
+          {"sort": 4, "translations": {"en-US": {"title": "Use of High Quality Raw Materials"}, "tr-TR": {"title": "Yüksek Kaliteli Hammadde Kullanımı"}}}
+        ]
+      }
+    },
+
+    {
+      "id": "shared_global_partners",
+      "collection": "block_brands_logos",
+      "background": "light",
+      "description": "Global Business Partners — dark rounded card, Earth image left, 6 brand names right. Appears on homepage, surface/underground category pages.",
+      "used_on": [
+        {"type": "page", "permalink": "/", "sort": 7},
+        {"type": "category", "slug": "surface-drilling-rigs", "position": "below", "sort": 3},
+        {"type": "category", "slug": "underground-drilling-rigs", "position": "below", "sort": 3}
+      ],
+      "data": {
+        "image": "https://barkomas.com/wp-content/uploads/2025/11/global-is-ortaklarimiz-bg.jpg",
+        "image_link": null,
+        "translations": {
+          "en-US": {
+            "headline": "The Most Prestigious International Brands, Represented by BARKOM",
+            "description": "BARKOM is the Turkish distributor of the world's most prestigious international brands in the mining and drilling industry.",
+            "image_title": "Global Business Partners"
+          },
+          "tr-TR": {
+            "headline": "BARKOM Tarafından Temsil Edilen En Prestijli Uluslararası Markalar",
+            "description": "BARKOM, madencilik ve sondaj sektöründe dünyanın en prestijli uluslararası markalarının Türkiye distribütörüdür.",
+            "image_title": "Küresel İş Ortakları"
+          }
+        },
+        "logos": [
+          {"sort": 1, "name": "AMC", "url": null},
+          {"sort": 2, "name": "MONARK", "url": null},
+          {"sort": 3, "name": "DEVICO & REFLEX", "url": null},
+          {"sort": 4, "name": "JET-LUBE", "url": null},
+          {"sort": 5, "name": "DIAMANTINA CHRISTENSEN", "url": null},
+          {"sort": 6, "name": "GEOSIGHT CMS", "url": null}
+        ]
+      }
+    },
+
+    {
+      "id": "shared_cta_standard",
+      "collection": "block_cta_banner",
+      "background": "light",
+      "description": "Standard CTA banner — white bg, 'CONTACT US' tagline, standard headline, 2 buttons. Appears on nearly every page and category.",
+      "used_on": [
+        {"type": "page", "permalink": "/", "sort": 8},
+        {"type": "page", "permalink": "/about-us"},
+        {"type": "page", "permalink": "/what-sets-us-a-part"},
+        {"type": "page", "permalink": "/support"},
+        {"type": "page", "permalink": "/contact"},
+        {"type": "page", "permalink": "/career"},
+        {"type": "category", "slug": "surface-drilling-rigs", "position": "below", "sort": 4},
+        {"type": "category", "slug": "underground-drilling-rigs", "position": "below", "sort": 4},
+        {"type": "category", "slug": "drilling-equipment", "position": "below", "sort": 1},
+        {"type": "category", "slug": "top-head-drive-drilling-rigs", "position": "below", "sort": 1},
+        {"type": "category", "slug": "spindle-drive-drilling-rigs", "position": "below", "sort": 1},
+        {"type": "category", "slug": "multi-purpose-drilling-rigs", "position": "below", "sort": 1},
+        {"type": "category", "slug": "skid-mounted-drilling-rigs", "position": "below", "sort": 1},
+        {"type": "category", "slug": "track-mounted-drilling-rigs", "position": "below", "sort": 1},
+        {"type": "category", "slug": "ex-proof-drilling-rigs", "position": "below", "sort": 1},
+        {"type": "category", "slug": "drill-rods-and-casings", "position": "below", "sort": 1},
+        {"type": "category", "slug": "core-barrels-and-overshots", "position": "below", "sort": 1},
+        {"type": "category", "slug": "tungsten-carbide-tools", "position": "below", "sort": 1},
+        {"type": "category", "slug": "drilling-accessories", "position": "below", "sort": 1},
+        {"type": "category", "slug": "core-trays", "position": "below", "sort": 1},
+        {"type": "category", "slug": "core-cutting-machine", "position": "below", "sort": 1},
+        {"type": "category", "slug": "flush-pumps-and-mud-mixers", "position": "below", "sort": 1},
+        {"type": "category", "slug": "geotechnical-equipment", "position": "below", "sort": 1},
+        {"type": "category", "slug": "rock-drilling-tools", "position": "below", "sort": 1}
+      ],
+      "data": {
+        "primary_cta_url": "/contact",
+        "secondary_cta_url": "/contact",
+        "translations": {
+          "en-US": {
+            "tagline": "CONTACT US",
+            "headline": "Discover BARKOM's innovative solutions for faster, safer, and more efficient drilling operations.",
+            "primary_cta_label": "Information & Request Form",
+            "secondary_cta_label": "Contact Us"
+          },
+          "tr-TR": {
+            "tagline": "BİZİMLE İLETİŞİME GEÇİN",
+            "headline": "Daha hızlı, daha güvenli ve daha verimli sondaj operasyonları için BARKOM'un yenilikçi çözümlerini keşfedin.",
+            "primary_cta_label": "Bilgi ve Talep Formu",
+            "secondary_cta_label": "Bize Ulaşın"
+          }
+        }
+      }
+    },
+
+    {
+      "id": "shared_cta_catalogue",
+      "collection": "block_cta_banner",
+      "background": "light",
+      "description": "Catalogue CTA — used on all drilling equipment subcategory pages (rods, bits, accessories, etc.). Slightly different headline.",
+      "variant_of": "shared_cta_standard",
+      "used_on": [
+        {"type": "category", "slug": "drill-rods-and-casings", "position": "below"},
+        {"type": "category", "slug": "core-barrels-and-overshots", "position": "below"},
+        {"type": "category", "slug": "tungsten-carbide-tools", "position": "below"},
+        {"type": "category", "slug": "drilling-accessories", "position": "below"},
+        {"type": "category", "slug": "core-trays", "position": "below"},
+        {"type": "category", "slug": "core-cutting-machine", "position": "below"},
+        {"type": "category", "slug": "flush-pumps-and-mud-mixers", "position": "below"},
+        {"type": "category", "slug": "geotechnical-equipment", "position": "below"},
+        {"type": "category", "slug": "rock-drilling-tools", "position": "below"}
+      ],
+      "data": {
+        "primary_cta_url": "/contact",
+        "secondary_cta_url": "/contact",
+        "translations": {
+          "en-US": {
+            "tagline": "CONTACT US",
+            "headline": "Request a quote or download our product catalogue.",
+            "primary_cta_label": "Information & Request Form",
+            "secondary_cta_label": "Contact Us"
+          },
+          "tr-TR": {
+            "tagline": "BİZİMLE İLETİŞİME GEÇİN",
+            "headline": "Teklif isteyin veya ürün kataloğumuzu indirin.",
+            "primary_cta_label": "Bilgi ve Talep Formu",
+            "secondary_cta_label": "Bize Ulaşın"
+          }
+        }
+      }
+    },
+
+    {
+      "id": "shared_why_barkom",
+      "collection": "block_features_grid",
+      "background": "light",
+      "description": "Why BARKOM showcase — image left, 3 rotating feature icons. Appears on homepage only (but is referenced from What Sets Us Apart page via link).",
+      "used_on": [
+        {"type": "page", "permalink": "/", "sort": 2}
+      ],
+      "data": {
+        "layout": "showcase_left",
+        "image": "https://barkomas.com/wp-content/uploads/2025/11/anasayfa-barkom-bg.jpg",
+        "image_link": "/what-sets-us-a-part",
+        "translations": {
+          "en-US": {
+            "tagline": "WHY BARKOM?",
+            "description": "From explosion-proof designs to rapid service support, every solution is engineered to ensure safe and uninterrupted operation in the field.",
+            "image_title": "Discover the BARKOM Difference"
+          },
+          "tr-TR": {
+            "tagline": "NEDEN BARKOM?",
+            "description": "Patlamaya dayanıklı tasarımlardan hızlı servis desteğine kadar her çözüm, sahada güvenli ve kesintisiz operasyonu sağlamak üzere tasarlanmıştır.",
+            "image_title": "BARKOM Farkını Keşfedin"
+          }
+        },
+        "items": [
+          {
+            "sort": 1,
+            "image": {"url": "https://barkomas.com/wp-content/uploads/2025/11/canli-destek.png"},
+            "translations": {
+              "en-US": {"headline": "Service Within 48 Hours and 24/7 Live Support"},
+              "tr-TR": {"headline": "48 Saat İçinde Servis ve 7/24 Canlı Destek"}
+            }
+          },
+          {
+            "sort": 2,
+            "image": {"url": "https://barkomas.com/wp-content/uploads/2025/11/depolama-alani.png"},
+            "translations": {
+              "en-US": {"headline": "Easy Spare Parts Supply with 8,200 m² of Storage Area"},
+              "tr-TR": {"headline": "8.200 m² Depolama Alanıyla Kolay Yedek Parça Temini"}
+            }
+          },
+          {
+            "sort": 3,
+            "image": {"url": "https://barkomas.com/wp-content/uploads/2025/11/is-guvenligi.png"},
+            "translations": {
+              "en-US": {"headline": "We maximize your safety and efficiency."},
+              "tr-TR": {"headline": "Güvenliğinizi ve verimliliğinizi maksimize ediyoruz."}
+            }
+          }
+        ]
+      }
+    },
+
+    {
+      "id": "shared_drilling_equipment_showcase",
+      "collection": "block_features_grid",
+      "background": "light",
+      "description": "Drilling Equipment showcase — image right, 3 feature icons. Appears on homepage only.",
+      "used_on": [
+        {"type": "page", "permalink": "/", "sort": 4}
+      ],
+      "data": {
+        "layout": "showcase_right",
+        "image": {
+          "url": "https://barkomas.com/wp-content/uploads/2025/11/sondaj-ekipmanlari-bg2.jpg"
+        },
+        "image_link": "/products/drilling-equipment",
+        "translations": {
+          "en-US": {
+            "tagline": "DRILLING EQUIPMENT",
+            "description": "Our equipment is manufactured from high-performance materials, ensuring exceptional durability and precision even in the hardest rock formations.",
+            "image_title": "Drilling Equipment"
+          },
+          "tr-TR": {
+            "tagline": "SONDAJ EKIPMANLARI",
+            "description": "Ekipmanlarımız, en sert kaya formasyonlarında bile olağanüstü dayanıklılık ve hassasiyet sağlayan yüksek performanslı malzemelerden üretilmektedir.",
+            "image_title": "Sondaj Ekipmanları"
+          }
+        },
+        "items": [
+          {
+            "sort": 1,
+            "image": {"url": "https://barkomas.com/wp-content/uploads/2025/11/matkaplar.png"},
+            "translations": {
+              "en-US": {"headline": "High wear-resistant diamond and tungsten carbide drill bits"},
+              "tr-TR": {"headline": "Yüksek aşınma dirençli elmas ve tungsten karbür matkap uçları"}
+            }
+          },
+          {
+            "sort": 2,
+            "image": {"url": "https://barkomas.com/wp-content/uploads/2025/11/karotiyer-sistemleri.png"},
+            "translations": {
+              "en-US": {"headline": "Portcrons, shoes, and advanced core barrel systems"},
+              "tr-TR": {"headline": "Portcron'lar, tabanlar ve gelişmiş karotla çekim sistemleri"}
+            }
+          },
+          {
+            "sort": 3,
+            "image": {"url": "https://barkomas.com/wp-content/uploads/2025/11/hassasiyet.png"},
+            "translations": {
+              "en-US": {"headline": "Precise hole stabilization with Diamond Locking Couplings"},
+              "tr-TR": {"headline": "Elmas Kilitleme Manşonları ile hassas delik stabilizasyonu"}
+            }
+          }
+        ]
+      }
+    }
+
+  ],
+
+  "summary": {
+    "total_shared_blocks": 7,
+    "reuse_count": {
+      "shared_cta_standard": 22,
+      "shared_after_sales_dark": 3,
+      "shared_rnd_light": 3,
+      "shared_global_partners": 3,
+      "shared_cta_catalogue": 9,
+      "shared_why_barkom": 1,
+      "shared_drilling_equipment_showcase": 1
+    },
+    "savings": "Instead of creating 42 duplicate blocks, you create 7 and reuse them. The CTA banner alone saves creating 21 duplicate entries.",
+    "unique_per_page_blocks": [
+      "block_hero_slider (homepage only)",
+      "block_product_category_cards (homepage only)",
+      "block_hero (each category/page has its own hero with unique tagline/headline)",
+      "block_numbered_list features (each rig category has its own feature list)"
+    ],
+    "images_needed_from_barkomas": {
+      "loadable_via_url": [
+        "https://barkomas.com/wp-content/uploads/2025/10/anasayfa-slider-bg-scaled.jpg",
+        "https://barkomas.com/wp-content/uploads/2025/11/bulldrill-red.png",
+        "https://barkomas.com/wp-content/uploads/2025/11/bulldrill-small-red.png",
+        "https://barkomas.com/wp-content/uploads/2025/11/canli-destek.png",
+        "https://barkomas.com/wp-content/uploads/2025/11/depolama-alani.png",
+        "https://barkomas.com/wp-content/uploads/2025/11/is-guvenligi.png",
+        "https://barkomas.com/wp-content/uploads/2025/11/matkaplar.png",
+        "https://barkomas.com/wp-content/uploads/2025/11/karotiyer-sistemleri.png",
+        "https://barkomas.com/wp-content/uploads/2025/11/hassasiyet.png"
+      ],
+      "must_upload_manually": [
+        "Why BARKOM card image — engineer at control panel",
+        "BullDrill Surface card image — red rig on terrain (3D render)",
+        "BullDrill Underground card image — yellow rig in tunnel (3D render)",
+        "Drilling Equipment card image — warehouse with drill rods",
+        "After-Sales card image — support engineer with headset",
+        "R&D card image — BDU 400 control panel",
+        "Global Partners card image — Earth from space"
+      ]
+    }
+  }
+}

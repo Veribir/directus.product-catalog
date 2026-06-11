@@ -1,5 +1,7 @@
 directus/*
 !directus/extensions
+!directus/seed-data
+!directus/schema
 !directus/docker-compose.yml
 !directus/Dockerfile
 !directus/fly.toml

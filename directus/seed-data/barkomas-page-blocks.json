@@ -1,0 +1,823 @@
+{
+  "_notes": {
+    "images": "All image URLs are from barkomas.com/wp-content/uploads/. These should be imported into Directus files. Images listed as null need to be uploaded manually.",
+    "background": "Values are 'light' or 'dark' matching the page_blocks junction background field.",
+    "layout_references": "For BlockFeaturesGrid: showcase_left = image left, showcase_right = image right. For BlockNumberedList: image_left or image_right."
+  },
+
+  "globals": {
+    "title": "BARKOM",
+    "tagline": "EXPLORING DEEPER",
+    "description": "BARKOM manufactures underground and surface diamond core drilling rigs at the same quality level as its European competitors and delivers them at far more competitive costs.",
+    "email": "info@barkomas.com",
+    "phone": "+90 312 385 60 50",
+    "address": "Malıköy Anadolu OSB, 30 Ağustos Cad. No:33, Sincan / ANKARA",
+    "accent_color": "#e11d25",
+    "logo_url": "https://barkomas.com/wp-content/uploads/2025/10/dark-logo.png",
+    "logo_dark_mode_url": "https://barkomas.com/wp-content/uploads/2025/11/footer-logo-light.png",
+    "footer_image_url": "https://barkomas.com/wp-content/uploads/2025/11/footer-vinc.png",
+    "social_links": [
+      {"service": "facebook", "url": "https://www.facebook.com/BarkomGroup"},
+      {"service": "instagram", "url": "https://www.instagram.com/BarkomGroup"},
+      {"service": "x", "url": "https://twitter.com/BarkomGroup"},
+      {"service": "linkedin", "url": "https://www.linkedin.com/company/barkom"},
+      {"service": "youtube", "url": "https://www.youtube.com/channel/UC97ieN0AIEwxWVx23PddJEQ"}
+    ]
+  },
+
+  "navigation": {
+    "main": {
+      "title": "Main Navigation",
+      "items": [
+        {
+          "type": "group",
+          "title": "Products",
+          "sort": 1,
+          "children": [
+            {"type": "url", "title": "Surface Drilling Rigs", "url": "/products/surface-drilling-rigs", "sort": 1},
+            {"type": "url", "title": "Underground Drilling Rigs", "url": "/products/underground-drilling-rigs", "sort": 2},
+            {"type": "url", "title": "Drilling Equipment", "url": "/products/drilling-equipment", "sort": 3},
+            {"type": "url", "title": "Product Catalog", "url": "/products", "sort": 4}
+          ]
+        },
+        {
+          "type": "group",
+          "title": "Corporate",
+          "sort": 2,
+          "children": [
+            {"type": "url", "title": "About Us", "url": "/about-us", "sort": 1},
+            {"type": "url", "title": "Why BARKOM?", "url": "/what-sets-us-a-part", "sort": 2},
+            {"type": "url", "title": "Our History", "url": "/our-history", "sort": 3},
+            {"type": "url", "title": "Our Quality Policy", "url": "/quality-policy", "sort": 4},
+            {"type": "url", "title": "Global Partners", "url": "/global-partners", "sort": 5},
+            {"type": "url", "title": "Career at BARKOM", "url": "/career", "sort": 6}
+          ]
+        },
+        {"type": "url", "title": "Career", "url": "/career", "sort": 3},
+        {"type": "url", "title": "Support", "url": "/support", "sort": 4},
+        {"type": "url", "title": "Contact", "url": "/contact", "sort": 5}
+      ]
+    },
+    "footer": {
+      "title": "Footer Navigation",
+      "items": [
+        {
+          "type": "group",
+          "title": "Products",
+          "sort": 1,
+          "children": [
+            {"type": "url", "title": "Surface Drilling Rigs", "url": "/products/surface-drilling-rigs", "sort": 1},
+            {"type": "url", "title": "Underground Drilling Rigs", "url": "/products/underground-drilling-rigs", "sort": 2},
+            {"type": "url", "title": "Drilling Equipment", "url": "/products/drilling-equipment", "sort": 3},
+            {"type": "url", "title": "Product Catalog", "url": "/products", "sort": 4}
+          ]
+        },
+        {
+          "type": "group",
+          "title": "Corporate",
+          "sort": 2,
+          "children": [
+            {"type": "url", "title": "About Us", "url": "/about-us", "sort": 1},
+            {"type": "url", "title": "Why BARKOM?", "url": "/what-sets-us-a-part", "sort": 2},
+            {"type": "url", "title": "Our History", "url": "/our-history", "sort": 3},
+            {"type": "url", "title": "Our Quality Policy", "url": "/quality-policy", "sort": 4},
+            {"type": "url", "title": "Global Partners", "url": "/global-partners", "sort": 5},
+            {"type": "url", "title": "Career at BARKOM", "url": "/career", "sort": 6}
+          ]
+        },
+        {
+          "type": "group",
+          "title": "Contact",
+          "sort": 3,
+          "children": [
+            {"type": "url", "title": "Support", "url": "/support", "sort": 1},
+            {"type": "url", "title": "Contact Us", "url": "/contact", "sort": 2}
+          ]
+        }
+      ]
+    }
+  },
+
+  "pages": [
+    {
+      "title": "Home",
+      "permalink": "/",
+      "status": "published",
+      "blocks": [
+        {
+          "collection": "block_hero_slider",
+          "background": "dark",
+          "sort": 1,
+          "data": {
+            "status": "published",
+            "brand_logo_url": "https://barkomas.com/wp-content/uploads/2025/11/bulldrill-red.png",
+            "brand_logo_link": "/products/surface-drilling-rigs",
+            "slides": [
+              {
+                "sort": 1,
+                "status": "published",
+                "image_url": "https://barkomas.com/wp-content/uploads/2025/10/anasayfa-slider-bg-scaled.jpg",
+                "video_url": "https://barkomas.com/wp-content/uploads/2025/10/anasayfa-slider.mp4",
+                "translations": {
+                  "en-US": {
+                    "tagline": "WORLD-CLASS STANDARDS",
+                    "headline": "High-Quality Drilling, At Accessible Costs",
+                    "description": "BARKOM manufactures underground and surface diamond core drilling rigs at the same quality level as its European competitors and delivers them at far more competitive costs.",
+                    "cta_label": null,
+                    "cta_url": null
+                  },
+                  "tr-TR": {
+                    "tagline": "DÜNYA STANDARTLARINDA",
+                    "headline": "Yüksek Kaliteli Sondaj, Uygun Maliyetle",
+                    "description": "BARKOM, yeraltı ve yüzey elmas karot sondaj makinelerini Avrupalı rakipleriyle aynı kalite seviyesinde üretir ve çok daha rekabetçi fiyatlarla teslim eder.",
+                    "cta_label": null,
+                    "cta_url": null
+                  }
+                }
+              },
+              {
+                "sort": 2,
+                "status": "published",
+                "image_url": "https://barkomas.com/wp-content/uploads/2025/10/anasayfa-slider-bg-scaled.jpg",
+                "video_url": "https://barkomas.com/wp-content/uploads/2025/10/anasayfa-slider.mp4",
+                "translations": {
+                  "en-US": {
+                    "tagline": "WHATEVER YOUR SITE REQUIRES",
+                    "headline": "BARKOM Designs Accordingly",
+                    "description": "With its own R&D center, BARKOM designs and manufactures drilling rigs tailored precisely to your project, without being limited by standard products.",
+                    "cta_label": "Discover the BARKOM Difference",
+                    "cta_url": "/what-sets-us-a-part"
+                  },
+                  "tr-TR": {
+                    "tagline": "SAHANIZİN GEREKTİRDİĞİ HER ŞEY",
+                    "headline": "BARKOM Buna Göre Tasarlar",
+                    "description": "Kendi Ar-Ge merkezi ile BARKOM, standart ürünlerle sınırlı kalmadan projenize tam olarak uygun sondaj makineleri tasarlar ve üretir.",
+                    "cta_label": "BARKOM Farkını Keşfedin",
+                    "cta_url": "/what-sets-us-a-part"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "collection": "block_features_grid",
+          "background": "light",
+          "sort": 2,
+          "data": {
+            "layout": "showcase_left",
+            "image_url": "https://barkomas.com/wp-content/uploads/2025/11/anasayfa-barkom-bg.jpg",
+            "image_link": "/what-sets-us-a-part",
+            "translations": {
+              "en-US": {
+                "tagline": "WHY BARKOM?",
+                "description": "From explosion-proof designs to rapid service support, every solution is engineered to ensure safe and uninterrupted operation in the field.",
+                "image_title": "Discover the BARKOM Difference",
+                "cta_label": "What Sets Us Apart",
+                "cta_url": "/what-sets-us-a-part"
+              },
+              "tr-TR": {
+                "tagline": "NEDEN BARKOM?",
+                "description": "Patlamaya dayanıklı tasarımlardan hızlı servis desteğine kadar her çözüm, sahada güvenli ve kesintisiz operasyonu sağlamak için mühendislik aklıyla tasarlanmıştır.",
+                "image_title": "BARKOM Farkını Keşfedin",
+                "cta_label": "Bizi Farklı Kılan",
+                "cta_url": "/what-sets-us-a-part"
+              }
+            },
+            "items": [
+              {
+                "sort": 1,
+                "icon_url": "https://barkomas.com/wp-content/uploads/2025/11/canli-destek.png",
+                "translations": {
+                  "en-US": {"headline": "Service Within 48 Hours and 24/7 Live Support"},
+                  "tr-TR": {"headline": "48 Saat İçinde Servis ve 7/24 Canlı Destek"}
+                }
+              },
+              {
+                "sort": 2,
+                "icon_url": "https://barkomas.com/wp-content/uploads/2025/11/depolama-alani.png",
+                "translations": {
+                  "en-US": {"headline": "Easy Spare Parts Supply with 8,200 m² of Storage Area"},
+                  "tr-TR": {"headline": "8.200 m² Depolama Alanıyla Kolay Yedek Parça Temini"}
+                }
+              },
+              {
+                "sort": 3,
+                "icon_url": "https://barkomas.com/wp-content/uploads/2025/11/is-guvenligi.png",
+                "translations": {
+                  "en-US": {"headline": "We maximize your safety and efficiency."},
+                  "tr-TR": {"headline": "Güvenliğinizi ve verimliliğinizi maksimize ediyoruz."}
+                }
+              }
+            ]
+          }
+        },
+        {
+          "collection": "block_product_category_cards",
+          "background": "dark",
+          "sort": 3,
+          "data": {
+            "brand_logo_url": "https://barkomas.com/wp-content/uploads/2025/11/bulldrill-small-red.png",
+            "translations": {
+              "en-US": {
+                "tagline": "BULLDRILL DRILLING RIGS",
+                "headline": "Engineered for Excellence",
+                "description": "BARKOM's BullDrill series delivers maximum performance in the toughest drilling operations, offering high torque, durability, and modular design flexibility.",
+                "brand_label": "BullDrill"
+              },
+              "tr-TR": {
+                "tagline": "BULLDRILL SONDAJ MAKİNELERİ",
+                "headline": "Mükemmellik için Mühendislik",
+                "description": "BARKOM'un BullDrill serisi, en zorlu sondaj operasyonlarında yüksek tork, dayanıklılık ve modüler tasarım esnekliği sunarak maksimum performans sağlar.",
+                "brand_label": "BullDrill"
+              }
+            },
+            "cards": [
+              {
+                "sort": 1,
+                "image_url": "https://barkomas.com/wp-content/uploads/2025/11/yerustu-frame1.png",
+                "video_url": "https://barkomas.com/wp-content/uploads/2025/11/yerustu-sondaj-makineleri.mp4",
+                "link_url": "/products/surface-drilling-rigs",
+                "translations": {
+                  "en-US": {"title": "Surface Drilling Rigs", "subtitle": "Top-Head Drive, Spindle Drive, Multi-Purpose"},
+                  "tr-TR": {"title": "Yüzey Sondaj Makineleri", "subtitle": "Üstten Tahrikli, Milden Tahrikli, Çok Amaçlı"}
+                }
+              },
+              {
+                "sort": 2,
+                "image_url": "https://barkomas.com/wp-content/uploads/2025/11/yeralti-frame1.png",
+                "video_url": "https://barkomas.com/wp-content/uploads/2025/11/yeralti-sondaj-makineleri.mp4",
+                "link_url": "/products/underground-drilling-rigs",
+                "translations": {
+                  "en-US": {"title": "Underground Drilling Rigs", "subtitle": "Skid-Mounted, Track-Mounted, Ex-Proof"},
+                  "tr-TR": {"title": "Yer Altı Sondaj Makineleri", "subtitle": "Kızak Tipi, Paletli, Ex-Proof"}
+                }
+              }
+            ]
+          }
+        },
+        {
+          "collection": "block_features_grid",
+          "background": "light",
+          "sort": 4,
+          "data": {
+            "layout": "showcase_right",
+            "image_url": "https://barkomas.com/wp-content/uploads/2025/11/sondaj-ekipmanlari-bg2.jpg",
+            "image_link": "/products/drilling-equipment",
+            "translations": {
+              "en-US": {
+                "tagline": "DRILLING EQUIPMENT",
+                "description": "Our equipment is manufactured from high-performance materials, ensuring exceptional durability and precision even in the hardest rock formations.",
+                "image_title": "Drilling Equipment",
+                "cta_label": "View All Drilling Equipment",
+                "cta_url": "/products/drilling-equipment"
+              },
+              "tr-TR": {
+                "tagline": "SONDAJ EKIPMANLARI",
+                "description": "Ekipmanlarımız, en sert kaya formasyonlarında bile olağanüstü dayanıklılık ve hassasiyet sağlayan yüksek performanslı malzemelerden üretilmektedir.",
+                "image_title": "Sondaj Ekipmanları",
+                "cta_label": "Tüm Sondaj Ekipmanlarını Gör",
+                "cta_url": "/products/drilling-equipment"
+              }
+            },
+            "items": [
+              {
+                "sort": 1,
+                "icon_url": "https://barkomas.com/wp-content/uploads/2025/11/matkaplar.png",
+                "translations": {
+                  "en-US": {"headline": "High wear-resistant diamond and tungsten carbide drill bits"},
+                  "tr-TR": {"headline": "Yüksek aşınma dirençli elmas ve tungsten karbür matkap uçları"}
+                }
+              },
+              {
+                "sort": 2,
+                "icon_url": "https://barkomas.com/wp-content/uploads/2025/11/karotiyer-sistemleri.png",
+                "translations": {
+                  "en-US": {"headline": "Portcrons, shoes, and advanced core barrel systems"},
+                  "tr-TR": {"headline": "Portcron'lar, tabanlar ve gelişmiş karotla çekim sistemleri"}
+                }
+              },
+              {
+                "sort": 3,
+                "icon_url": "https://barkomas.com/wp-content/uploads/2025/11/hassasiyet.png",
+                "translations": {
+                  "en-US": {"headline": "Precise hole stabilization with Diamond Locking Couplings"},
+                  "tr-TR": {"headline": "Elmas Kilitleme Manşonları ile hassas delik stabilizasyonu"}
+                }
+              }
+            ]
+          }
+        },
+        {
+          "collection": "block_numbered_list",
+          "background": "dark",
+          "sort": 5,
+          "data": {
+            "layout": "image_left",
+            "image_url": "https://barkomas.com/wp-content/uploads/2025/11/satis-sonrasi-destek-bg1.jpg",
+            "image_link": "/support",
+            "translations": {
+              "en-US": {
+                "headline": "With After-Sales Support, We Stand by You for Operational Continuity",
+                "description": "BARKOM's expert service team is always by your side to ensure your machine operates at peak performance without interruption.",
+                "image_title": "After Sales Support"
+              },
+              "tr-TR": {
+                "headline": "Satış Sonrası Destekle, Operasyonel Sürekliliğiniz için Yanınızdayız",
+                "description": "BARKOM'un uzman servis ekibi, makinenizin kesintisiz olarak en yüksek performansta çalışmasını sağlamak için her zaman yanınızdadır.",
+                "image_title": "Satış Sonrası Destek"
+              }
+            },
+            "items": [
+              {
+                "sort": 1,
+                "translations": {
+                  "en-US": {"title": "On Site Service Within 48 Hours"},
+                  "tr-TR": {"title": "48 Saat İçinde Yerinde Servis"}
+                }
+              },
+              {
+                "sort": 2,
+                "translations": {
+                  "en-US": {"title": "24/7 Technical Support"},
+                  "tr-TR": {"title": "7/24 Teknik Destek"}
+                }
+              },
+              {
+                "sort": 3,
+                "translations": {
+                  "en-US": {"title": "On-Site Delivery & Orientation Assistance"},
+                  "tr-TR": {"title": "Sahada Teslim ve Oryantasyon Desteği"}
+                }
+              },
+              {
+                "sort": 4,
+                "translations": {
+                  "en-US": {"title": "Easy Access to Spare Parts"},
+                  "tr-TR": {"title": "Kolay Yedek Parça Erişimi"}
+                }
+              }
+            ]
+          }
+        },
+        {
+          "collection": "block_numbered_list",
+          "background": "light",
+          "sort": 6,
+          "data": {
+            "layout": "image_right",
+            "image_url": "https://barkomas.com/wp-content/uploads/2025/11/projeye-ozel-tasarim-bg.jpg",
+            "image_link": "/products",
+            "translations": {
+              "en-US": {
+                "headline": "Innovative Solutions Driven by Our R&D Center",
+                "description": "With its R&D Center approved by the Republic of Türkiye Ministry of Industry and Technology, BARKOM is among the few manufacturers capable of designing customized drilling rigs.",
+                "image_title": "Project Based Design"
+              },
+              "tr-TR": {
+                "headline": "Ar-Ge Merkezimizden Yenilikçi Çözümler",
+                "description": "T.C. Sanayi ve Teknoloji Bakanlığı tarafından onaylanan Ar-Ge Merkezi ile BARKOM, özelleştirilmiş sondaj makineleri tasarlayabilen az sayıdaki üreticiden biridir.",
+                "image_title": "Proje Bazlı Tasarım"
+              }
+            },
+            "items": [
+              {
+                "sort": 1,
+                "translations": {
+                  "en-US": {"title": "Site Specific Engineering Solutions"},
+                  "tr-TR": {"title": "Sahaya Özgü Mühendislik Çözümleri"}
+                }
+              },
+              {
+                "sort": 2,
+                "translations": {
+                  "en-US": {"title": "Configuration Based on Operational Efficiency"},
+                  "tr-TR": {"title": "Operasyonel Verimliliğe Dayalı Konfigürasyon"}
+                }
+              },
+              {
+                "sort": 3,
+                "translations": {
+                  "en-US": {"title": "Customization Beyond Standard Production"},
+                  "tr-TR": {"title": "Standart Üretimin Ötesinde Özelleştirme"}
+                }
+              },
+              {
+                "sort": 4,
+                "translations": {
+                  "en-US": {"title": "Use of High Quality Raw Materials"},
+                  "tr-TR": {"title": "Yüksek Kaliteli Hammadde Kullanımı"}
+                }
+              }
+            ]
+          }
+        },
+        {
+          "collection": "block_brands_logos",
+          "background": "light",
+          "sort": 7,
+          "data": {
+            "image_url": "https://barkomas.com/wp-content/uploads/2025/11/global-is-ortaklarimiz-bg.jpg",
+            "image_link": null,
+            "translations": {
+              "en-US": {
+                "headline": "The Most Prestigious International Brands, Represented by BARKOM",
+                "description": "BARKOM is the Turkish distributor of the world's most prestigious international brands in the mining and drilling industry.",
+                "image_title": "Global Business Partners"
+              },
+              "tr-TR": {
+                "headline": "BARKOM Tarafından Temsil Edilen En Prestijli Uluslararası Markalar",
+                "description": "BARKOM, madencilik ve sondaj sektöründe dünyanın en prestijli uluslararası markalarının Türkiye distribütörüdür.",
+                "image_title": "Küresel İş Ortakları"
+              }
+            },
+            "logos": [
+              {"sort": 1, "name": "AMC", "url": null, "image_url": null},
+              {"sort": 2, "name": "MONARK", "url": null, "image_url": null},
+              {"sort": 3, "name": "DEVICO & REFLEX", "url": null, "image_url": null},
+              {"sort": 4, "name": "JET-LUBE", "url": null, "image_url": null},
+              {"sort": 5, "name": "DIAMANTINA CHRISTENSEN", "url": null, "image_url": null},
+              {"sort": 6, "name": "GEOSIGHT CMS", "url": null, "image_url": null}
+            ]
+          }
+        },
+        {
+          "collection": "block_cta_banner",
+          "background": "light",
+          "sort": 8,
+          "data": {
+            "primary_cta_url": "/contact",
+            "secondary_cta_url": "/contact",
+            "translations": {
+              "en-US": {
+                "tagline": "CONTACT US",
+                "headline": "Discover BARKOM's innovative solutions for faster, safer, and more efficient drilling operations.",
+                "primary_cta_label": "Information & Request Form",
+                "secondary_cta_label": "Contact Us"
+              },
+              "tr-TR": {
+                "tagline": "BİZİMLE İLETİŞİME GEÇİN",
+                "headline": "Daha hızlı, daha güvenli ve daha verimli sondaj operasyonları için BARKOM'un yenilikçi çözümlerini keşfedin.",
+                "primary_cta_label": "Bilgi ve Talep Formu",
+                "secondary_cta_label": "Bize Ulaşın"
+              }
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "title": "About Us",
+      "permalink": "/about-us",
+      "status": "published",
+      "blocks": [
+        {
+          "collection": "block_hero",
+          "background": "dark",
+          "sort": 1,
+          "data": {
+            "layout": "image_center",
+            "translations": {
+              "en-US": {
+                "tagline": "EXPLORING DEEPER — SINCE 1987",
+                "headline": "Founded in 1987 in Ankara, BARKOM is a leading manufacturer of drilling rigs and equipment for mineral exploration and geotechnical investigations."
+              },
+              "tr-TR": {
+                "tagline": "DERİNLERİ KEŞFEDIYORUZ — 1987'DEN BERİ",
+                "headline": "1987 yılında Ankara'da kurulan BARKOM, mineral arama ve geoteknik araştırmalar için sondaj makineleri ve ekipmanları alanında önde gelen bir üreticidir."
+              }
+            }
+          }
+        },
+        {
+          "collection": "block_richtext",
+          "background": "light",
+          "sort": 2,
+          "data": {
+            "alignment": "left",
+            "translations": {
+              "en-US": {
+                "tagline": "WHO WE ARE",
+                "headline": "35+ Years of Drilling Excellence",
+                "content": "<p>BARKOM specializes exclusively in the drilling and mining sectors since 1987. With a 5,600 m² production facility in Ankara, state-of-the-art CNC machines, and a Ministry-approved R&D Center, BARKOM commands 80% of the Turkish drilling market and exports to more than 80 countries across five continents.</p><h3>Key Milestones</h3><ul><li><strong>2008</strong> — ISO 9001, ISO 14001, ISO 45001 certifications</li><li><strong>2014</strong> — First heat-treated Wireline rods production in Turkey</li><li><strong>2015</strong> — BULLDRILL® brand drilling rig production launch</li><li><strong>2017</strong> — Turkey's first 100% ATEX-certified ex-proof drilling rigs</li><li><strong>2018</strong> — Ministry-approved R&D Center status</li><li><strong>2025</strong> — New production facility investment</li></ul>"
+              },
+              "tr-TR": {
+                "tagline": "BİZ KİMİZ",
+                "headline": "35+ Yıllık Sondaj Mükemmelliği",
+                "content": "<p>BARKOM, 1987'den bu yana yalnızca sondaj ve madencilik sektörlerine odaklanmaktadır. Ankara'daki 5.600 m²'lik üretim tesisi, son teknoloji CNC makineleri ve Bakanlık onaylı Ar-Ge Merkezi ile BARKOM, Türkiye sondaj pazarının %80'ini elinde bulundurur ve beş kıtada 80'den fazla ülkeye ihracat yapmaktadır.</p>"
+              }
+            }
+          }
+        },
+        {
+          "collection": "block_numbered_list",
+          "background": "light",
+          "sort": 3,
+          "data": {
+            "layout": "image_right",
+            "image_url": "https://barkomas.com/wp-content/uploads/2025/11/projeye-ozel-tasarim-bg.jpg",
+            "translations": {
+              "en-US": {
+                "tagline": "WHAT SETS US APART",
+                "headline": "12 Reasons to Choose BARKOM",
+                "image_title": "BARKOM Difference"
+              },
+              "tr-TR": {
+                "tagline": "BİZİ FARKLI KILAN",
+                "headline": "BARKOM'u Seçmek İçin 12 Neden",
+                "image_title": "BARKOM Farkı"
+              }
+            },
+            "items": [
+              {"sort": 1, "translations": {"en-US": {"title": "Exceptional After-Sales Service — on-site within 48 hours"}, "tr-TR": {"title": "Olağanüstü Satış Sonrası Servis — 48 saat içinde yerinde"}}},
+              {"sort": 2, "translations": {"en-US": {"title": "8,200 m² warehouses — complimentary spare part box"}, "tr-TR": {"title": "8.200 m² depolar — ücretsiz yedek parça kutusu"}}},
+              {"sort": 3, "translations": {"en-US": {"title": "Comprehensive Delivery Support — on-site setup and first drilling"}, "tr-TR": {"title": "Kapsamlı Teslimat Desteği — yerinde kurulum ve ilk sondaj"}}},
+              {"sort": 4, "translations": {"en-US": {"title": "24/7 WhatsApp Live Support"}, "tr-TR": {"title": "7/24 WhatsApp Canlı Destek"}}},
+              {"sort": 5, "translations": {"en-US": {"title": "Top Quality Raw Materials from world's most reputable brands"}, "tr-TR": {"title": "Dünyanın en itibarlı markalarından en kaliteli hammaddeler"}}},
+              {"sort": 6, "translations": {"en-US": {"title": "Turkey's only drilling rig manufacturer with its own R&D Center"}, "tr-TR": {"title": "Türkiye'nin kendi Ar-Ge Merkezi olan tek sondaj makinesi üreticisi"}}},
+              {"sort": 7, "translations": {"en-US": {"title": "Custom Design Excellence — rigs tailored to client needs"}, "tr-TR": {"title": "Özel Tasarım Mükemmelliği — müşteri ihtiyaçlarına göre makine"}}},
+              {"sort": 8, "translations": {"en-US": {"title": "Turkey's first ATEX-certified explosion-proof drilling rigs since 2017"}, "tr-TR": {"title": "2017'den beri Türkiye'nin ilk ATEX sertifikalı patlamaya dayanıklı sondaj makineleri"}}},
+              {"sort": 9, "translations": {"en-US": {"title": "Exclusive Turkish manufacturer of Multi-Purpose RC + diamond core rigs"}, "tr-TR": {"title": "RC + elmas karot Çok Amaçlı makinelerin tek Türk üreticisi"}}},
+              {"sort": 10, "translations": {"en-US": {"title": "First Turkish manufacturer to apply heat treatment to drill rods (2014)"}, "tr-TR": {"title": "Sondaj borularına ısıl işlem uygulayan ilk Türk üretici (2014)"}}},
+              {"sort": 11, "translations": {"en-US": {"title": "CNC and CMM machines — cutting edge manufacturing technology"}, "tr-TR": {"title": "CNC ve CMM makineleri — son teknoloji imalat"}}},
+              {"sort": 12, "translations": {"en-US": {"title": "35+ years specializing exclusively in drilling and mining"}, "tr-TR": {"title": "35+ yıl yalnızca sondaj ve madenciliğe odaklanma"}}}
+            ]
+          }
+        },
+        {
+          "collection": "block_cta_banner",
+          "background": "light",
+          "sort": 4,
+          "data": {
+            "primary_cta_url": "/contact",
+            "secondary_cta_url": "/products",
+            "translations": {
+              "en-US": {
+                "tagline": "CONTACT US",
+                "headline": "Discover BARKOM's innovative solutions for faster, safer, and more efficient drilling operations.",
+                "primary_cta_label": "Information & Request Form",
+                "secondary_cta_label": "View Products"
+              },
+              "tr-TR": {
+                "tagline": "BİZİMLE İLETİŞİME GEÇİN",
+                "headline": "Daha hızlı, daha güvenli ve daha verimli sondaj için BARKOM çözümlerini keşfedin.",
+                "primary_cta_label": "Bilgi ve Talep Formu",
+                "secondary_cta_label": "Ürünleri Gör"
+              }
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "title": "What Sets Us Apart",
+      "permalink": "/what-sets-us-a-part",
+      "status": "published",
+      "blocks": [
+        {
+          "collection": "block_hero",
+          "background": "dark",
+          "sort": 1,
+          "data": {
+            "layout": "image_center",
+            "translations": {
+              "en-US": {
+                "tagline": "WHY BARKOM?",
+                "headline": "What Sets Us Apart",
+                "description": "With over 35 years of experience, Barkom stands as the symbol of reliability and durability in drilling, powered by its innovative R&D, ATEX-certified rigs, and 24/7 after-sales support."
+              },
+              "tr-TR": {
+                "tagline": "NEDEN BARKOM?",
+                "headline": "Bizi Farklı Kılan",
+                "description": "35 yılı aşkın deneyimiyle BARKOM, yenilikçi Ar-Ge'si, ATEX sertifikalı makineleri ve 7/24 satış sonrası desteğiyle sondaj sektöründe güvenilirlik ve dayanıklılığın simgesi haline gelmiştir."
+              }
+            }
+          }
+        },
+        {
+          "collection": "block_features_grid",
+          "background": "light",
+          "sort": 2,
+          "data": {
+            "layout": "grid_3",
+            "translations": {
+              "en-US": {
+                "tagline": "12 DIFFERENTIATORS",
+                "headline": "Why Industry Leaders Choose BARKOM"
+              },
+              "tr-TR": {
+                "tagline": "12 FARK",
+                "headline": "Sektör Liderleri Neden BARKOM'u Seçiyor"
+              }
+            },
+            "items": [
+              {"sort": 1, "translations": {"en-US": {"headline": "Exceptional After-Sales Service", "description": "On-site service within 48 hours, both domestically and internationally."}, "tr-TR": {"headline": "Olağanüstü Satış Sonrası Servis", "description": "Yurt içi ve yurt dışında 48 saat içinde yerinde servis."}}},
+              {"sort": 2, "translations": {"en-US": {"headline": "Easy Access to Spare Parts", "description": "Four warehouses totaling 8,200 m², plus a complimentary spare part box with every rig."}, "tr-TR": {"headline": "Kolay Yedek Parça Erişimi", "description": "Toplam 8.200 m² dört depo ve her makinayla birlikte ücretsiz yedek parça kutusu."}}},
+              {"sort": 3, "translations": {"en-US": {"headline": "Comprehensive Delivery Support", "description": "Our team sets up the rig on-site and conducts the first hours of drilling alongside your operator."}, "tr-TR": {"headline": "Kapsamlı Teslimat Desteği", "description": "Ekibimiz makineyi sahada kurar ve ilk sondaj saatlerini operatörünüzle birlikte gerçekleştirir."}}},
+              {"sort": 4, "translations": {"en-US": {"headline": "24/7 Accessibility", "description": "Round-the-clock WhatsApp Live Support available through our website."}, "tr-TR": {"headline": "7/24 Erişilebilirlik", "description": "Web sitemiz üzerinden kesintisiz WhatsApp Canlı Destek."}}},
+              {"sort": 5, "translations": {"en-US": {"headline": "Top Quality Raw Materials", "description": "Materials sourced exclusively from the world's most reputable brands."}, "tr-TR": {"headline": "En Kaliteli Hammaddeler", "description": "Malzemeler yalnızca dünyanın en saygın markalarından temin edilir."}}},
+              {"sort": 6, "translations": {"en-US": {"headline": "Innovative R&D Center", "description": "The only drilling rig manufacturer in Turkey with its own Ministry-approved R&D Center."}, "tr-TR": {"headline": "Yenilikçi Ar-Ge Merkezi", "description": "Türkiye'de Bakanlık onaylı kendi Ar-Ge Merkezine sahip tek sondaj makinesi üreticisi."}}},
+              {"sort": 7, "translations": {"en-US": {"headline": "Custom Design Excellence", "description": "Specializing in customizing and modifying rigs to meet the specific needs of clients."}, "tr-TR": {"headline": "Özel Tasarım Mükemmelliği", "description": "Müşterilerin özel ihtiyaçlarını karşılamak için makine özelleştirme ve modifikasyon uzmanlığı."}}},
+              {"sort": 8, "translations": {"en-US": {"headline": "Explosion-Proof Technology", "description": "Turkey's first and only manufacturer of 100% ATEX-certified explosion-proof drilling rigs since 2017."}, "tr-TR": {"headline": "Patlamaya Dayanıklı Teknoloji", "description": "2017'den beri %100 ATEX sertifikalı patlamaya dayanıklı sondaj makinelerinin Türkiye'deki ilk ve tek üreticisi."}}},
+              {"sort": 9, "translations": {"en-US": {"headline": "Multi-Purpose Drill Rigs", "description": "Exclusive Turkish manufacturer of multi-purpose rigs capable of both RC and diamond core drilling."}, "tr-TR": {"headline": "Çok Amaçlı Sondaj Makineleri", "description": "Hem RC hem de elmas karot sondajı yapabilen çok amaçlı makinelerin tek Türk üreticisi."}}},
+              {"sort": 10, "translations": {"en-US": {"headline": "Pioneering Heat Treatment", "description": "First Turkish manufacturer to apply heat treatment to drill rods in 2014."}, "tr-TR": {"headline": "Öncü Isıl İşlem", "description": "2014'te sondaj borularına ısıl işlem uygulayan ilk Türk üretici."}}},
+              {"sort": 11, "translations": {"en-US": {"headline": "Cutting Edge Technology", "description": "CNC and CMM machines ensure the highest manufacturing precision."}, "tr-TR": {"headline": "Son Teknoloji", "description": "CNC ve CMM makineleri en yüksek üretim hassasiyetini sağlar."}}},
+              {"sort": 12, "translations": {"en-US": {"headline": "Decades of Expertise", "description": "Specializing exclusively in drilling and mining since 1987 — over 35 years of focused experience."}, "tr-TR": {"headline": "Onlarca Yıllık Uzmanlık", "description": "1987'den beri yalnızca sondaj ve madenciliğe odaklanıyor — 35 yılı aşkın deneyim."}}}
+            ]
+          }
+        },
+        {
+          "collection": "block_cta_banner",
+          "background": "light",
+          "sort": 3,
+          "data": {
+            "primary_cta_url": "/contact",
+            "secondary_cta_url": "/products",
+            "translations": {
+              "en-US": {
+                "tagline": "CONTACT US",
+                "headline": "Ready to Experience the BARKOM Difference?",
+                "primary_cta_label": "Information & Request Form",
+                "secondary_cta_label": "View Products"
+              },
+              "tr-TR": {
+                "tagline": "BİZİMLE İLETİŞİME GEÇİN",
+                "headline": "BARKOM Farkını Deneyimlemeye Hazır mısınız?",
+                "primary_cta_label": "Bilgi ve Talep Formu",
+                "secondary_cta_label": "Ürünleri Gör"
+              }
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "title": "Support",
+      "permalink": "/support",
+      "status": "published",
+      "blocks": [
+        {
+          "collection": "block_hero",
+          "background": "dark",
+          "sort": 1,
+          "data": {
+            "layout": "image_center",
+            "translations": {
+              "en-US": {
+                "tagline": "AFTER-SALES SUPPORT",
+                "headline": "Technical Support",
+                "description": "For all technical support requests — including service, maintenance, spare parts, and operator training — you can reach our team anytime. Our 24/7 support staff provides solutions remotely or on-site."
+              },
+              "tr-TR": {
+                "tagline": "SATIS SONRASI DESTEK",
+                "headline": "Teknik Destek",
+                "description": "Servis, bakım, yedek parça ve operatör eğitimi dahil tüm teknik destek talepleriniz için ekibimize her zaman ulaşabilirsiniz. 7/24 destek ekibimiz uzaktan veya yerinde çözüm sunar."
+              }
+            }
+          }
+        },
+        {
+          "collection": "block_richtext",
+          "background": "light",
+          "sort": 2,
+          "data": {
+            "alignment": "left",
+            "translations": {
+              "en-US": {
+                "tagline": "CONTACT SUPPORT",
+                "headline": "We're Here to Help",
+                "content": "<p>Contact our support team at <a href='mailto:destek@barkomas.com'>destek@barkomas.com</a> or through the form below. We provide fast and transparent solutions remotely or on-site.</p>"
+              },
+              "tr-TR": {
+                "tagline": "DESTEK İLETİŞİMİ",
+                "headline": "Yardım Etmeye Hazırız",
+                "content": "<p>Destek ekibimize <a href='mailto:destek@barkomas.com'>destek@barkomas.com</a> adresinden veya aşağıdaki form aracılığıyla ulaşabilirsiniz.</p>"
+              }
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "title": "Contact",
+      "permalink": "/contact",
+      "status": "published",
+      "blocks": [
+        {
+          "collection": "block_hero",
+          "background": "dark",
+          "sort": 1,
+          "data": {
+            "layout": "image_center",
+            "translations": {
+              "en-US": {
+                "tagline": "GET IN TOUCH",
+                "headline": "Contact Us",
+                "description": "At BARKOM, we prioritize being always accessible. Contact us regarding our products, technical support requests, or collaboration opportunities."
+              },
+              "tr-TR": {
+                "tagline": "BİZE ULAŞIN",
+                "headline": "İletişim",
+                "description": "BARKOM olarak her zaman erişilebilir olmayı öncelik olarak belirliyoruz. Ürünlerimiz, teknik destek talepleriniz veya iş birliği fırsatları hakkında bizimle iletişime geçin."
+              }
+            }
+          }
+        },
+        {
+          "collection": "block_richtext",
+          "background": "light",
+          "sort": 2,
+          "data": {
+            "alignment": "left",
+            "translations": {
+              "en-US": {
+                "tagline": "CONTACT INFORMATION",
+                "headline": "Reach Us Directly",
+                "content": "<p><strong>Email:</strong> <a href='mailto:info@barkomas.com'>info@barkomas.com</a></p><p><strong>Phone:</strong> +90 312 385 60 50 / +90 312 385 35 75</p><p><strong>Address:</strong> Malıköy Anadolu OSB, 30 Ağustos Cad. No:33, Sincan / ANKARA</p>"
+              },
+              "tr-TR": {
+                "tagline": "İLETİŞİM BİLGİLERİ",
+                "headline": "Doğrudan Bize Ulaşın",
+                "content": "<p><strong>E-posta:</strong> <a href='mailto:info@barkomas.com'>info@barkomas.com</a></p><p><strong>Telefon:</strong> +90 312 385 60 50 / +90 312 385 35 75</p><p><strong>Adres:</strong> Malıköy Anadolu OSB, 30 Ağustos Cad. No:33, Sincan / ANKARA</p>"
+              }
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "title": "Career",
+      "permalink": "/career",
+      "status": "published",
+      "blocks": [
+        {
+          "collection": "block_hero",
+          "background": "dark",
+          "sort": 1,
+          "data": {
+            "layout": "image_center",
+            "translations": {
+              "en-US": {
+                "tagline": "JOIN THE TEAM",
+                "headline": "Career & Internship Applications",
+                "description": "At BARKOM, we believe that success is built on qualified and passionate people. We seek team members who are eager to learn, solution-oriented, and innovative."
+              },
+              "tr-TR": {
+                "tagline": "TAKIMA KATIL",
+                "headline": "Kariyer ve Staj Başvuruları",
+                "description": "BARKOM'da başarının nitelikli ve tutkulu insanlar üzerine inşa edildiğine inanıyoruz. Öğrenmeye hevesli, çözüm odaklı ve yenilikçi ekip üyeleri arıyoruz."
+              }
+            }
+          }
+        },
+        {
+          "collection": "block_richtext",
+          "background": "light",
+          "sort": 2,
+          "data": {
+            "alignment": "left",
+            "translations": {
+              "en-US": {
+                "tagline": "APPLY NOW",
+                "headline": "Start Your Journey with BARKOM",
+                "content": "<p>Send your resume to <a href='mailto:ik@barkomas.com'>ik@barkomas.com</a>. All applications are carefully reviewed by our Human Resources team, and shortlisted candidates will be contacted as soon as possible.</p>"
+              },
+              "tr-TR": {
+                "tagline": "BAŞVUR",
+                "headline": "BARKOM'la Yolculuğunuza Başlayın",
+                "content": "<p>Özgeçmişinizi <a href='mailto:ik@barkomas.com'>ik@barkomas.com</a> adresine gönderin. Tüm başvurular İnsan Kaynakları ekibimiz tarafından titizlikle incelenmekte, kısa listeye alınan adaylarla en kısa sürede iletişime geçilmektedir.</p>"
+              }
+            }
+          }
+        }
+      ]
+    }
+  ],
+
+  "images_to_import": [
+    {"url": "https://barkomas.com/wp-content/uploads/2025/10/dark-logo.png", "title": "BARKOM Logo (Dark)", "usage": "globals.logo"},
+    {"url": "https://barkomas.com/wp-content/uploads/2025/11/footer-logo-light.png", "title": "BARKOM Logo (Light/Footer)", "usage": "globals.logo_dark_mode"},
+    {"url": "https://barkomas.com/wp-content/uploads/2025/11/footer-vinc.png", "title": "Footer Crane Image", "usage": "globals.footer_image"},
+    {"url": "https://barkomas.com/wp-content/uploads/2025/10/anasayfa-slider-bg-scaled.jpg", "title": "Hero Slider Background", "usage": "block_hero_slider_slides.image (slide 1 & 2)"},
+    {"url": "https://barkomas.com/wp-content/uploads/2025/11/bulldrill-red.png", "title": "BullDrill Logo Red", "usage": "block_hero_slider.brand_logo"},
+    {"url": "https://barkomas.com/wp-content/uploads/2025/11/bulldrill-small-red.png", "title": "BullDrill Logo Small Red", "usage": "block_product_category_cards.brand_logo"},
+    {"url": "https://barkomas.com/wp-content/uploads/2025/11/canli-destek.png", "title": "Icon: Live Support", "usage": "block_features_grid items (Why BARKOM — item 1 icon)"},
+    {"url": "https://barkomas.com/wp-content/uploads/2025/11/depolama-alani.png", "title": "Icon: Storage Area", "usage": "block_features_grid items (Why BARKOM — item 2 icon)"},
+    {"url": "https://barkomas.com/wp-content/uploads/2025/11/is-guvenligi.png", "title": "Icon: Safety", "usage": "block_features_grid items (Why BARKOM — item 3 icon)"},
+    {"url": "https://barkomas.com/wp-content/uploads/2025/11/matkaplar.png", "title": "Icon: Drill Bits", "usage": "block_features_grid items (Drilling Equipment — item 1 icon)"},
+    {"url": "https://barkomas.com/wp-content/uploads/2025/11/karotiyer-sistemleri.png", "title": "Icon: Core Barrel Systems", "usage": "block_features_grid items (Drilling Equipment — item 2 icon)"},
+    {"url": "https://barkomas.com/wp-content/uploads/2025/11/hassasiyet.png", "title": "Icon: Precision", "usage": "block_features_grid items (Drilling Equipment — item 3 icon)"},
+    {"url": "https://barkomas.com/wp-content/uploads/2025/11/small-logo.png", "title": "BARKOM Small Logo Mark", "usage": "Decorative logo mark in sections"},
+    {"url": "https://barkomas.com/wp-content/uploads/2025/11/bd-tophead-drive-img1.png", "title": "Top-Head Drive Rig — Image 1", "usage": "Product image (already imported)"},
+    {"url": "https://barkomas.com/wp-content/uploads/2025/11/bd-tophead-drive-img2.png", "title": "Top-Head Drive Rig — Image 2", "usage": "Product gallery (already imported)"},
+    {"url": "https://barkomas.com/wp-content/uploads/2025/11/bd-tophead-drive-img3.png", "title": "Top-Head Drive Rig — Image 3", "usage": "Product gallery (already imported)"},
+    {"url": "https://barkomas.com/wp-content/uploads/2025/11/bdu200-teknikcizim.png", "title": "BDU200 Technical Drawing 1", "usage": "Product image (already imported)"},
+    {"url": "https://barkomas.com/wp-content/uploads/2025/11/bdu200-teknikcizim02.png", "title": "BDU200 Technical Drawing 2", "usage": "Product gallery (already imported)"},
+    {"url": "https://barkomas.com/wp-content/uploads/2025/11/bdu200-teknikcizim03.png", "title": "BDU200 Technical Drawing 3", "usage": "Product gallery (already imported)"}
+  ]
+}

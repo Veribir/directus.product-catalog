@@ -1,0 +1,403 @@
+{
+  "_notes": {
+    "source": "All URLs fetched from live barkomas.com CSS background-image properties and video src attributes. These were not visible via HTML scraping — required fetching raw HTML and CSS.",
+    "base_url": "https://barkomas.com/wp-content/uploads/",
+    "how_to_import": "Use Directus MCP mcp__barkomas_dev__files with action: 'import' to import each URL as a Directus file."
+  },
+
+  "videos": [
+    {
+      "url": "https://barkomas.com/wp-content/uploads/2025/10/anasayfa-slider.mp4",
+      "title": "Hero Slider — Background Video (Autoplay)",
+      "used_on": ["homepage hero slider slide 1 (autoplay, muted, loop)"],
+      "directus_field": "block_hero_slider_slides.video",
+      "note": "Full-screen background video. Autoplays silently on homepage load."
+    },
+    {
+      "url": "https://barkomas.com/wp-content/uploads/2025/11/yerustu-sondaj-makineleri.mp4",
+      "title": "Surface Drilling Rigs — Hover Video",
+      "used_on": [
+        "homepage block_product_category_cards card 1 (Surface Drilling Rigs)",
+        "footer section widget on all product/category pages"
+      ],
+      "directus_field": "block_product_category_cards_items.video",
+      "note": "Plays on mouseenter over the Surface Drilling Rigs card. Static frame image shown by default."
+    },
+    {
+      "url": "https://barkomas.com/wp-content/uploads/2025/11/yeralti-sondaj-makineleri.mp4",
+      "title": "Underground Drilling Rigs — Hover Video",
+      "used_on": [
+        "homepage block_product_category_cards card 2 (Underground Drilling Rigs)",
+        "footer section widget on all product/category pages"
+      ],
+      "directus_field": "block_product_category_cards_items.video",
+      "note": "Plays on mouseenter over the Underground Drilling Rigs card. Static frame image shown by default."
+    }
+  ],
+
+  "homepage_section_images": [
+    {
+      "url": "https://barkomas.com/wp-content/uploads/2025/11/anasayfa-barkom-bg.jpg",
+      "title": "Why BARKOM — Section Card Image",
+      "used_in_block": "block_features_grid (showcase_left) — image card on the left",
+      "directus_field": "block_features_grid.image",
+      "description": "Person (engineer) working at an industrial control panel/monitor in a dark workshop environment."
+    },
+    {
+      "url": "https://barkomas.com/wp-content/uploads/2025/11/sondaj-ekipmanlari-bg2.jpg",
+      "title": "Drilling Equipment — Section Card Image",
+      "used_in_block": "block_features_grid (showcase_right) — image card on the right",
+      "directus_field": "block_features_grid.image",
+      "description": "Indoor warehouse with rows of stacked black drill rods in bundles. Red drilling rig visible in background."
+    },
+    {
+      "url": "https://barkomas.com/wp-content/uploads/2025/11/satis-sonrasi-destek-bg1.jpg",
+      "title": "After-Sales Support — Section Card Image",
+      "used_in_block": "block_numbered_list (image_left, dark) — image card on the left",
+      "directus_field": "block_numbered_list.image",
+      "description": "Smiling support engineer in dark BARKOM uniform with a headset, arms crossed confidently, standing in a bright industrial facility."
+    },
+    {
+      "url": "https://barkomas.com/wp-content/uploads/2025/11/projeye-ozel-tasarim-bg.jpg",
+      "title": "R&D / Project Based Design — Section Card Image",
+      "used_in_block": "block_numbered_list (image_right, light) — image card on the right",
+      "directus_field": "block_numbered_list.image",
+      "description": "Close-up of BullDrill BDU 400 control panel — metal panel with multiple toggle levers labeled in Turkish (YEDEK, KULE DAYAMA, KULE KALDIRMA, etc.)."
+    },
+    {
+      "url": "https://barkomas.com/wp-content/uploads/2025/11/global-is-ortaklarimiz-bg.jpg",
+      "title": "Global Business Partners — Section Card Image",
+      "used_in_block": "block_brands_logos — image card on the left",
+      "directus_field": "block_brands_logos.image",
+      "description": "Earth from space at night — Europe and Middle East visible with city lights glowing against dark space background."
+    }
+  ],
+
+  "product_category_card_frame_images": [
+    {
+      "url": "https://barkomas.com/wp-content/uploads/2025/11/yerustu-frame1.png",
+      "title": "Surface Drilling Rigs — Card Default Frame",
+      "used_in_block": "block_product_category_cards card 1 (Surface) — shown before hover video plays",
+      "directus_field": "block_product_category_cards_items.image",
+      "description": "Red BullDrill surface rig (BD series) rendered dramatically on rocky terrain. First frame of the hover video."
+    },
+    {
+      "url": "https://barkomas.com/wp-content/uploads/2025/11/yeralti-frame1.png",
+      "title": "Underground Drilling Rigs — Card Default Frame",
+      "used_in_block": "block_product_category_cards card 2 (Underground) — shown before hover video plays",
+      "directus_field": "block_product_category_cards_items.image",
+      "description": "Yellow/gold BullDrill underground rig (BDU series) in dark atmospheric underground tunnel. First frame of the hover video."
+    }
+  ],
+
+  "category_listing_hero_images": [
+    {
+      "url": "https://barkomas.com/wp-content/uploads/2025/12/top-head-drive-bg-photo-new.png",
+      "title": "Top-Head Drive — Category Hero Background",
+      "used_in": "category hero block on top-head-drive and surface-drilling-rigs listing pages",
+      "directus_field": "block_hero.image"
+    },
+    {
+      "url": "https://barkomas.com/wp-content/uploads/2025/12/multi-purpose-bg-photo-new.png",
+      "title": "Multi-Purpose — Category Hero Background",
+      "used_in": "category hero block on multi-purpose-drilling-rigs and surface listing page",
+      "directus_field": "block_hero.image"
+    },
+    {
+      "url": "https://barkomas.com/wp-content/uploads/2025/11/bd1500s-product-bg.png",
+      "title": "Spindle Drive (BD1500S) — Category Card Image",
+      "used_in": "surface category listing — spindle drive card",
+      "directus_field": "product_categories.image"
+    },
+    {
+      "url": "https://barkomas.com/wp-content/uploads/2025/11/bd200-product-bg01.png",
+      "title": "Skid-Mounted (BDU200) — Category Card Image",
+      "used_in": "underground category listing — skid-mounted card",
+      "directus_field": "product_categories.image"
+    },
+    {
+      "url": "https://barkomas.com/wp-content/uploads/2025/11/bdu500-product-bg.png",
+      "title": "Skid-Mounted (BDU500) — Category Card Image (variant)",
+      "used_in": "underground category listing",
+      "directus_field": "product_categories.image"
+    },
+    {
+      "url": "https://barkomas.com/wp-content/uploads/2025/11/bdu700exc-bg-photo.png",
+      "title": "Ex-Proof (BDU700EXC) — Category Card Image",
+      "used_in": "underground category listing — ex-proof card",
+      "directus_field": "product_categories.image"
+    }
+  ],
+
+  "product_page_images": {
+    "top_head_drive": {
+      "hero_bg": "https://barkomas.com/wp-content/uploads/2025/12/top-head-drive-bg-photo-new.png",
+      "gallery": [
+        "https://barkomas.com/wp-content/uploads/2025/11/tophead-drive-galeri1.jpg",
+        "https://barkomas.com/wp-content/uploads/2025/11/tophead-drive-galeri2.jpg",
+        "https://barkomas.com/wp-content/uploads/2025/11/tophead-drive-galeri3.jpg",
+        "https://barkomas.com/wp-content/uploads/2025/11/tophead-drive-galeri4.jpg",
+        "https://barkomas.com/wp-content/uploads/2025/11/tophead-drive-galeri5.jpg"
+      ],
+      "feature_accordion_images": {
+        "01_terrain": "https://barkomas.com/wp-content/uploads/2025/11/01-mobilite.jpg",
+        "02_rotary_unit": "https://barkomas.com/wp-content/uploads/2025/11/02-unite.jpg",
+        "03_plc": "https://barkomas.com/wp-content/uploads/2025/11/03-panel.jpg",
+        "04_power": "https://barkomas.com/wp-content/uploads/2025/11/04-guclu.jpg",
+        "05_cooling": "https://barkomas.com/wp-content/uploads/2025/11/05-sogutma.jpg",
+        "06_loading": "https://barkomas.com/wp-content/uploads/2025/11/06-yukleme.jpg",
+        "07_rod_handling": "https://barkomas.com/wp-content/uploads/2025/11/07-tasima.jpg",
+        "08_control_panel": "https://barkomas.com/wp-content/uploads/2025/11/08-panel.jpg",
+        "09_safety": "https://barkomas.com/wp-content/uploads/2025/11/09-donanim.jpg"
+      },
+      "note": "Feature accordion images: each numbered feature item has its own background image shown when expanded."
+    },
+    "spindle_drive": {
+      "hero_bg": "https://barkomas.com/wp-content/uploads/2025/11/bd1500s-product-bg.png",
+      "gallery": [
+        "https://barkomas.com/wp-content/uploads/2025/11/bd1500s-bg-photo.png",
+        "https://barkomas.com/wp-content/uploads/2025/11/bd1500s-bg-photo02.png",
+        "https://barkomas.com/wp-content/uploads/2025/11/bd1500s-bg-photo03.png",
+        "https://barkomas.com/wp-content/uploads/2025/11/bd1500s-bg-photo04.png",
+        "https://barkomas.com/wp-content/uploads/2025/11/bd1500s-bg-photo05.png"
+      ],
+      "feature_accordion_images": {
+        "01_terrain": "https://barkomas.com/wp-content/uploads/2025/11/01-mobilite.jpg",
+        "03_plc": "https://barkomas.com/wp-content/uploads/2025/11/03-panel.jpg",
+        "04_power": "https://barkomas.com/wp-content/uploads/2025/11/04-guclu.jpg",
+        "05_cooling": "https://barkomas.com/wp-content/uploads/2025/11/05-sogutma.jpg",
+        "08_control_panel": "https://barkomas.com/wp-content/uploads/2025/11/08-panel.jpg",
+        "09_safety": "https://barkomas.com/wp-content/uploads/2025/11/09-donanim.jpg",
+        "05_gearbox": "https://barkomas.com/wp-content/uploads/2025/11/bd1500s-details-05.png",
+        "06_loading": "https://barkomas.com/wp-content/uploads/2025/11/bd1500s-details-06.png",
+        "07_panel": "https://barkomas.com/wp-content/uploads/2025/11/bd1500s-details-07.png",
+        "08_safety_alt": "https://barkomas.com/wp-content/uploads/2025/11/bd1500s-details-08.png",
+        "09_mast": "https://barkomas.com/wp-content/uploads/2025/11/bd1500s-details-09.png"
+      }
+    },
+    "multi_purpose": {
+      "hero_bg": "https://barkomas.com/wp-content/uploads/2025/12/multi-purpose-bg-photo-new.png",
+      "gallery": [
+        "https://barkomas.com/wp-content/uploads/2025/11/bd1500m-bg-photo01.png",
+        "https://barkomas.com/wp-content/uploads/2025/11/bd1500m-bg-photo02.png",
+        "https://barkomas.com/wp-content/uploads/2025/11/bd1500m-bg-photo03.png",
+        "https://barkomas.com/wp-content/uploads/2025/11/bd1500m-bg-photo04.png",
+        "https://barkomas.com/wp-content/uploads/2025/11/bd1500m-bg-photo05.png",
+        "https://barkomas.com/wp-content/uploads/2025/11/bd1500m-bg-photo06.png",
+        "https://barkomas.com/wp-content/uploads/2025/11/bd1500m-bg-photo07.png"
+      ],
+      "feature_accordion_images": {
+        "01_terrain": "https://barkomas.com/wp-content/uploads/2025/11/01-mobilite.jpg",
+        "03_plc": "https://barkomas.com/wp-content/uploads/2025/11/03-panel.jpg",
+        "04_power": "https://barkomas.com/wp-content/uploads/2025/11/04-guclu.jpg",
+        "05_cooling": "https://barkomas.com/wp-content/uploads/2025/11/05-sogutma.jpg",
+        "08_control_panel": "https://barkomas.com/wp-content/uploads/2025/11/08-panel.jpg",
+        "09_safety": "https://barkomas.com/wp-content/uploads/2025/11/09-donanim.jpg",
+        "detail_01": "https://barkomas.com/wp-content/uploads/2025/11/bd1500m-details-01.png",
+        "detail_02": "https://barkomas.com/wp-content/uploads/2025/11/bd1500m-details-02.png",
+        "detail_03": "https://barkomas.com/wp-content/uploads/2025/11/bd1500m-details-03.png",
+        "detail_04": "https://barkomas.com/wp-content/uploads/2025/11/bd1500m-details-04.png"
+      }
+    },
+    "skid_mounted": {
+      "hero_bg": "https://barkomas.com/wp-content/uploads/2025/11/bd200-product-bg01.png",
+      "gallery": [
+        "https://barkomas.com/wp-content/uploads/2025/11/bd200-bg-photo01.png",
+        "https://barkomas.com/wp-content/uploads/2025/11/bd200-bg-photo02.png",
+        "https://barkomas.com/wp-content/uploads/2025/11/bd200-bg-photo03.png",
+        "https://barkomas.com/wp-content/uploads/2025/11/bd200-bg-photo04.png"
+      ],
+      "feature_accordion_images": {
+        "01_motor": "https://barkomas.com/wp-content/uploads/2025/11/bd200-details-01.png",
+        "02_pumps": "https://barkomas.com/wp-content/uploads/2025/11/bd200-details-02.png",
+        "03_rotary_head": "https://barkomas.com/wp-content/uploads/2025/11/bd200-details-03.png",
+        "04_reducers": "https://barkomas.com/wp-content/uploads/2025/11/bd200-details-04.png",
+        "05_wireline": "https://barkomas.com/wp-content/uploads/2025/11/bd200-details-05.png",
+        "06_rod_holder": "https://barkomas.com/wp-content/uploads/2025/11/bd200-details-06.png",
+        "07_control_panel": "https://barkomas.com/wp-content/uploads/2025/11/bd200-details-07.png",
+        "08_safety_cage": "https://barkomas.com/wp-content/uploads/2025/11/bd200-details-08.png",
+        "09_emergency_stop": "https://barkomas.com/wp-content/uploads/2025/11/bd200-details-09.png"
+      },
+      "note": "bd200-details-* images are shared across skid-mounted, track-mounted, and ex-proof pages."
+    },
+    "track_mounted": {
+      "hero_bg": "https://barkomas.com/wp-content/uploads/2025/11/bdu500-product-bg.png",
+      "gallery": [
+        "https://barkomas.com/wp-content/uploads/2025/11/bdu500c-bg-photo01.png",
+        "https://barkomas.com/wp-content/uploads/2025/11/bdu500c-bg-photo02.png",
+        "https://barkomas.com/wp-content/uploads/2025/11/bdu500c-bg-photo03.png",
+        "https://barkomas.com/wp-content/uploads/2025/11/bdu500c-bg-photo04.png",
+        "https://barkomas.com/wp-content/uploads/2025/11/bdu500c-bg-photo05.png",
+        "https://barkomas.com/wp-content/uploads/2025/11/bdu500c-bg-photo06.png",
+        "https://barkomas.com/wp-content/uploads/2025/11/bdu500c-bg-photo07.png",
+        "https://barkomas.com/wp-content/uploads/2025/11/bdu500c-bg-photo08.png",
+        "https://barkomas.com/wp-content/uploads/2025/11/bdu500c-bg-photo09.png"
+      ],
+      "feature_accordion_images": {
+        "01_motor": "https://barkomas.com/wp-content/uploads/2025/11/bd200-details-01.png",
+        "02_pumps": "https://barkomas.com/wp-content/uploads/2025/11/bd200-details-02.png",
+        "03_rotary_head": "https://barkomas.com/wp-content/uploads/2025/11/bd200-details-03.png",
+        "04_reducers": "https://barkomas.com/wp-content/uploads/2025/11/bd200-details-04.png",
+        "05_wireline": "https://barkomas.com/wp-content/uploads/2025/11/bd200-details-05.png",
+        "06_rod_holder": "https://barkomas.com/wp-content/uploads/2025/11/bd200-details-06.png",
+        "07_control_panel": "https://barkomas.com/wp-content/uploads/2025/11/bd200-details-07.png",
+        "08_diesel_tram": "https://barkomas.com/wp-content/uploads/2025/11/bdu500-details-01.png",
+        "09_crawler": "https://barkomas.com/wp-content/uploads/2025/11/bdu500-details-02.png",
+        "10_flush_pump": "https://barkomas.com/wp-content/uploads/2025/11/bdu500-details-03.png"
+      }
+    },
+    "ex_proof": {
+      "hero_bg": "https://barkomas.com/wp-content/uploads/2025/11/bdu700exc-bg-photo.png",
+      "gallery": [
+        "https://barkomas.com/wp-content/uploads/2025/11/bdu700exc-bg-photo01.png",
+        "https://barkomas.com/wp-content/uploads/2025/11/bdu700exc-bg-photo02.png",
+        "https://barkomas.com/wp-content/uploads/2025/11/bdu700exc-bg-photo03.png",
+        "https://barkomas.com/wp-content/uploads/2025/11/bdu700exc-bg-photo04.png",
+        "https://barkomas.com/wp-content/uploads/2025/11/bdu700exc-bg-photo05.png",
+        "https://barkomas.com/wp-content/uploads/2025/11/bdu700exc-bg-photo06.png",
+        "https://barkomas.com/wp-content/uploads/2025/11/bdu700exc-bg-photo07.png",
+        "https://barkomas.com/wp-content/uploads/2025/11/bdu700exc-bg-photo08.png",
+        "https://barkomas.com/wp-content/uploads/2025/11/bdu700exc-bg-photo09.png"
+      ],
+      "feature_accordion_images": {
+        "01_atex_proof": "https://barkomas.com/wp-content/uploads/2025/11/bd200-details-01.png",
+        "02_motor": "https://barkomas.com/wp-content/uploads/2025/11/bd200-details-02.png",
+        "03_pumps": "https://barkomas.com/wp-content/uploads/2025/11/bd200-details-03.png",
+        "04_rotary_head": "https://barkomas.com/wp-content/uploads/2025/11/bd200-details-04.png",
+        "05_reducers": "https://barkomas.com/wp-content/uploads/2025/11/bd200-details-05.png",
+        "06_wireline": "https://barkomas.com/wp-content/uploads/2025/11/bd200-details-06.png",
+        "07_rod_holder": "https://barkomas.com/wp-content/uploads/2025/11/bd200-details-07.png",
+        "08_control_panel": "https://barkomas.com/wp-content/uploads/2025/11/bd200-details-08.png",
+        "09_safety_cage": "https://barkomas.com/wp-content/uploads/2025/11/bd200-details-09.png",
+        "13_exproof_box": "https://barkomas.com/wp-content/uploads/2025/11/bdu700exc-details-01.png",
+        "14_power_input": "https://barkomas.com/wp-content/uploads/2025/11/bdu700exc-details-02.png",
+        "15_thermocouple": "https://barkomas.com/wp-content/uploads/2025/11/bdu700exc-details-03.png",
+        "16_methane": "https://barkomas.com/wp-content/uploads/2025/11/bdu700exc-details-04.png",
+        "17_fire_tank": "https://barkomas.com/wp-content/uploads/2025/11/bdu700exc-details-05.png",
+        "atex_extra_07": "https://barkomas.com/wp-content/uploads/2025/11/bdu700exc-details-07.png",
+        "atex_extra_08": "https://barkomas.com/wp-content/uploads/2025/11/bdu700exc-details-08.png",
+        "atex_extra_09": "https://barkomas.com/wp-content/uploads/2025/11/bdu700exc-details-09.png"
+      }
+    }
+  },
+
+  "shared_feature_images": {
+    "note": "These feature accordion images are used across multiple products — they appear to be generic shots of the relevant components.",
+    "images": [
+      {"url": "https://barkomas.com/wp-content/uploads/2025/11/01-mobilite.jpg", "title": "Feature: Terrain Mobility", "used_by": ["top-head-drive", "spindle-drive", "multi-purpose"]},
+      {"url": "https://barkomas.com/wp-content/uploads/2025/11/02-unite.jpg", "title": "Feature: Top-Head Rotary Unit", "used_by": ["top-head-drive"]},
+      {"url": "https://barkomas.com/wp-content/uploads/2025/11/03-panel.jpg", "title": "Feature: PLC Monitoring Panel", "used_by": ["top-head-drive", "spindle-drive", "multi-purpose"]},
+      {"url": "https://barkomas.com/wp-content/uploads/2025/11/04-guclu.jpg", "title": "Feature: Engine Power", "used_by": ["top-head-drive", "spindle-drive", "multi-purpose"]},
+      {"url": "https://barkomas.com/wp-content/uploads/2025/11/05-sogutma.jpg", "title": "Feature: Cooling System", "used_by": ["top-head-drive", "spindle-drive", "multi-purpose"]},
+      {"url": "https://barkomas.com/wp-content/uploads/2025/11/06-yukleme.jpg", "title": "Feature: Self-Loading Capability", "used_by": ["top-head-drive"]},
+      {"url": "https://barkomas.com/wp-content/uploads/2025/11/07-tasima.jpg", "title": "Feature: Rod Handling System", "used_by": ["top-head-drive"]},
+      {"url": "https://barkomas.com/wp-content/uploads/2025/11/08-panel.jpg", "title": "Feature: User-Friendly Control Panel", "used_by": ["top-head-drive", "spindle-drive", "multi-purpose"]},
+      {"url": "https://barkomas.com/wp-content/uploads/2025/11/09-donanim.jpg", "title": "Feature: Safety Features", "used_by": ["top-head-drive", "spindle-drive", "multi-purpose"]},
+      {"url": "https://barkomas.com/wp-content/uploads/2025/11/bd200-details-01.png", "title": "Feature: Electric Motor (underground)", "used_by": ["skid-mounted", "track-mounted", "ex-proof"]},
+      {"url": "https://barkomas.com/wp-content/uploads/2025/11/bd200-details-02.png", "title": "Feature: Hydraulic Pumps", "used_by": ["skid-mounted", "track-mounted", "ex-proof"]},
+      {"url": "https://barkomas.com/wp-content/uploads/2025/11/bd200-details-03.png", "title": "Feature: Rotary Head", "used_by": ["skid-mounted", "track-mounted", "ex-proof"]},
+      {"url": "https://barkomas.com/wp-content/uploads/2025/11/bd200-details-04.png", "title": "Feature: Double Reducers", "used_by": ["skid-mounted", "track-mounted", "ex-proof"]},
+      {"url": "https://barkomas.com/wp-content/uploads/2025/11/bd200-details-05.png", "title": "Feature: Wireline System", "used_by": ["skid-mounted", "track-mounted", "ex-proof"]},
+      {"url": "https://barkomas.com/wp-content/uploads/2025/11/bd200-details-06.png", "title": "Feature: Rod Holder", "used_by": ["skid-mounted", "track-mounted", "ex-proof"]},
+      {"url": "https://barkomas.com/wp-content/uploads/2025/11/bd200-details-07.png", "title": "Feature: Control Panel (underground)", "used_by": ["skid-mounted", "track-mounted", "ex-proof"]},
+      {"url": "https://barkomas.com/wp-content/uploads/2025/11/bd200-details-08.png", "title": "Feature: Safety Cage", "used_by": ["skid-mounted", "track-mounted", "ex-proof"]},
+      {"url": "https://barkomas.com/wp-content/uploads/2025/11/bd200-details-09.png", "title": "Feature: Emergency Stop", "used_by": ["skid-mounted", "track-mounted", "ex-proof"]}
+    ]
+  },
+
+  "all_unique_urls": [
+    "https://barkomas.com/wp-content/uploads/2025/10/anasayfa-slider.mp4",
+    "https://barkomas.com/wp-content/uploads/2025/11/yerustu-sondaj-makineleri.mp4",
+    "https://barkomas.com/wp-content/uploads/2025/11/yeralti-sondaj-makineleri.mp4",
+    "https://barkomas.com/wp-content/uploads/2025/11/anasayfa-barkom-bg.jpg",
+    "https://barkomas.com/wp-content/uploads/2025/11/sondaj-ekipmanlari-bg2.jpg",
+    "https://barkomas.com/wp-content/uploads/2025/11/satis-sonrasi-destek-bg1.jpg",
+    "https://barkomas.com/wp-content/uploads/2025/11/projeye-ozel-tasarim-bg.jpg",
+    "https://barkomas.com/wp-content/uploads/2025/11/global-is-ortaklarimiz-bg.jpg",
+    "https://barkomas.com/wp-content/uploads/2025/11/yerustu-frame1.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/yeralti-frame1.png",
+    "https://barkomas.com/wp-content/uploads/2025/12/top-head-drive-bg-photo-new.png",
+    "https://barkomas.com/wp-content/uploads/2025/12/multi-purpose-bg-photo-new.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bd1500s-product-bg.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bd200-product-bg01.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bdu500-product-bg.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bdu700exc-bg-photo.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/tophead-drive-galeri1.jpg",
+    "https://barkomas.com/wp-content/uploads/2025/11/tophead-drive-galeri2.jpg",
+    "https://barkomas.com/wp-content/uploads/2025/11/tophead-drive-galeri3.jpg",
+    "https://barkomas.com/wp-content/uploads/2025/11/tophead-drive-galeri4.jpg",
+    "https://barkomas.com/wp-content/uploads/2025/11/tophead-drive-galeri5.jpg",
+    "https://barkomas.com/wp-content/uploads/2025/11/01-mobilite.jpg",
+    "https://barkomas.com/wp-content/uploads/2025/11/02-unite.jpg",
+    "https://barkomas.com/wp-content/uploads/2025/11/03-panel.jpg",
+    "https://barkomas.com/wp-content/uploads/2025/11/04-guclu.jpg",
+    "https://barkomas.com/wp-content/uploads/2025/11/05-sogutma.jpg",
+    "https://barkomas.com/wp-content/uploads/2025/11/06-yukleme.jpg",
+    "https://barkomas.com/wp-content/uploads/2025/11/07-tasima.jpg",
+    "https://barkomas.com/wp-content/uploads/2025/11/08-panel.jpg",
+    "https://barkomas.com/wp-content/uploads/2025/11/09-donanim.jpg",
+    "https://barkomas.com/wp-content/uploads/2025/11/bd1500s-bg-photo.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bd1500s-bg-photo02.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bd1500s-bg-photo03.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bd1500s-bg-photo04.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bd1500s-bg-photo05.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bd1500s-details-05.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bd1500s-details-06.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bd1500s-details-07.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bd1500s-details-08.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bd1500s-details-09.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bd1500m-bg-photo01.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bd1500m-bg-photo02.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bd1500m-bg-photo03.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bd1500m-bg-photo04.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bd1500m-bg-photo05.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bd1500m-bg-photo06.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bd1500m-bg-photo07.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bd1500m-details-01.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bd1500m-details-02.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bd1500m-details-03.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bd1500m-details-04.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bd200-bg-photo01.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bd200-bg-photo02.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bd200-bg-photo03.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bd200-bg-photo04.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bd200-details-01.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bd200-details-02.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bd200-details-03.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bd200-details-04.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bd200-details-05.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bd200-details-06.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bd200-details-07.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bd200-details-08.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bd200-details-09.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bdu500c-bg-photo01.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bdu500c-bg-photo02.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bdu500c-bg-photo03.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bdu500c-bg-photo04.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bdu500c-bg-photo05.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bdu500c-bg-photo06.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bdu500c-bg-photo07.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bdu500c-bg-photo08.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bdu500c-bg-photo09.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bdu500-details-01.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bdu500-details-02.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bdu500-details-03.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bdu700exc-bg-photo01.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bdu700exc-bg-photo02.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bdu700exc-bg-photo03.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bdu700exc-bg-photo04.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bdu700exc-bg-photo05.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bdu700exc-bg-photo06.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bdu700exc-bg-photo07.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bdu700exc-bg-photo08.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bdu700exc-bg-photo09.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bdu700exc-details-01.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bdu700exc-details-02.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bdu700exc-details-03.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bdu700exc-details-04.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bdu700exc-details-05.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bdu700exc-details-07.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bdu700exc-details-08.png",
+    "https://barkomas.com/wp-content/uploads/2025/11/bdu700exc-details-09.png"
+  ]
+}

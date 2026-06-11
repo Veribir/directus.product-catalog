@@ -1,0 +1,631 @@
+[
+  {
+    "slug": "bulldrill-top-head-drive",
+    "category_slug": "top-head-drive-drilling-rigs",
+    "brand": "BullDrill",
+    "name_en": "BullDrill Top-Head Drive Drilling Rigs",
+    "name_tr": "BullDrill Üstten Tahrikli Sondaj Makineleri",
+    "tagline_en": "High torque, safe control, maximum efficiency.",
+    "tagline_tr": "Yüksek tork, güvenli kontrol, maksimum verim.",
+    "description_en": "The BullDrill Top-Head Drive series features robust construction designed for challenging field conditions, with user-friendly systems and mobile track capability. Compatible with B-N-H-P drill rod sets for fast field adaptation.",
+    "model_range": "BD400T, BD800T, BD1500T, BD2500T",
+    "image_url": "https://barkomas.com/wp-content/uploads/2025/11/bd-tophead-drive-img1.png",
+    "gallery": [
+      "https://barkomas.com/wp-content/uploads/2025/11/bd-tophead-drive-img1.png",
+      "https://barkomas.com/wp-content/uploads/2025/11/bd-tophead-drive-img2.png",
+      "https://barkomas.com/wp-content/uploads/2025/11/bd-tophead-drive-img3.png"
+    ],
+    "features_detail": [
+      {
+        "number": "01",
+        "title": "Conquer Any Terrain with Confidence",
+        "body": "The robust steel track design enables effortless mobility even in the harshest ground conditions. Combined with a remote-control option, you can ensure maximum safety and ease of operation for tramming."
+      },
+      {
+        "number": "02",
+        "title": "Seamless Adaptability with Top-Head Rotary Unit",
+        "body": "The top-head system is compatible with the B-N-H-P drill rod set. It enables fast adaptation in the field and minimizes downtime."
+      },
+      {
+        "number": "03",
+        "title": "PLC Monitoring for Enhanced Efficiency",
+        "body": "Equipped with a reliable control and warning system, our cutting-edge control panel features indicators to monitor all drilling equipment and functions. The 10-inch touchscreen PLC display provides real-time updates on engine performance and alerts for potential issues."
+      },
+      {
+        "number": "04",
+        "title": "Unstoppable Power",
+        "body": "Driven by a powerful diesel engine, our rig delivers consistent and reliable performance for even the most demanding operations."
+      },
+      {
+        "number": "05",
+        "title": "Optimized Cooling for Peak Performance",
+        "body": "A high-capacity cooling system ensures smooth operation, even during intensive drilling sessions."
+      },
+      {
+        "number": "06",
+        "title": "Effortless Self-Loading Capability",
+        "body": "Lifts itself up to 1.4 meters, allowing for fast and easy loading without the need for a platform. Hydraulic jack stabilizers ensure easy setup and stability on sloping and challenging terrains."
+      },
+      {
+        "number": "07",
+        "title": "Semi-Automatic Rod Handling System",
+        "body": "A hydraulic arm enables semi-automatic rod handling, reducing operation time while increasing safety and efficiency."
+      },
+      {
+        "number": "08",
+        "title": "User-Friendly Control Panel",
+        "body": "Enjoy simplicity and convenience with our easy-to-use control interface, designed to keep you focused on the task."
+      },
+      {
+        "number": "09",
+        "title": "Advanced Safety Features",
+        "body": "Our rigs are equipped with a safety cage and emergency stop buttons, ensuring safer drilling operations for your crew. The automatic locking system of the main winch offers a safe and reliable lifting solution."
+      }
+    ],
+    "specs": {
+      "drilling_capacity_m": {
+        "BD400T": {"PWL": 80, "HWL": 200, "NWL": 400, "BWL": 550},
+        "BD800T": {"PWL": 250, "HWL": 400, "NWL": 800, "BWL": 1000},
+        "BD1500T": {"PWL": 400, "HWL": 650, "NWL": 1500, "BWL": 1800},
+        "BD2500T": {"PWL": 1000, "HWL": 1500, "NWL": 2500, "BWL": 3500}
+      },
+      "dimensions": {
+        "BD400T": {"LxWxH": "6m x 2m x 2.2m", "mast_open_m": 6, "weight_ton": 4},
+        "BD800T": {"LxWxH": "8.5m x 2.2m x 2.4m", "mast_open_m": 8.5, "weight_ton": 8},
+        "BD1500T": {"LxWxH": "11.5m x 2.35m x 2.67m", "mast_open_m": 11.5, "weight_ton": 13.5},
+        "BD2500T": {"LxWxH": "11.5m x 2.35m x 2.9m", "mast_open_m": 11.5, "weight_ton": 16}
+      },
+      "diesel_engine": {
+        "BD400T": {"brand_model": "KOHLER KDI 3404TM", "power_kw": 68, "power_hp": 90, "electrical": "12V", "speed_rpm": 2000, "cylinders": 4, "cooling": "Water", "fuel_tank_L": 70},
+        "BD800T": {"brand_model": "IVECO N45 TM3", "power_kw": 122, "power_hp": 164, "electrical": "12V", "speed_rpm": 2000, "cylinders": 4, "cooling": "Water", "fuel_tank_L": 120},
+        "BD1500T": {"brand_model": "CUMMINS QSB 6.7", "power_kw": 165, "power_hp": 221, "electrical": "24V", "speed_rpm": 2000, "cylinders": 6, "cooling": "Water", "fuel_tank_L": 200},
+        "BD2500T": {"brand_model": "CUMMINS QSL 8.9 or VOLVO TAD853VE", "power_kw": "225 or 238", "power_hp": "305 or 320", "electrical": "24V", "speed_rpm": 2000, "cylinders": 6, "cooling": "Water", "fuel_tank_L": 350}
+      },
+      "hydraulic_system": {
+        "BD400T": {"connection": "Tandem", "pump1_Lmin": 128, "pump2_Lmin": 44, "pump3_Lmin": 25, "pump4_Lmin": 16, "oil_tank_L": 70, "air_cooler": "PARKER or AKG"},
+        "BD800T": {"connection": "Tandem", "pump1_Lmin": 180, "pump2_Lmin": 72, "pump3_Lmin": 44, "pump4_Lmin": 16, "oil_tank_L": 180, "air_cooler": "PARKER or AKG"},
+        "BD1500T": {"connection": "Tandem", "pump1_Lmin": 224, "pump2_Lmin": 72, "pump3_Lmin": 44, "pump4_Lmin": 16, "oil_tank_L": 200, "air_cooler": "PARKER or AKG"},
+        "BD2500T": {"connection": "Tandem", "pump1_Lmin": 320, "pump2_Lmin": 72, "pump3_Lmin": 44, "pump4_Lmin": 25, "pump5_Lmin": 16, "oil_tank_L": 300, "air_cooler": "PARKER or AKG"}
+      },
+      "rotary_head": {
+        "BD400T": {"type": "Multistage head", "gearbox_reduction": 3.53, "max_speed_rpm": 1100, "max_torque_Nm": 3890, "cradle_slide_mm": 240},
+        "BD800T": {"type": "Multistage head", "gearbox_reduction": 3.53, "max_speed_rpm": 1100, "max_torque_Nm": 4250, "cradle_slide_mm": 320},
+        "BD1500T": {"type": "Multistage head", "gearbox_reduction": 4.13, "max_speed_rpm": 1100, "max_torque_Nm": 5420, "cradle_slide_mm": 350},
+        "BD2500T": {"type": "Multistage head", "gearbox_reduction": 4, "max_speed_rpm": 1100, "max_torque_Nm": 8000, "cradle_slide_mm": 475}
+      },
+      "feed_system": {
+        "BD400T": {"head_movement_m": 3.5, "pullup_kN": 80, "pulldown_kN": 40, "max_rod_dia_mm": 114.3},
+        "BD800T": {"head_movement_m": 3.5, "pullup_kN": 110, "pulldown_kN": 50, "max_rod_dia_mm": 114.3},
+        "BD1500T": {"head_movement_m": 7, "pullup_kN": 160, "pulldown_kN": 70, "max_rod_dia_mm": 114.3},
+        "BD2500T": {"head_movement_m": 7, "pullup_kN": 285, "pulldown_kN": 175, "max_rod_dia_mm": 114.3}
+      },
+      "rod_holder": {
+        "BD400T": {"type": "Hydraulic Foot Clamp", "max_rod_dia_mm": 154, "holding_force_kN": 165},
+        "BD800T": {"type": "Hydraulic Foot Clamp", "max_rod_dia_mm": 154, "holding_force_kN": 165},
+        "BD1500T": {"type": "Hydraulic Foot Clamp", "max_rod_dia_mm": 154, "holding_force_kN": 165},
+        "BD2500T": {"type": "Hydraulic Foot Clamp", "max_rod_dia_mm": 154, "holding_force_kN": 300}
+      },
+      "main_hoist": {
+        "BD400T": {"rope_dia_mm": 12, "rope_length_m": 18, "max_pull_kN": 30},
+        "BD800T": {"rope_dia_mm": 14, "rope_length_m": 18, "max_pull_kN": 100},
+        "BD1500T": {"rope_dia_mm": 16, "rope_length_m": 24, "max_pull_kN": 100},
+        "BD2500T": {"rope_dia_mm": 16, "rope_length_m": 24, "max_pull_kN": 180}
+      },
+      "wireline_crane": {
+        "BD400T": {"rope_dia_mm": 4.8, "max_rope_length_m": 600, "winding": "Automatic"},
+        "BD800T": {"rope_dia_mm": 4.8, "max_rope_length_m": 1000, "winding": "Automatic"},
+        "BD1500T": {"rope_dia_mm": 4.8, "max_rope_length_m": 4000, "winding": "Automatic"},
+        "BD2500T": {"rope_dia_mm": 4.8, "max_rope_length_m": 4000, "winding": "Automatic"}
+      },
+      "jib_crane": {
+        "BD400T": null,
+        "BD800T": null,
+        "BD1500T": {"extension_mm": 1790, "loading_capacity_kg": 500, "turn_deg": 80},
+        "BD2500T": {"extension_mm": 1790, "loading_capacity_kg": 500, "turn_deg": 80}
+      },
+      "flush_pump": {
+        "BD400T": {"flow_rate_Lmin": 90, "pressure_bar": 50},
+        "BD800T": {"flow_rate_Lmin": 120, "pressure_bar": 70},
+        "BD1500T": {"flow_rate_Lmin": 140, "pressure_bar": 70},
+        "BD2500T": {"flow_rate_Lmin": 140, "pressure_bar": 70}
+      },
+      "crawler": {
+        "BD400T": {"brand": "USTEC", "speed_kmh": 4.35, "track_height_mm": 390, "track_width_mm": 230, "remote_control": "Optional"},
+        "BD800T": {"brand": "USTEC", "speed_kmh": 3.38, "track_height_mm": 500, "track_width_mm": 300, "remote_control": "Optional"},
+        "BD1500T": {"brand": "USTEC", "speed_kmh": 2.96, "track_height_mm": 660, "track_width_mm": 380, "remote_control": "Optional"},
+        "BD2500T": {"brand": "USTEC or STRICKLAND", "speed_kmh": 2.96, "track_height_mm": 660, "track_width_mm": 380, "remote_control": "Optional"}
+      }
+    }
+  },
+  {
+    "slug": "bulldrill-spindle-drive",
+    "category_slug": "spindle-drive-drilling-rigs",
+    "brand": "BullDrill",
+    "name_en": "BullDrill Spindle Drive Drilling Rigs",
+    "name_tr": "BullDrill Milden Tahrikli Sondaj Makineleri",
+    "tagline_en": "Spindle drive, high precision, seamless control.",
+    "tagline_tr": "Mil tahriği, yüksek hassasiyet, kesintisiz kontrol.",
+    "description_en": "The BullDrill Spindle Drive series delivers superior performance in challenging field conditions, featuring a robust structure, 4-gear transmission, gas-operated rod holder, and telescopically extendable mast.",
+    "model_range": "BD1500S, BD2500S",
+    "image_url": null,
+    "features_detail": [
+      {
+        "number": "01",
+        "title": "Conquer Any Terrain with Confidence",
+        "body": "The robust steel track design enables effortless mobility even in the harshest ground conditions. Remote-control tramming options enhance operator safety."
+      },
+      {
+        "number": "02",
+        "title": "PLC Monitoring for Enhanced Efficiency",
+        "body": "Equipped with a reliable control and warning system, our cutting-edge control panel features indicators to track all drilling operations. A 10-inch touchscreen display provides real-time engine monitoring."
+      },
+      {
+        "number": "03",
+        "title": "Unstoppable Power",
+        "body": "Driven by a powerful diesel engine, our rig delivers consistent and reliable performance for even the most demanding operation."
+      },
+      {
+        "number": "04",
+        "title": "Optimized Cooling for Peak Performance",
+        "body": "A high-capacity cooling system ensures smooth operation, even during intensive drilling sessions."
+      },
+      {
+        "number": "05",
+        "title": "Powerful Gearbox with Sliding System",
+        "body": "A high-performance sliding mechanism and robust gearbox ensure superior performance in challenging operations."
+      },
+      {
+        "number": "06",
+        "title": "Effortless Self-Loading Capability",
+        "body": "Lifts itself up to 1.4 meters, allowing for fast and easy loading without the need for a platform. Hydraulic stabilizers support challenging terrain setup."
+      },
+      {
+        "number": "07",
+        "title": "User-Friendly Control Panel",
+        "body": "Intuitive interface design prioritizes operator focus and operational simplicity."
+      },
+      {
+        "number": "08",
+        "title": "Advanced Safety Features",
+        "body": "Equipment includes safety cages and emergency stop buttons to maximize the safety of your operator team. Main winch features automatic locking systems."
+      },
+      {
+        "number": "09",
+        "title": "Robust Transmission System with 4 Gears",
+        "body": "Provides maximum power flexibility across drilling applications."
+      },
+      {
+        "number": "10",
+        "title": "Gas-Operated Strong Rod Holder",
+        "body": "The high-end rod holder operated by gas pressure provides exceptional gripping strength for the most demanding jobs."
+      },
+      {
+        "number": "11",
+        "title": "Seamless Transportation with Extendable Mast",
+        "body": "The ergonomic mast design features a telescopically extendable tower that folds for convenient transport."
+      }
+    ],
+    "specs": {
+      "drilling_capacity_m": {
+        "BD1500S": {"PWL": 400, "HWL": 750, "NWL": 1500, "BWL": 1800},
+        "BD2500S": {"PWL": 1000, "HWL": 1500, "NWL": 2500, "BWL": 3500}
+      },
+      "dimensions": {
+        "BD1500S": {"LxWxH": "7.6m x 2.35m x 2.7m", "mast_open_m": 9.6, "weight_ton": 14.5},
+        "BD2500S": {"LxWxH": "7.6m x 2.45m x 2.8m", "mast_open_m": 9.6, "weight_ton": 16}
+      },
+      "diesel_engine": {
+        "BD1500S": {"brand_model": "CUMMINS QSB 6.7", "power_kw": 165, "power_hp": 221, "electrical": "24V", "speed_rpm": 2000, "cylinders": 6, "cooling": "Water", "fuel_tank_L": 300},
+        "BD2500S": {"brand_model": "CUMMINS QSL 8.9 or VOLVO TAD853VE", "power_kw": "225 or 238", "power_hp": "305 or 320", "electrical": "24V", "speed_rpm": 2000, "cylinders": 6, "cooling": "Water", "fuel_tank_L": 350}
+      },
+      "hydraulic_system": {
+        "BD1500S": {"connection": "Tandem", "pump1_Lmin": 224, "pump2_Lmin": 72, "pump3_Lmin": 44, "pump4_Lmin": 25, "pump5_Lmin": 16, "oil_tank_L": 300, "air_cooler": "PARKER or AKG"},
+        "BD2500S": {"connection": "Tandem", "pump1_Lmin": 320, "pump2_Lmin": 72, "pump3_Lmin": 44, "pump4_Lmin": 25, "pump5_Lmin": 16, "oil_tank_L": 300, "air_cooler": "PARKER or AKG"}
+      },
+      "rotary_head": {
+        "BD1500S": {"type": "Spindle", "gearbox_reduction": 2.56, "speeds_rpm": [165, 347, 639, 1100], "max_torque_Nm": 5400, "cradle_slide_mm": 300},
+        "BD2500S": {"type": "Spindle", "gearbox_reduction": 2.56, "speeds_rpm": [170, 358, 660, 1136], "max_torque_Nm": 7485, "cradle_slide_mm": 300}
+      },
+      "chuck_assembly": {
+        "BD1500S": {"type": "Spring closed, opens with hydraulic", "max_inner_dia_mm": 117, "holding_capacity_kN": 180},
+        "BD2500S": {"type": "Spring closed, opens with hydraulic", "max_inner_dia_mm": 117, "holding_capacity_kN": 220}
+      },
+      "feed_system": {
+        "BD1500S": {"head_movement_m": 3.5, "pullup_kN": 265, "pulldown_kN": 90, "max_rod_dia_mm": 114.3},
+        "BD2500S": {"head_movement_m": 3.5, "pullup_kN": 265, "pulldown_kN": 90, "max_rod_dia_mm": 114.3}
+      },
+      "rod_holder": {
+        "BD1500S": {"type": "Spring closed (gas) or hydraulic", "max_rod_dia_mm": 140, "holding_force_kN": "144 or 300"},
+        "BD2500S": {"type": "Spring closed (gas) or hydraulic", "max_rod_dia_mm": 140, "holding_force_kN": "200 or 300"}
+      },
+      "main_hoist": {
+        "BD1500S": {"rope_dia_mm": 18, "rope_length_m": 24, "max_pull_kN": 180},
+        "BD2500S": {"rope_dia_mm": 18, "rope_length_m": 24, "max_pull_kN": 180}
+      },
+      "wireline_crane": {
+        "BD1500S": {"rope_dia_mm": 4.8, "max_rope_length_m": 2000, "winding": "Automatic"},
+        "BD2500S": {"rope_dia_mm": 4.8, "max_rope_length_m": 3000, "winding": "Automatic"}
+      },
+      "flush_pump": {
+        "BD1500S": {"flow_rate_Lmin": 140, "pressure_bar": 70},
+        "BD2500S": {"flow_rate_Lmin": 140, "pressure_bar": 70}
+      },
+      "crawler": {
+        "BD1500S": {"brand": "USTEC", "speed_kmh": 2.96, "track_height_mm": 660, "track_width_mm": 380, "remote_control": "Optional"},
+        "BD2500S": {"brand": "USTEC or STRICKLAND", "speed_kmh": 2.96, "track_height_mm": 660, "track_width_mm": 380, "remote_control": "Optional"}
+      }
+    }
+  },
+  {
+    "slug": "bulldrill-multi-purpose",
+    "category_slug": "multi-purpose-drilling-rigs",
+    "brand": "BullDrill",
+    "name_en": "BullDrill Multi-Purpose Drilling Rigs",
+    "name_tr": "BullDrill Çok Amaçlı Sondaj Makineleri",
+    "tagline_en": "Dual mode, single platform, uninterrupted flexibility.",
+    "tagline_tr": "Çift mod, tek platform, kesintisiz esneklik.",
+    "description_en": "Combines reverse circulation (RC) and diamond core drilling capabilities in a single platform. Features high-quality dust cyclone collection for RC drilling and semi-automatic hydraulic rod handling.",
+    "model_range": "BD1500M, BD2500M",
+    "image_url": null,
+    "features_detail": [
+      {
+        "number": "01",
+        "title": "Conquer Any Terrain with Confidence",
+        "body": "The robust steel track design enables effortless mobility even in the harshest ground conditions. Combined with a remote-control option, you can ensure maximum safety and ease of operation for tramming."
+      },
+      {
+        "number": "02",
+        "title": "Seamless Adaptability with Top-Head Rotary Unit",
+        "body": "The innovative top-head rotary unit design simplifies working with the B-N-H-P drill rod set, making operations faster and more versatile."
+      },
+      {
+        "number": "03",
+        "title": "PLC Monitoring for Enhanced Efficiency",
+        "body": "Equipped with a reliable control and warning system, our cutting-edge control panel features indicators to monitor all drilling equipment and functions. The 10-inch touchscreen PLC display on the control panel provides real-time updates on engine performance and alerts for potential issues."
+      },
+      {
+        "number": "04",
+        "title": "Unstoppable Power",
+        "body": "Driven by a powerful diesel engine, our rig delivers consistent and reliable performance for even the most demanding operations."
+      },
+      {
+        "number": "05",
+        "title": "Optimized Cooling for Peak Performance",
+        "body": "A high-capacity cooling system ensures smooth operation, even during intensive drilling sessions."
+      },
+      {
+        "number": "06",
+        "title": "Effortless Self-Loading Capability",
+        "body": "Lifts itself up to 1.4 meters, allowing for fast and easy loading without the need for a platform. Hydraulic jack stabilizers ensure easy setup and stability on sloping and challenging terrains."
+      },
+      {
+        "number": "07",
+        "title": "Semi-Automatic Rod Handling System",
+        "body": "A hydraulic arm enables semi-automatic rod handling, reducing operation time while increasing safety and efficiency."
+      },
+      {
+        "number": "08",
+        "title": "User-Friendly Control Panel",
+        "body": "Enjoy simplicity and convenience with our easy-to-use control interface, designed to keep you focused on the task at hand."
+      },
+      {
+        "number": "09",
+        "title": "Advanced Safety Features",
+        "body": "Our drilling rigs are equipped with safety cages and emergency stop buttons to ensure the safety of your team. The automatic locking system on the main winch provides a secure lifting capacity solution."
+      },
+      {
+        "number": "10",
+        "title": "High-End Dust Cyclone",
+        "body": "A high-quality dust collection unit tailored specifically for RC drilling applications."
+      }
+    ],
+    "specs": {
+      "drilling_capacity_m": {
+        "BD1500M": {"PWL": 400, "HWL": 650, "NWL": 1500, "BWL": 1800},
+        "BD2500M": {"PWL": 1000, "HWL": 1500, "NWL": 2500, "BWL": 3500}
+      },
+      "dimensions": {
+        "BD1500M": {"LxWxH": "11.5m x 2.35m x 2.67m", "mast_open_m": 11.5, "weight_ton": 14.5},
+        "BD2500M": {"LxWxH": "11.5m x 2.35m x 2.9m", "mast_open_m": 11.5, "weight_ton": 16.5}
+      },
+      "diesel_engine": {
+        "BD1500M": {"brand_model": "CUMMINS QSB 6.7", "power_kw": 165, "power_hp": 221, "electrical": "24V", "speed_rpm": 2000, "cylinders": 6, "cooling": "Water", "fuel_tank_L": 200},
+        "BD2500M": {"brand_model": "CUMMINS QSL 8.9 or VOLVO TAD853VE", "power_kw": "225 or 238", "power_hp": "305 or 320", "electrical": "24V", "speed_rpm": 2000, "cylinders": 6, "cooling": "Water", "fuel_tank_L": 350}
+      },
+      "hydraulic_system": {
+        "BD1500M": {"connection": "Tandem", "pump1_Lmin": 224, "pump2_Lmin": 72, "pump3_Lmin": 44, "pump4_Lmin": 25, "pump5_Lmin": 16, "oil_tank_L": 300, "air_cooler": "PARKER or AKG"},
+        "BD2500M": {"connection": "Tandem", "pump1_Lmin": 320, "pump2_Lmin": 72, "pump3_Lmin": 44, "pump4_Lmin": 25, "pump5_Lmin": 16, "oil_tank_L": 300, "air_cooler": "PARKER or AKG"}
+      },
+      "rotary_head": {
+        "BD1500M": {"type": "Multistage head", "gearbox_reduction": 4.13, "max_speed_rpm": 1100, "max_torque_Nm": 5420, "cradle_slide_mm": 350},
+        "BD2500M": {"type": "Multistage head", "gearbox_reduction": 4, "max_speed_rpm": 1100, "max_torque_Nm": 8000, "cradle_slide_mm": 475}
+      },
+      "feed_system": {
+        "BD1500M": {"head_movement_m": 7, "pullup_kN": 160, "pulldown_kN": 70, "max_rod_dia_mm": 114.3},
+        "BD2500M": {"head_movement_m": 7, "pullup_kN": 285, "pulldown_kN": 175, "max_rod_dia_mm": 114.3}
+      },
+      "rod_holder": {
+        "BD1500M": {"type": "Hydraulic Foot Clamp", "max_rod_dia_mm": 154, "holding_force_kN": 165},
+        "BD2500M": {"type": "Hydraulic Foot Clamp", "max_rod_dia_mm": 154, "holding_force_kN": 300}
+      },
+      "main_hoist": {
+        "BD1500M": {"rope_dia_mm": 16, "rope_length_m": 24, "max_pull_kN": 180},
+        "BD2500M": {"rope_dia_mm": 18, "rope_length_m": 24, "max_pull_kN": 180}
+      },
+      "wireline_crane": {
+        "BD1500M": {"rope_dia_mm": 4.8, "max_rope_length_m": 4000, "winding": "Automatic"},
+        "BD2500M": {"rope_dia_mm": 4.8, "max_rope_length_m": 4000, "winding": "Automatic"}
+      },
+      "jib_crane": {
+        "BD1500M": {"extension_mm": 1790, "loading_capacity_kg": 500, "turn_deg": 80},
+        "BD2500M": {"extension_mm": 1790, "loading_capacity_kg": 500, "turn_deg": 80}
+      },
+      "flush_pump": {
+        "BD1500M": {"flow_rate_Lmin": 140, "pressure_bar": 70},
+        "BD2500M": {"flow_rate_Lmin": 140, "pressure_bar": 70}
+      },
+      "crawler": {
+        "BD1500M": {"brand": "USTEC", "speed_kmh": 2.96, "track_height_mm": 660, "track_width_mm": 380, "remote_control": "Optional"},
+        "BD2500M": {"brand": "USTEC or STRICKLAND", "speed_kmh": 2.96, "track_height_mm": 660, "track_width_mm": 380, "remote_control": "Optional"}
+      }
+    }
+  },
+  {
+    "slug": "bulldrill-skid-mounted",
+    "category_slug": "skid-mounted-drilling-rigs",
+    "brand": "BullDrill",
+    "name_en": "BullDrill Skid-Mounted Underground Drilling Rigs",
+    "name_tr": "BullDrill Kızak Tipi Yer Altı Sondaj Makineleri",
+    "tagline_en": "Compact power, full control, maximum torque.",
+    "tagline_tr": "Kompakt güç, tam kontrol, maksimum tork.",
+    "description_en": "Compact underground drilling systems featuring ABB/SIEMENS electric motors, KAWASAKI tandem hydraulic pumps, telescopic mast with 360° drilling capability, and automatic wireline winding for confined space operations.",
+    "model_range": "BDU200, BDU500, BDU700, BDU1500",
+    "image_url": "https://barkomas.com/wp-content/uploads/2025/11/bdu200-teknikcizim.png",
+    "gallery": [
+      "https://barkomas.com/wp-content/uploads/2025/11/bdu200-teknikcizim.png",
+      "https://barkomas.com/wp-content/uploads/2025/11/bdu200-teknikcizim02.png",
+      "https://barkomas.com/wp-content/uploads/2025/11/bdu200-teknikcizim03.png"
+    ],
+    "features": [
+      "High-end ABB/SIEMENS electric motor (55–110 kW)",
+      "KAWASAKI tandem hydraulic pumps (280–315 bar)",
+      "Open feed spindle rotary head (up to 1200 rpm, 1020–2060 Nm torque)",
+      "Double reducers enabling 360° drilling capability",
+      "Automatic winding wireline system",
+      "High-strength TC insert jaw rod holder (70–130 kN axial force)",
+      "User-friendly control panel",
+      "Safety cage with dual emergency stop system"
+    ],
+    "features_detail": [
+      {"number": "01", "title": "High-End Electric Motor", "body": "Powered by ABB or SIEMENS electric motors, ensuring high performance and reliability. With power outputs ranging from 55 to 110 kW and speeds up to 1480 rpm, they deliver efficient and consistent drilling capability."},
+      {"number": "02", "title": "Robust Hydraulic Pumps", "body": "Features four KAWASAKI pumps in tandem at 280–315 bar pressure, cooled by HYDAC water-cooling and PARKER/AKG air-cooling systems."},
+      {"number": "03", "title": "Vigorous Rotary Head", "body": "Open-feed spindle reaching 1200 rpm with torque of 1020–2060 Nm, powered by PARKER or REXROTH hydromotors for efficient operation."},
+      {"number": "04", "title": "Easy Navigation With Double Reducers", "body": "Two hydraulically-controlled reducers positioned at the bottom and at the boom-to-mast connection enable effortless and fast 360° drilling."},
+      {"number": "05", "title": "Wireline System With Automatic Winding Feature", "body": "Reduces manual handling risks with consistent tension control, prevents cable snapping, minimizes wear and tear, and improves core retrieval speed and accuracy."},
+      {"number": "06", "title": "High-Strength Rod Holder", "body": "Gas-pressure-operated system with TC insert jaws providing 70–130 kN axial holding force for firm and reliable rod security."},
+      {"number": "07", "title": "User-Friendly Control Panel", "body": "Intuitive and easy-to-use control panel allows precise control over drilling operations while maintaining advanced functionality."},
+      {"number": "08", "title": "Safety Cage For Sound Operations", "body": "Mechanically or hydraulically controlled safety cage enhances operator protection during drilling."},
+      {"number": "09", "title": "Dual Emergency Stop System", "body": "Control panel emergency button plus additional wire emergency stop on the mast for immediate shutdown capability in critical situations."}
+    ],
+    "specs": {
+      "drilling_capacity_m": {
+        "BDU500": {"HWL": 200, "NWL": 500, "BWL": 700},
+        "BDU700": {"PWL": null, "HWL": 350, "NWL": 700, "BWL": 1000},
+        "BDU1500": {"PWL": 400, "HWL": 700, "NWL": 1500, "BWL": 2000}
+      },
+      "electric_motor": {
+        "BDU500": {"brand": "ABB/SIEMENS", "power_kw": 55, "power_hp": 74, "voltage_V": 380, "speed_rpm": 1480},
+        "BDU700": {"brand": "ABB/SIEMENS", "power_kw": 90, "power_hp": 121, "voltage_V": 380, "speed_rpm": 1480},
+        "BDU1500": {"brand": "ABB/SIEMENS", "power_kw": 110, "power_hp": 148, "voltage_V": 380, "speed_rpm": 1480}
+      },
+      "rotary_head": {
+        "BDU500": {"type": "Open feed (spindle)", "max_speed_rpm": 1200, "max_torque_Nm": 1020, "inner_dia_mm": 78, "max_rod_dia_mm": 70, "chuck_axial_kN": 100, "hydromotor": "PARKER/REXROTH 80cc"},
+        "BDU700": {"type": "Open feed (spindle)", "max_speed_rpm": 1200, "max_torque_Nm": 1420, "inner_dia_mm": 101, "max_rod_dia_mm": 89, "chuck_axial_kN": 150, "hydromotor": "PARKER/REXROTH 110cc"},
+        "BDU1500": {"type": "Open feed (spindle)", "max_speed_rpm": 1200, "max_torque_Nm": 2060, "inner_dia_mm": 101, "max_rod_dia_mm": 89, "chuck_axial_kN": 150, "hydromotor": "PARKER/REXROTH 160cc"}
+      },
+      "feed_system": {
+        "BDU500": {"feed_cylinder": "Telescopic", "mast_rotation_deg": 360, "feed_stroke_mm": 1800, "pullup_kN": 55, "pulldown_kN": 55},
+        "BDU700": {"feed_cylinder": "Telescopic", "mast_rotation_deg": 360, "feed_stroke_mm": 1800, "pullup_kN": 70, "pulldown_kN": 70},
+        "BDU1500": {"feed_cylinder": "Telescopic", "mast_rotation_deg": 360, "feed_stroke_mm": 1800, "pullup_kN": 135, "pulldown_kN": 135}
+      },
+      "rod_holder": {
+        "BDU500": {"max_rod_dia_mm": 89, "axial_force_kN": 70},
+        "BDU700": {"max_rod_dia_mm": 114, "axial_force_kN": 70},
+        "BDU1500": {"max_rod_dia_mm": 114, "axial_force_kN": 130}
+      },
+      "wireline_crane": {
+        "BDU500": {"empty_drum_kN": 21, "full_drum_kN": 8.5, "rope_dia_mm": 4.8, "rope_length_m": 1000, "hydromotor": "DANFOSS"},
+        "BDU700": {"empty_drum_kN": 21, "full_drum_kN": 8.5, "rope_dia_mm": 4.8, "rope_length_m": 1000, "hydromotor": "DANFOSS"},
+        "BDU1500": {"empty_drum_kN": 21, "full_drum_kN": 8.5, "rope_dia_mm": 4.8, "rope_length_m": 1000, "hydromotor": "DANFOSS"}
+      },
+      "hydraulic_system": {
+        "BDU500": {"brand": "KAWASAKI", "pump1_cc": 80, "pump2_cc": 28, "pump3_cc": 16, "pump4_cc": 11, "pressure_bar": 280, "oil_tank_L": 130},
+        "BDU700": {"brand": "KAWASAKI", "pump1_cc": 112, "pump2_cc": 45, "pump3_cc": 28, "pump4_cc": 11, "pressure_bar": 280, "oil_tank_L": 130},
+        "BDU1500": {"brand": "KAWASAKI", "pump1_cc": 140, "pump2_cc": 45, "pump3_cc": 28, "pump4_cc": 11, "pressure_bar": 315, "oil_tank_L": 130}
+      },
+      "flush_pump": {
+        "BDU500": {"type": "Triplex", "flow_rate_Lmin": 90, "pressure_bar": 60, "height_mast_open_m": 3.7},
+        "BDU700": {"type": "Triplex", "flow_rate_Lmin": 140, "pressure_bar": 70, "height_mast_open_m": 3.7},
+        "BDU1500": {"type": "Triplex", "flow_rate_Lmin": 140, "pressure_bar": 70, "height_mast_open_m": 3.7}
+      },
+      "weight_ton": {"BDU500": 3.1, "BDU700": 3.4, "BDU1500": 4.2}
+    }
+  },
+  {
+    "slug": "bulldrill-track-mounted",
+    "category_slug": "track-mounted-drilling-rigs",
+    "brand": "BullDrill",
+    "name_en": "BullDrill Track-Mounted Underground Drilling Rigs",
+    "name_tr": "BullDrill Paletli Yer Altı Sondaj Makineleri",
+    "tagline_en": "Strong ground grip, full control, high torque.",
+    "tagline_tr": "Güçlü tutuş, tam kontrol, yüksek tork.",
+    "description_en": "Designed for challenging underground conditions with USTEC crawler track systems, PERKINS diesel tramming engine, high-torque spindle heads, and robust construction for maximum maneuverability.",
+    "model_range": "BDU500C, BDU700C, BDU1500C",
+    "image_url": null,
+    "features": [
+      "ABB/SIEMENS high-end electric motor (55–110 kW)",
+      "KAWASAKI tandem hydraulic pumps",
+      "Open feed spindle rotary head (up to 1200 rpm, 1020–2060 Nm torque)",
+      "Double reducers for 360° drilling",
+      "USTEC crawler system for underground mobility (up to 3.38 km/h)",
+      "PERKINS 4-cylinder diesel tramming engine (37 kW / 50 hp)",
+      "Automatic winding wireline system",
+      "Safety cage with dual emergency stop system"
+    ],
+    "features_detail": [
+      {"number": "01", "title": "High-End Electric Motor", "body": "Powered by ABB or SIEMENS electric motors, ensuring high performance and reliability. With power outputs ranging from 55 to 110 kW and speeds up to 1480 rpm, they deliver efficient and consistent drilling capability."},
+      {"number": "02", "title": "Robust Hydraulic Pumps", "body": "Feature four KAWASAKI hydraulic pumps in a tandem configuration, operating at 280 or 315 bar pressure. The system is cooled by a HYDAC water-cooling unit and an air-cooling system from PARKER or AKG."},
+      {"number": "03", "title": "Vigorous Rotary Head", "body": "Open-feed spindle rotary head reaches speeds up to 1200 rpm with torque ranging from 1020 to 2060 Nm. It is powered by PARKER or REXROTH hydromotors for smooth and powerful operation."},
+      {"number": "04", "title": "Easy Navigation With Double Reducers", "body": "Two hydraulically-controlled reducers are positioned at the bottom and at the boom-to-mast connection. This setup allows for effortless and fast 360° drilling in underground operations."},
+      {"number": "05", "title": "Wireline System With Automatic Winding Feature", "body": "The automatic winding wireline system reduces manual handling risks and ensures consistent tension control. It prevents cable snapping, minimizes wear and tear, and improves core retrieval speed and accuracy."},
+      {"number": "06", "title": "High-Strength Rod Holder", "body": "Gas-pressure-operated rod holder secures rods using TC insert jaws, providing an axial holding force of 70 to 130 kN, ensuring firm and reliable grip."},
+      {"number": "07", "title": "User-Friendly Control Panel", "body": "An intuitive and easy-to-use control panel allows precise control over drilling operations while maintaining advanced functionality."},
+      {"number": "08", "title": "Highly Efficient Diesel Engine for Tramming", "body": "A PERKINS 4-cylinder diesel engine generating 50 hp powers the tramming system, ensuring reliable movement and positioning in underground environments."},
+      {"number": "09", "title": "High-Quality Crawler System", "body": "Manufactured by USTEC, the crawler system delivers excellent traction and stability, reaching speeds of up to 3.4 km/h for smooth maneuverability."},
+      {"number": "10", "title": "Integrated Flush Pump", "body": "The triplex mud pump, attached onto the rig chassis, provides a flow rate of 90–140 l/min at 60–70 bar pressure, ensuring efficient flushing performance."},
+      {"number": "11", "title": "Safety Cage for Sound Operations", "body": "A mechanically or hydraulically controlled safety cage enhances operator safety during drilling operations."},
+      {"number": "12", "title": "Dual Emergency Stop System", "body": "An emergency stop button is located on the control panel, with an additional wire emergency stop positioned on the mast for immediate shutdown in critical situations."}
+    ],
+    "specs": {
+      "drilling_capacity_m": {
+        "BDU500C": {"HWL": 200, "NWL": 500, "BWL": 700},
+        "BDU700C": {"HWL": 350, "NWL": 700, "BWL": 1000},
+        "BDU1500C": {"PWL": 400, "HWL": 700, "NWL": 1500, "BWL": 2000}
+      },
+      "electric_motor": {
+        "BDU500C": {"brand": "ABB/SIEMENS", "power_kw": 55, "power_hp": 74, "voltage_V": 380, "speed_rpm": 1480},
+        "BDU700C": {"brand": "ABB/SIEMENS", "power_kw": 90, "power_hp": 121, "voltage_V": 380, "speed_rpm": 1480},
+        "BDU1500C": {"brand": "ABB/SIEMENS", "power_kw": 110, "power_hp": 148, "voltage_V": 380, "speed_rpm": 1480}
+      },
+      "rotary_head": {
+        "BDU500C": {"type": "Open feed (spindle)", "max_speed_rpm": 1200, "max_torque_Nm": 1020, "inner_dia_mm": 78, "max_rod_dia_mm": 70, "chuck_axial_kN": 100},
+        "BDU700C": {"type": "Open feed (spindle)", "max_speed_rpm": 1200, "max_torque_Nm": 1420, "inner_dia_mm": 101, "max_rod_dia_mm": 89, "chuck_axial_kN": 150},
+        "BDU1500C": {"type": "Open feed (spindle)", "max_speed_rpm": 1200, "max_torque_Nm": 2060, "inner_dia_mm": 101, "max_rod_dia_mm": 89, "chuck_axial_kN": 150}
+      },
+      "feed_system": {
+        "BDU500C": {"feed_cylinder": "Telescopic", "mast_rotation_deg": 360, "feed_stroke_mm": 1800, "pullup_kN": 55, "pulldown_kN": 55},
+        "BDU700C": {"feed_cylinder": "Telescopic", "mast_rotation_deg": 360, "feed_stroke_mm": 1800, "pullup_kN": 70, "pulldown_kN": 70},
+        "BDU1500C": {"feed_cylinder": "Telescopic", "mast_rotation_deg": 360, "feed_stroke_mm": 1800, "pullup_kN": 135, "pulldown_kN": 135}
+      },
+      "rod_holder": {
+        "BDU500C": {"max_rod_dia_mm": 89, "axial_force_kN": 70},
+        "BDU700C": {"max_rod_dia_mm": 114, "axial_force_kN": 70},
+        "BDU1500C": {"max_rod_dia_mm": 114, "axial_force_kN": 130}
+      },
+      "crawler": {
+        "BDU500C": {"brand": "USTEC", "max_speed_kmh": 3.38, "track_width_mm": 300, "track_height_mm": 500},
+        "BDU700C": {"brand": "USTEC", "max_speed_kmh": 3.38, "track_width_mm": 300, "track_height_mm": 500},
+        "BDU1500C": {"brand": "USTEC", "max_speed_kmh": 3.38, "track_width_mm": 300, "track_height_mm": 500}
+      },
+      "crawler_engine": {
+        "BDU500C": {"brand": "PERKINS", "type": "4-cylinder diesel", "power_kw": 37, "power_hp": 50},
+        "BDU700C": {"brand": "PERKINS", "type": "4-cylinder diesel", "power_kw": 37, "power_hp": 50},
+        "BDU1500C": {"brand": "PERKINS", "type": "4-cylinder diesel", "power_kw": 37, "power_hp": 50}
+      },
+      "hydraulic_system": {
+        "BDU500C": {"brand": "KAWASAKI", "pump1_cc": 80, "pump2_cc": 28, "pump3_cc": 16, "pump4_cc": 11, "pressure_bar": 280, "oil_tank_L": 130},
+        "BDU700C": {"brand": "KAWASAKI", "pump1_cc": 112, "pump2_cc": 45, "pump3_cc": 28, "pump4_cc": 11, "pressure_bar": 280, "oil_tank_L": 130},
+        "BDU1500C": {"brand": "KAWASAKI", "pump1_cc": 140, "pump2_cc": 45, "pump3_cc": 28, "pump4_cc": 11, "pressure_bar": 315, "oil_tank_L": 130}
+      },
+      "flush_pump": {
+        "BDU500C": {"type": "Triplex", "flow_rate_Lmin": 90, "pressure_bar": 60},
+        "BDU700C": {"type": "Triplex", "flow_rate_Lmin": 140, "pressure_bar": 70},
+        "BDU1500C": {"type": "Triplex", "flow_rate_Lmin": 140, "pressure_bar": 70}
+      },
+      "weight_ton": {"BDU500C": 3.1, "BDU700C": 3.4, "BDU1500C": 4.2}
+    }
+  },
+  {
+    "slug": "bulldrill-ex-proof",
+    "category_slug": "ex-proof-drilling-rigs",
+    "brand": "BullDrill",
+    "name_en": "BullDrill Ex-Proof Underground Drilling Rigs",
+    "name_tr": "BullDrill Ex-Proof Yer Altı Sondaj Makineleri",
+    "tagline_en": "Harsh environments, full protection, high performance.",
+    "tagline_tr": "Zorlu ortamlar, tam koruma, yüksek performans.",
+    "description_en": "Türkiye's first and only ATEX-certified explosion-proof drilling rigs. Designed for environments with methane emissions. Features CEMP/ABB Ex-proof motors, fire-resistant hydraulic fluid (HFD-U 68), D-type explosion-proof electrical enclosure, methane detector, and 120°C thermocouple overheat protection.",
+    "model_range": "BDU500EXC, BDU700EXC, BDU1500EXC",
+    "image_url": null,
+    "certifications": ["ATEX"],
+    "features": [
+      "100% ATEX-certified explosion-proof drilling rigs — first of their kind in Türkiye",
+      "ATEX-certified ABB or CEMP electric motors (660V or 1100V)",
+      "KAWASAKI four-unit tandem ATEX-certified hydraulic pumps",
+      "Open feed spindle rotary head (up to 1200 rpm)",
+      "Double reducers for 360° drilling",
+      "USTEC crawler system with PERKINS tramming engine",
+      "D-type explosion-proof electrical enclosure (flameproof construction)",
+      "Fire-resistant hydraulic tank (130L, HFD-U 68 fluid)",
+      "Integrated methane gas detector (CH₄ monitoring)",
+      "Thermocouple for 120°C overheat protection",
+      "Ex-proof power input system",
+      "Dual emergency stop system"
+    ],
+    "features_detail": [
+      {"number": "01", "title": "100% Explosion-Proof Drilling Rigs", "body": "BARKOM is Türkiye's first and only manufacturer of ATEX-certified explosion-proof drilling rigs, designed for safe operation in hazardous environments where methane gas emissions create explosive risks."},
+      {"number": "02", "title": "High-End Electric Motor", "body": "Ex-proof ABB or CEMP motors deliver power outputs ranging from 55 to 110 kW and speeds up to 1480 rpm for consistent drilling capability."},
+      {"number": "03", "title": "Robust Hydraulic Pumps", "body": "Four ex-proof KAWASAKI hydraulic pumps in a tandem configuration, operating at 280 or 315 bar pressure with cooling via HYDAC and PARKER/AKG systems."},
+      {"number": "04", "title": "Vigorous Rotary Head", "body": "Open-feed spindle reaches speeds up to 1200 rpm with torque ranging from 1020 to 2060 Nm using PARKER or REXROTH ex-proof hydromotors."},
+      {"number": "05", "title": "Easy Navigation With Double Reducers", "body": "Two hydraulically-controlled reducers are positioned at the bottom and at the boom-to-mast connection enabling 360° drilling capability."},
+      {"number": "06", "title": "Wireline System With Automatic Winding Feature", "body": "The automatic winding wireline system reduces manual handling risks and ensures consistent tension control. It prevents cable snapping and minimizes wear and tear."},
+      {"number": "07", "title": "High-Strength Rod Holder", "body": "Gas-pressure-operated rod holder secures rods using TC insert jaws, providing an axial holding force of 70 to 130 kN."},
+      {"number": "08", "title": "User-Friendly Control Panel", "body": "Intuitive and easy-to-use control panel allows precise control over drilling operations while maintaining advanced functionality."},
+      {"number": "09", "title": "High-Quality Crawler System", "body": "Manufactured by USTEC, the ex-proof crawler system delivers excellent traction and stability, reaching speeds of up to 3.4 km/h."},
+      {"number": "10", "title": "Integrated Flush Pump", "body": "Triplex mud pump, attached onto the rig chassis, provides a flow rate of 90–140 l/min at 60–70 bar pressure, ensuring efficient flushing performance."},
+      {"number": "11", "title": "Safety Cage For Sound Operations", "body": "Mechanically or hydraulically controlled safety cage enhances operator safety during drilling operations."},
+      {"number": "12", "title": "Dual Emergency Stop System", "body": "An emergency stop button is located on the control panel, with an additional wire emergency stop positioned on the mast for immediate shutdown."},
+      {"number": "13", "title": "D-type Explosion-Proof Electrical Box", "body": "D-Type electrical enclosure prevents internal sparks or arcs from igniting external gases or dust. Its flameproof construction ensures containment."},
+      {"number": "14", "title": "Explosion-Proof Power Input System", "body": "Ex-proof power input box is designed to eliminate ignition risks, containing internal sparks or explosions and preventing their propagation."},
+      {"number": "15", "title": "Integrated Thermocouple For Automatic Overheat Protection", "body": "Thermocouple continuously monitors hydraulic oil temperature. If it reaches 120°C, the system automatically shuts down, preventing overheating."},
+      {"number": "16", "title": "Methane Gas Detector", "body": "Methane detector continuously monitors CH₄ levels, preventing dangerous gas buildup and ensuring safe drilling in coal mines."},
+      {"number": "17", "title": "Fire-Resistant Hydraulic Tank", "body": "130-liter hydraulic tank is filled with HFD-U 68 fire-resistant synthetic hydraulic fluid, meeting strict ex-proof safety regulations."}
+    ],
+    "specs": {
+      "drilling_capacity_m": {
+        "BDU500EXC": {"HWL": 200, "NWL": 500, "BWL": 700},
+        "BDU700EXC": {"HWL": 350, "NWL": 700, "BWL": 1000},
+        "BDU1500EXC": {"PWL": 400, "HWL": 700, "NWL": 1500, "BWL": 2000}
+      },
+      "electric_motor": {
+        "BDU500EXC": {"brand": "ABB or CEMP (ATEX)", "power_kw": 55, "power_hp": 74, "voltage_V": "660 or 1100", "speed_rpm": 1480},
+        "BDU700EXC": {"brand": "ABB or CEMP (ATEX)", "power_kw": 90, "power_hp": 121, "voltage_V": "660 or 1100", "speed_rpm": 1480},
+        "BDU1500EXC": {"brand": "ABB or CEMP (ATEX)", "power_kw": 110, "power_hp": 148, "voltage_V": "660 or 1100", "speed_rpm": 1480}
+      },
+      "rotary_head": {
+        "BDU500EXC": {"type": "Open feed (spindle)", "max_speed_rpm": 1200, "max_torque_Nm": 1020, "inner_dia_mm": 78, "max_rod_dia_mm": 70, "chuck_axial_kN": 100},
+        "BDU700EXC": {"type": "Open feed (spindle)", "max_speed_rpm": 1200, "max_torque_Nm": 1420, "inner_dia_mm": 101, "max_rod_dia_mm": 89, "chuck_axial_kN": 150},
+        "BDU1500EXC": {"type": "Open feed (spindle)", "max_speed_rpm": 1200, "max_torque_Nm": 2060, "inner_dia_mm": 101, "max_rod_dia_mm": 89, "chuck_axial_kN": 150}
+      },
+      "feed_system": {
+        "BDU500EXC": {"feed_cylinder": "Telescopic", "mast_rotation_deg": 360, "feed_stroke_mm": 1800, "pullup_kN": 55, "pulldown_kN": 55},
+        "BDU700EXC": {"feed_cylinder": "Telescopic", "mast_rotation_deg": 360, "feed_stroke_mm": 1800, "pullup_kN": 70, "pulldown_kN": 70},
+        "BDU1500EXC": {"feed_cylinder": "Telescopic", "mast_rotation_deg": 360, "feed_stroke_mm": 1800, "pullup_kN": 135, "pulldown_kN": 135}
+      },
+      "rod_holder": {
+        "BDU500EXC": {"max_rod_dia_mm": 89, "axial_force_kN": 70},
+        "BDU700EXC": {"max_rod_dia_mm": 114, "axial_force_kN": 70},
+        "BDU1500EXC": {"max_rod_dia_mm": 114, "axial_force_kN": 130}
+      },
+      "hydraulic_system": {
+        "BDU500EXC": {"brand": "KAWASAKI (ATEX)", "pump1_cc": 80, "pump2_cc": 28, "pump3_cc": 16, "pump4_cc": 11, "pressure_bar": 280, "oil_tank_L": 130, "fluid": "HFD-U 68 fire-resistant"},
+        "BDU700EXC": {"brand": "KAWASAKI (ATEX)", "pump1_cc": 112, "pump2_cc": 45, "pump3_cc": 28, "pump4_cc": 11, "pressure_bar": 280, "oil_tank_L": 130, "fluid": "HFD-U 68 fire-resistant"},
+        "BDU1500EXC": {"brand": "KAWASAKI (ATEX)", "pump1_cc": 140, "pump2_cc": 45, "pump3_cc": 28, "pump4_cc": 11, "pressure_bar": 315, "oil_tank_L": 130, "fluid": "HFD-U 68 fire-resistant"}
+      },
+      "flush_pump": {
+        "BDU500EXC": {"type": "Triplex", "flow_rate_Lmin": 90, "pressure_bar": 60},
+        "BDU700EXC": {"type": "Triplex", "flow_rate_Lmin": 140, "pressure_bar": 70},
+        "BDU1500EXC": {"type": "Triplex", "flow_rate_Lmin": 140, "pressure_bar": 70}
+      },
+      "crawler": {
+        "BDU500EXC": {"brand": "USTEC", "max_speed_kmh": 3.38, "track_width_mm": 300, "track_height_mm": 500},
+        "BDU700EXC": {"brand": "USTEC", "max_speed_kmh": 3.38, "track_width_mm": 300, "track_height_mm": 500},
+        "BDU1500EXC": {"brand": "USTEC", "max_speed_kmh": 3.38, "track_width_mm": 300, "track_height_mm": 500}
+      },
+      "dimensions": {
+        "BDU500EXC": {"LxWxH": "5.2m x 1.87m x 2.28m", "height_mast_open_m": 3.7, "weight_ton": 6.2},
+        "BDU700EXC": {"LxWxH": "5.2m x 1.87m x 2.28m", "height_mast_open_m": 3.7, "weight_ton": 7.2},
+        "BDU1500EXC": {"LxWxH": "5.2m x 1.87m x 2.28m", "height_mast_open_m": 3.7, "weight_ton": 7.7}
+      }
+    }
+  }
+]
