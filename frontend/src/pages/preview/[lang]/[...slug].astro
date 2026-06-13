@@ -8,18 +8,22 @@ import SlugContent from "../../../components/SlugContent.astro";
 
 const PREVIEW_SECRET = await getRuntimeEnv("PREVIEW_SECRET");
 const token = Astro.url.searchParams.get("token");
+console.log("[preview] PREVIEW_SECRET set:", !!PREVIEW_SECRET, "token provided:", !!token, "match:", token === PREVIEW_SECRET);
 if (!PREVIEW_SECRET || token !== PREVIEW_SECRET) {
   return new Response("Not found", { status: 404 });
 }
 
 const { lang, slug } = Astro.params;
+console.log("[preview] lang:", lang, "slug:", slug);
 const languages = await getLanguages();
 const language = languages.find((l) => l.code === lang) as Language | undefined;
 if (!language) {
+  console.log("[preview] no matching language for", lang, "available:", languages.map((l) => l.code));
   return new Response("Not found", { status: 404 });
 }
 
 const route = await resolveSlugRoute(slug ?? "", lang!, true);
+console.log("[preview] resolveSlugRoute result:", JSON.stringify(route));
 if (!route) {
   return new Response("Not found", { status: 404 });
 }
