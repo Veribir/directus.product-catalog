@@ -11,6 +11,7 @@ directus/*
 frontend/node_modules/
 frontend/dist/
 frontend/.astro/
+frontend/.wrangler/
 
 # OS / editor
 .directory

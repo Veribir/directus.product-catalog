@@ -6,7 +6,7 @@ import { resolveSlugRoute } from "../../../lib/catalog";
 import { getRuntimeEnv } from "../../../lib/env";
 import SlugContent from "../../../components/SlugContent.astro";
 
-const PREVIEW_SECRET = getRuntimeEnv(Astro, "PREVIEW_SECRET");
+const PREVIEW_SECRET = await getRuntimeEnv("PREVIEW_SECRET");
 const token = Astro.url.searchParams.get("token");
 if (!PREVIEW_SECRET || token !== PREVIEW_SECRET) {
   return new Response("Not found", { status: 404 });
