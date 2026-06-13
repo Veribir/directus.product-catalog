@@ -32,6 +32,7 @@ frontend/src/
     catalog.ts     — Category path building, product URL resolution, eCl@ss helpers.
     i18n.ts        — getLanguages(), getTranslation() with en-US fallback.
     price.ts       — formatPrice(), isOnSale().
+    env.ts         — getRuntimeEnv(astro, key) for secrets read inside SSR pages.
   components/
     PageBlocks.astro          — M2A block dispatcher (add new blocks here too)
     blocks/Block*.astro       — One file per block type
@@ -119,6 +120,12 @@ First classify the error:
 - `formatPrice(price, locale)` for all prices — never format manually.
 - New types → `types.ts` first, then re-export from `directus.ts`. Never import from `types.ts` directly in components.
 - `fields: [...] as any[]` when SDK type inference breaks on M2A or dot-notation fields.
+
+### Env vars in SSR pages (Cloudflare)
+The site is static by default; only `prerender = false` pages (e.g. `pages/preview/`) run as SSR on the Cloudflare Worker.
+- Build-time config (`DIRECTUS_URL`, `ASSETS_URL` in `directus.ts`) — keep using `import.meta.env`. Vite inlines these as literals at build time; this is correct since they're infra config, not rotatable secrets, and `directus.ts` is a module-level singleton with no `Astro` context.
+- Runtime secrets read inside an SSR page (e.g. `PREVIEW_SECRET`) — use `getRuntimeEnv(Astro, "KEY")` from `lib/env.ts`. It checks `Astro.locals.runtime.env` (Cloudflare dashboard/wrangler secrets, rotatable without rebuild) first, falling back to `import.meta.env` for `astro dev` and non-Cloudflare builds.
+- Don't use `getRuntimeEnv` at module scope or inside `getStaticPaths()` — `Astro.locals` only exists per-request in an SSR page.
 
 ### Build safety
 - Kill any running dev server before running `npm run build`: `lsof -ti :4321 | xargs kill -9 2>/dev/null; true`

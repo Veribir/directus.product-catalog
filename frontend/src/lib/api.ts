@@ -214,6 +214,12 @@ const PAGE_FIELDS = [
   ...BLOCK_ITEM_FIELDS,
 ];
 
+// Status filter applied to all published-content queries. Omitted entirely in
+// preview mode so draft/archived items resolve too.
+function publishedFilter(preview: boolean): Record<string, unknown> {
+  return preview ? {} : { status: { _eq: "published" } };
+}
+
 const SORT_MAP: Record<string, string[]> = {
   sort: ["sort"],
   date_created_desc: ["-date_created"],
@@ -249,10 +255,10 @@ export async function fetchGlobals(): Promise<Globals> {
 
 // ─── Pages ────────────────────────────────────────────────────────────────────
 
-export async function fetchPageByPermalink(permalink: string): Promise<Page | null> {
+export async function fetchPageByPermalink(permalink: string, preview = false): Promise<Page | null> {
   const results = (await directus.request(
     readItems("pages", {
-      filter: { permalink: { _eq: permalink }, status: { _eq: "published" } },
+      filter: { permalink: { _eq: permalink }, ...publishedFilter(preview) } as any,
       fields: PAGE_FIELDS as any[],
       limit: 1,
     }),
@@ -260,10 +266,10 @@ export async function fetchPageByPermalink(permalink: string): Promise<Page | nu
   return results[0] ?? null;
 }
 
-export async function fetchAllPages(): Promise<Pick<Page, "permalink" | "title">[]> {
+export async function fetchAllPages(preview = false): Promise<Pick<Page, "permalink" | "title">[]> {
   return directus.request(
     readItems("pages", {
-      filter: { status: { _eq: "published" } },
+      filter: publishedFilter(preview) as any,
       fields: ["permalink", "title"],
       sort: ["sort"] as any[],
     }),
@@ -303,10 +309,10 @@ export async function fetchAllPostSlugs(): Promise<{ slug: string }[]> {
   ) as unknown as { slug: string }[];
 }
 
-export async function fetchPostBySlug(slug: string): Promise<Post | null> {
+export async function fetchPostBySlug(slug: string, preview = false): Promise<Post | null> {
   const results = (await directus.request(
     readItems("posts", {
-      filter: { slug: { _eq: slug }, status: { _eq: "published" } },
+      filter: { slug: { _eq: slug }, ...publishedFilter(preview) } as any,
       fields: ["id", "slug", "status", "image", "published_at", "translations.*"] as any[],
       limit: 1,
     }),
@@ -327,12 +333,14 @@ export async function fetchProductsPagePermalink(): Promise<string | null> {
   return results[0]?.page?.permalink ?? null;
 }
 
-export async function fetchAllProductSlugs(): Promise<
+export async function fetchAllProductSlugs(
+  preview = false,
+): Promise<
   { slug: string; category: { id: string } | null; translations: { languages_code: string; slug: string | null }[] }[]
 > {
   return directus.request(
     readItems("products", {
-      filter: { status: { _eq: "published" } },
+      filter: publishedFilter(preview) as any,
       fields: ["slug", "category.id", "translations.languages_code", "translations.slug"] as any[],
       limit: -1,
     }),
@@ -362,12 +370,13 @@ export async function fetchProductsByCategory(
   categoryIds: string[],
   limit = -1,
   sortBy?: string | null,
+  preview = false,
 ): Promise<Product[]> {
   const sort = SORT_MAP[sortBy ?? "sort"] ?? ["sort"];
   return directus.request(
     readItems("products", {
       filter: {
-        status: { _eq: "published" },
+        ...publishedFilter(preview),
         _or: [
           { category: { _in: categoryIds } },
           { additional_categories: { product_categories_id: { _in: categoryIds } } },
@@ -380,10 +389,10 @@ export async function fetchProductsByCategory(
   ) as unknown as Product[];
 }
 
-export async function fetchProductBySlug(slug: string): Promise<Product | null> {
+export async function fetchProductBySlug(slug: string, preview = false): Promise<Product | null> {
   const results = (await directus.request(
     readItems("products", {
-      filter: { slug: { _eq: slug }, status: { _eq: "published" } },
+      filter: { slug: { _eq: slug }, ...publishedFilter(preview) } as any,
       fields: [
         "id",
         "slug",
@@ -531,10 +540,10 @@ export async function fetchProductBySlug(slug: string): Promise<Product | null> 
 
 // ─── Product categories ───────────────────────────────────────────────────────
 
-export async function fetchAllCategories(): Promise<ProductCategory[]> {
+export async function fetchAllCategories(preview = false): Promise<ProductCategory[]> {
   return directus.request(
     readItems("product_categories", {
-      filter: { status: { _eq: "published" } },
+      filter: publishedFilter(preview) as any,
       fields: [
         "id",
         "slug",
@@ -555,7 +564,7 @@ export async function fetchAllCategories(): Promise<ProductCategory[]> {
   ) as unknown as ProductCategory[];
 }
 
-export async function fetchCategoryById(id: string): Promise<ProductCategory | null> {
+export async function fetchCategoryById(id: string, preview = false): Promise<ProductCategory | null> {
   const CATEGORY_BLOCK_FIELDS = PAGE_BLOCK_JUNCTION_FIELDS.map((f) => f).concat([
     "blocks.position",
     ...BLOCK_ITEM_FIELDS,
@@ -563,7 +572,7 @@ export async function fetchCategoryById(id: string): Promise<ProductCategory | n
 
   const results = (await directus.request(
     readItems("product_categories", {
-      filter: { id: { _eq: id }, status: { _eq: "published" } },
+      filter: { id: { _eq: id }, ...publishedFilter(preview) } as any,
       fields: [
         "id",
         "slug",

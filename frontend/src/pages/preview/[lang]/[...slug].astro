@@ -1,0 +1,28 @@
+---
+export const prerender = false;
+
+import { getLanguages, type Language } from "../../../lib/i18n";
+import { resolveSlugRoute } from "../../../lib/catalog";
+import { getRuntimeEnv } from "../../../lib/env";
+import SlugContent from "../../../components/SlugContent.astro";
+
+const PREVIEW_SECRET = getRuntimeEnv(Astro, "PREVIEW_SECRET");
+const token = Astro.url.searchParams.get("token");
+if (!PREVIEW_SECRET || token !== PREVIEW_SECRET) {
+  return new Response("Not found", { status: 404 });
+}
+
+const { lang, slug } = Astro.params;
+const languages = await getLanguages();
+const language = languages.find((l) => l.code === lang) as Language | undefined;
+if (!language) {
+  return new Response("Not found", { status: 404 });
+}
+
+const route = await resolveSlugRoute(slug ?? "", lang!, true);
+if (!route) {
+  return new Response("Not found", { status: 404 });
+}
+---
+
+<SlugContent {route} {language} {languages} preview={true} />

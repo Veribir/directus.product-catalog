@@ -1,0 +1,101 @@
+---
+import { getTranslation, type Language } from "../lib/i18n";
+import {
+  fetchPageByPermalink,
+  fetchPostBySlug,
+  fetchProductBySlug,
+  fetchCategoryById,
+  fetchAllCategories,
+  fetchProductsByCategory,
+} from "../lib/api";
+import { getDescendantIds, type SlugRouteProps } from "../lib/catalog";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageBlocks from "./PageBlocks.astro";
+import PostDetail from "./PostDetail.astro";
+import ProductDetail from "./ProductDetail.astro";
+import CategoryLanding from "./CategoryLanding.astro";
+
+interface Props {
+  route: SlugRouteProps;
+  language: Language;
+  languages: Language[];
+  preview?: boolean;
+}
+
+const { route, language, languages, preview = false } = Astro.props;
+
+const page = route.type === "page" ? await fetchPageByPermalink(route.permalink, preview) : null;
+const post = route.type === "post" ? await fetchPostBySlug(route.postSlug, preview) : null;
+const product = route.type === "product" ? await fetchProductBySlug(route.productSlug, preview) : null;
+
+let category = null;
+let categoryProducts: Awaited<ReturnType<typeof fetchProductsByCategory>> = [];
+let allCategoriesForNav: Awaited<ReturnType<typeof fetchAllCategories>> = [];
+
+if (route.type === "category") {
+  [category, allCategoriesForNav] = await Promise.all([
+    fetchCategoryById(route.categoryId, preview),
+    fetchAllCategories(preview),
+  ]);
+  if (category) {
+    const descendantIds = getDescendantIds(route.categoryId, allCategoriesForNav);
+    categoryProducts = await fetchProductsByCategory(
+      [route.categoryId, ...descendantIds],
+      -1,
+      category.listing_layout ?? undefined,
+      preview,
+    );
+  }
+}
+
+const title =
+  page
+    ? ((page.seo as { title?: string } | null)?.title ?? page.title)
+    : post
+      ? (getTranslation(post.translations, language.code).title ?? post.slug)
+      : product
+        ? (getTranslation(product.translations, language.code).name ?? product.slug)
+        : category
+          ? (getTranslation(category.translations, language.code)?.name ?? "Category")
+          : "Not Found";
+---
+
+<BaseLayout {title} {language} {languages}>
+  {page && (
+    <PageBlocks
+      blocks={page.blocks}
+      locale={language.code}
+      pagePermalink={route.type === "page" ? route.permalink : "/"}
+    />
+  )}
+
+  {post && route.type === "post" && (
+    <PostDetail {post} locale={language.code} postsPagePermalink={route.postsPagePermalink} />
+  )}
+
+  {category && route.type === "category" && (
+    <CategoryLanding
+      {category}
+      products={categoryProducts}
+      allCategories={allCategoriesForNav}
+      locale={language.code}
+      categoryPath={route.categoryPath}
+      productsPagePermalink={route.productsPagePermalink}
+      urlStructure={route.urlStructure}
+    />
+  )}
+
+  {product && route.type === "product" && (
+    <ProductDetail
+      {product}
+      locale={language.code}
+      productsPagePermalink={route.productsPagePermalink}
+    />
+  )}
+
+  {!page && !post && !product && !category && (
+    <div class="flex items-center justify-center h-[60vh] text-slate-400 text-sm">
+      Page not found.
+    </div>
+  )}
+</BaseLayout>

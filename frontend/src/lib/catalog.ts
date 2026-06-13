@@ -1,4 +1,13 @@
 import type { ProductPageTemplate, ProductTemplateBlock, Product, ProductCategoryRef, ProductUrlStructure } from "./types";
+import {
+  fetchAllPages,
+  fetchPostsPagePermalink,
+  fetchProductsPagePermalink,
+  fetchAllCategories,
+  fetchAllProductSlugs,
+  fetchPostBySlug,
+  fetchGlobals,
+} from "./api";
 
 // ─── Default template ─────────────────────────────────────────────────────────
 
@@ -189,4 +198,93 @@ export function getTemplateBlocks(template: ProductPageTemplate): ProductTemplat
     .flatMap((tab) => tab.blocks ?? [])
     .filter((b) => !b.hide_block)
     .sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0));
+}
+
+// ─── Slug routing ──────────────────────────────────────────────────────────────
+
+/**
+ * Discriminates which kind of content a `/[lang]/[...slug]` URL resolves to.
+ * Shared between the static route (resolved at build time via getStaticPaths)
+ * and the SSR preview route (resolved per-request).
+ */
+export type SlugRouteProps =
+  | { type: "page"; permalink: string }
+  | { type: "post"; postSlug: string; postsPagePermalink: string }
+  | {
+      type: "category";
+      categoryId: string;
+      categoryPath: string;
+      productsPagePermalink: string;
+      urlStructure: ProductUrlStructure;
+    }
+  | {
+      type: "product";
+      productSlug: string;
+      productsPagePermalink: string;
+      urlStructure: ProductUrlStructure;
+    };
+
+/**
+ * Resolves a `/[lang]/[...slug]` path to its content type at request time.
+ * Used by the preview route, which has no static path list to look up.
+ * When `preview` is true, draft/archived content is eligible to match.
+ */
+export async function resolveSlugRoute(
+  slug: string,
+  lang: string,
+  preview: boolean,
+): Promise<SlugRouteProps | null> {
+  const [pages, postsPagePermalink, productsPagePermalink, allCategories, globals] = await Promise.all([
+    fetchAllPages(preview),
+    fetchPostsPagePermalink(),
+    fetchProductsPagePermalink(),
+    fetchAllCategories(preview),
+    fetchGlobals(),
+  ]);
+
+  const urlStructure: ProductUrlStructure = globals.product_url_structure ?? "category_prefixed";
+  const normalizedSlug = slug.replace(/^\//, "");
+
+  const page = pages.find((p) => p.permalink !== "/" && p.permalink.replace(/^\//, "") === normalizedSlug);
+  if (page) return { type: "page", permalink: page.permalink };
+
+  const postsPrefix = postsPagePermalink?.replace(/^\//, "") ?? null;
+  if (postsPrefix && normalizedSlug.startsWith(`${postsPrefix}/`)) {
+    const postSlug = normalizedSlug.slice(postsPrefix.length + 1);
+    const post = await fetchPostBySlug(postSlug, preview);
+    if (post) return { type: "post", postSlug, postsPagePermalink: postsPagePermalink! };
+  }
+
+  const productsPrefix = productsPagePermalink?.replace(/^\//, "") ?? null;
+  if (productsPrefix && normalizedSlug.startsWith(`${productsPrefix}/`)) {
+    const remainder = normalizedSlug.slice(productsPrefix.length + 1);
+    const catPathMap = buildCategoryPaths(allCategories, lang);
+
+    for (const [categoryId, categoryPath] of catPathMap) {
+      if (categoryPath === remainder) {
+        return {
+          type: "category",
+          categoryId,
+          categoryPath,
+          productsPagePermalink: productsPagePermalink!,
+          urlStructure,
+        };
+      }
+    }
+
+    const productSlugs = await fetchAllProductSlugs(preview);
+    for (const p of productSlugs) {
+      const fullPath = getProductFullPath(p.slug, p.category?.id ?? null, catPathMap, urlStructure);
+      if (fullPath === remainder) {
+        return {
+          type: "product",
+          productSlug: p.slug,
+          productsPagePermalink: productsPagePermalink!,
+          urlStructure,
+        };
+      }
+    }
+  }
+
+  return null;
 }
