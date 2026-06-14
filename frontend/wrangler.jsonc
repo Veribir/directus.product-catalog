@@ -5,8 +5,13 @@
   // (run from this directory) deploys.
   //
   // Set "name" to the Worker name for this project before deploying.
-  "name": "barkomas-frontend",
+  "name": "dev-tamim",
   "compatibility_date": "2026-04-15",
+  // Without this, `wrangler deploy` deletes all dashboard-configured plaintext
+  // "Environment Variables" (e.g. PREVIEW_SECRET) before applying this file's
+  // `vars` (which is empty) — wiping them on every deploy. Secrets are preserved
+  // either way, but this keeps plain vars set via the dashboard intact too.
+  "keep_vars": true,
   "assets": {
     // Workers checks static assets before running the Worker by default.
     // Required so SSR routes (e.g. /preview/*) reach the Astro worker instead
