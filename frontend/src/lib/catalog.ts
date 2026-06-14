@@ -245,7 +245,10 @@ export async function resolveSlugRoute(
   const urlStructure: ProductUrlStructure = globals.product_url_structure ?? "category_prefixed";
   const normalizedSlug = slug.replace(/^\//, "");
 
-  const page = pages.find((p) => p.permalink !== "/" && p.permalink.replace(/^\//, "") === normalizedSlug);
+  const page =
+    normalizedSlug === ""
+      ? pages.find((p) => p.permalink === "/")
+      : pages.find((p) => p.permalink !== "/" && p.permalink.replace(/^\//, "") === normalizedSlug);
   if (page) return { type: "page", permalink: page.permalink };
 
   const postsPrefix = postsPagePermalink?.replace(/^\//, "") ?? null;
