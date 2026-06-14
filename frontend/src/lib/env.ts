@@ -13,10 +13,14 @@ export async function getRuntimeEnv(key: string): Promise<string | undefined> {
     // @ts-expect-error - "cloudflare:workers" types are only present when the
     // @astrojs/cloudflare adapter is active; resolved at runtime via try/catch.
     const { env } = await import(/* @vite-ignore */ "cloudflare:workers");
+    console.log("[env] cloudflare:workers import ok, available keys:", Object.keys(env as object));
     const value = (env as Record<string, string | undefined>)[key];
+    console.log(`[env] cloudflare:workers env["${key}"] present:`, value !== undefined);
     if (value) return value;
-  } catch {
-    // Not running on Cloudflare Workers (astro dev / non-Cloudflare build).
+  } catch (err) {
+    console.log("[env] cloudflare:workers import failed:", err);
   }
-  return import.meta.env[key];
+  const fallback = import.meta.env[key];
+  console.log(`[env] import.meta.env["${key}"] present:`, fallback !== undefined);
+  return fallback;
 }
