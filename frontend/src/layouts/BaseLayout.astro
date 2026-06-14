@@ -10,9 +10,10 @@ interface Props {
   title?: string;
   language: Language;
   languages: Language[];
+  preview?: boolean;
 }
 
-const { title, language, languages } = Astro.props;
+const { title, language, languages, preview = false } = Astro.props;
 
 const [globals, mainNav, footerNav] = await Promise.all([
   fetchGlobals(),
@@ -54,5 +55,22 @@ const faviconUrl = globals.favicon
       }, { threshold: 0.08 });
       animatedEls.forEach(el => observer.observe(el));
     </script>
+    {preview && (
+      <script>
+        // Keep internal navigation inside /preview/* (with the preview token)
+        // so editors can browse draft content without leaving preview mode.
+        const token = new URLSearchParams(window.location.search).get('token');
+        if (token) {
+          document.querySelectorAll('a[href^="/"]').forEach((a) => {
+            const href = a.getAttribute('href');
+            if (!href || href.startsWith('/preview/')) return;
+            const url = new URL(href, window.location.origin);
+            url.pathname = `/preview${url.pathname}`;
+            url.searchParams.set('token', token);
+            a.setAttribute('href', `${url.pathname}?${url.searchParams}${url.hash}`);
+          });
+        }
+      </script>
+    )}
   </body>
 </html>
