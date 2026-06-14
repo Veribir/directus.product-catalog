@@ -60,15 +60,20 @@ const faviconUrl = globals.favicon
         // Keep internal navigation inside /preview/* (with the preview token)
         // so editors can browse draft content without leaving preview mode.
         const token = new URLSearchParams(window.location.search).get('token');
+        console.log('[preview] rewriting links, token present:', !!token);
         if (token) {
+          let rewritten = 0;
           document.querySelectorAll('a[href^="/"]').forEach((a) => {
             const href = a.getAttribute('href');
             if (!href || href.startsWith('/preview/')) return;
             const url = new URL(href, window.location.origin);
             url.pathname = `/preview${url.pathname}`;
             url.searchParams.set('token', token);
-            a.setAttribute('href', `${url.pathname}?${url.searchParams}${url.hash}`);
+            const newHref = `${url.pathname}?${url.searchParams}${url.hash}`;
+            a.setAttribute('href', newHref);
+            rewritten++;
           });
+          console.log('[preview] rewrote', rewritten, 'link(s)');
         }
       </script>
     )}
