@@ -35,7 +35,11 @@ function navHref(url: string | null | undefined): string {
 }
 ---
 
-<header data-navbar class="fixed top-0 z-50 w-full border-b border-transparent transition-colors duration-300">
+<header
+  data-navbar
+  class="fixed top-0 z-50 w-full border-b border-transparent transition-[top,background-color,border-color,box-shadow] duration-300"
+  style="top: var(--preview-bar-h, 0px)"
+>
   <div class="max-w-6xl mx-auto px-6 h-16 flex items-center gap-8">
     <a href={`/${language.code}`} class="flex items-center gap-2.5 shrink-0 no-underline">
       {logoUrl ? (

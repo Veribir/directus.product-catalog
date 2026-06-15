@@ -22,11 +22,13 @@ if (!language) {
   return new Response("Not found", { status: 404 });
 }
 
-const route = await resolveSlugRoute(slug ?? "", lang!, true);
+const route = await resolveSlugRoute(slug ?? "", lang!);
 console.log("[preview] resolveSlugRoute result:", JSON.stringify(route));
 if (!route) {
   return new Response("Not found", { status: 404 });
 }
+
+const version = Astro.url.searchParams.get("version") ?? undefined;
 ---
 
-<SlugContent {route} {language} {languages} preview={true} />
+<SlugContent {route} {language} {languages} preview={true} version={version} />

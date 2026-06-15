@@ -1,0 +1,58 @@
+---
+import type { ContentVersion } from "../lib/api";
+
+interface Props {
+  versions: ContentVersion[];
+  currentVersion: string | null;
+}
+
+const { versions, currentVersion } = Astro.props;
+
+const extraVersions = versions.filter((v) => v.key !== "main");
+---
+
+<div
+  data-preview-toolbar
+  class="fixed top-0 inset-x-0 z-60 h-10 overflow-hidden border-b border-slate-800 bg-slate-900 text-slate-200 transition-[height] duration-300"
+  style="height: var(--preview-bar-h, 2.5rem)"
+>
+  <div class="max-w-6xl mx-auto px-6 h-10 flex items-center gap-3 text-sm">
+    <span class="font-medium text-slate-400">Preview version</span>
+    <select
+      data-version-select
+      class="bg-slate-800 border border-slate-700 rounded-md px-2 py-1 text-sm text-slate-200 cursor-pointer"
+    >
+      <option value="" selected={!currentVersion}>Published</option>
+      {extraVersions.map((v) => (
+        <option value={v.key} selected={v.key === currentVersion}>
+          {v.key === "draft" ? "Draft" : v.name ?? v.key}
+        </option>
+      ))}
+    </select>
+  </div>
+</div>
+
+<script>
+  const select = document.querySelector("[data-version-select]") as HTMLSelectElement | null;
+  select?.addEventListener("change", () => {
+    const url = new URL(window.location.href);
+    if (select.value) {
+      url.searchParams.set("version", select.value);
+    } else {
+      url.searchParams.delete("version");
+    }
+    window.location.href = url.toString();
+  });
+
+  let lastScrollY = window.scrollY;
+  function updateToolbar() {
+    const scrollY = window.scrollY;
+    if (scrollY > lastScrollY && scrollY > 60) {
+      document.documentElement.style.setProperty("--preview-bar-h", "0px");
+    } else {
+      document.documentElement.style.setProperty("--preview-bar-h", "2.5rem");
+    }
+    lastScrollY = scrollY;
+  }
+  window.addEventListener("scroll", updateToolbar, { passive: true });
+</script>

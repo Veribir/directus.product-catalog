@@ -7,6 +7,8 @@ import {
   fetchCategoryById,
   fetchAllCategories,
   fetchProductsByCategory,
+  fetchContentVersions,
+  type ContentVersion,
 } from "../lib/api";
 import { getDescendantIds, type SlugRouteProps } from "../lib/catalog";
 import BaseLayout from "../layouts/BaseLayout.astro";
@@ -20,13 +22,38 @@ interface Props {
   language: Language;
   languages: Language[];
   preview?: boolean;
+  version?: string;
 }
 
-const { route, language, languages, preview = false } = Astro.props;
+const { route, language, languages, preview = false, version } = Astro.props;
 
-const page = route.type === "page" ? await fetchPageByPermalink(route.permalink, preview) : null;
-const post = route.type === "post" ? await fetchPostBySlug(route.postSlug, preview) : null;
-const product = route.type === "product" ? await fetchProductBySlug(route.productSlug, preview) : null;
+const page = route.type === "page" ? await fetchPageByPermalink(route.permalink, version) : null;
+const post = route.type === "post" ? await fetchPostBySlug(route.postSlug, version) : null;
+const product =
+  route.type === "product" ? await fetchProductBySlug(route.productSlug, version) : null;
+
+let versions: ContentVersion[] = [];
+const versionedItem =
+  route.type === "page" && page
+    ? { collection: "pages", id: page.id }
+    : route.type === "post" && post
+      ? { collection: "posts", id: post.id }
+      : route.type === "product" && product
+        ? { collection: "products", id: product.id }
+        : null;
+const versionable = versionedItem !== null;
+if (preview) {
+  if (versionedItem) {
+    try {
+      versions = await fetchContentVersions(versionedItem.collection, versionedItem.id);
+    } catch (err) {
+      console.warn(
+        "[preview] fetchContentVersions failed - grant the public role read access to directus_versions:",
+        err,
+      );
+    }
+  }
+}
 
 let category = null;
 let categoryProducts: Awaited<ReturnType<typeof fetchProductsByCategory>> = [];
@@ -34,8 +61,8 @@ let allCategoriesForNav: Awaited<ReturnType<typeof fetchAllCategories>> = [];
 
 if (route.type === "category") {
   [category, allCategoriesForNav] = await Promise.all([
-    fetchCategoryById(route.categoryId, preview),
-    fetchAllCategories(preview),
+    fetchCategoryById(route.categoryId),
+    fetchAllCategories(),
   ]);
   if (category) {
     const descendantIds = getDescendantIds(route.categoryId, allCategoriesForNav);
@@ -43,7 +70,6 @@ if (route.type === "category") {
       [route.categoryId, ...descendantIds],
       -1,
       category.listing_layout ?? undefined,
-      preview,
     );
   }
 }
@@ -60,7 +86,15 @@ const title =
           : "Not Found";
 ---
 
-<BaseLayout {title} {language} {languages} {preview}>
+<BaseLayout
+  {title}
+  {language}
+  {languages}
+  {preview}
+  {versionable}
+  {versions}
+  currentVersion={version ?? null}
+>
   {page && (
     <PageBlocks
       blocks={page.blocks}

@@ -1,9 +1,10 @@
 ---
 import type { Language } from "../lib/i18n";
 import { assetUrl, loadAssetMap } from "../lib/assets";
-import { fetchGlobals, fetchNavigation } from "../lib/api";
+import { fetchGlobals, fetchNavigation, type ContentVersion } from "../lib/api";
 import Navbar from "../components/Navbar.astro";
 import Footer from "../components/Footer.astro";
+import PreviewToolbar from "../components/PreviewToolbar.astro";
 import "../styles/global.css";
 
 interface Props {
@@ -11,9 +12,20 @@ interface Props {
   language: Language;
   languages: Language[];
   preview?: boolean;
+  versionable?: boolean;
+  versions?: ContentVersion[];
+  currentVersion?: string | null;
 }
 
-const { title, language, languages, preview = false } = Astro.props;
+const {
+  title,
+  language,
+  languages,
+  preview = false,
+  versionable = false,
+  versions = [],
+  currentVersion = null,
+} = Astro.props;
 
 const [globals, mainNav, footerNav] = await Promise.all([
   fetchGlobals(),
@@ -43,8 +55,9 @@ const faviconUrl = globals.favicon
     <title>{pageTitle}</title>
   </head>
   <body class="m-0 font-sans antialiased bg-white text-slate-900">
+    {preview && versionable && <PreviewToolbar {versions} {currentVersion} />}
     <Navbar {globals} navigation={mainNav} {language} {languages} currentPath={Astro.url.pathname} />
-    <main class="pt-16">
+    <main style="padding-top: calc(4rem + var(--preview-bar-h, 0px))">
       <slot />
     </main>
     <Footer {globals} navigation={footerNav} {language} />

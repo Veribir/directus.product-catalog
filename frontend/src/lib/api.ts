@@ -1,4 +1,4 @@
-import { readItems, readSingleton } from "@directus/sdk";
+import { readItems, readItem, readSingleton, readContentVersions } from "@directus/sdk";
 import { directus } from "./directus";
 import type { Page, Globals, Post, Product, ProductCategory, Navigation } from "./directus";
 
@@ -214,10 +214,34 @@ const PAGE_FIELDS = [
   ...BLOCK_ITEM_FIELDS,
 ];
 
-// Status filter applied to all published-content queries. Omitted entirely in
-// preview mode so draft/archived items resolve too.
-function publishedFilter(preview: boolean): Record<string, unknown> {
-  return preview ? {} : { status: { _eq: "published" } };
+// Directus' `version` query param only works on the single-item-by-id endpoint,
+// so fetching a specific version first requires resolving the item's id.
+async function resolveItemId(
+  collection: string,
+  filter: Record<string, unknown>,
+): Promise<string | null> {
+  const results = (await directus.request(
+    readItems(collection as any, { filter: filter as any, fields: ["id"], limit: 1 }),
+  )) as unknown as { id: string }[];
+  return results[0]?.id ?? null;
+}
+
+export interface ContentVersion {
+  key: string;
+  name: string | null;
+}
+
+export async function fetchContentVersions(
+  collection: string,
+  item: string,
+): Promise<ContentVersion[]> {
+  return directus.request(
+    readContentVersions({
+      filter: { collection: { _eq: collection }, item: { _eq: item } } as any,
+      fields: ["key", "name"],
+      sort: ["-date_updated"] as any[],
+    }),
+  ) as unknown as ContentVersion[];
 }
 
 const SORT_MAP: Record<string, string[]> = {
@@ -255,10 +279,26 @@ export async function fetchGlobals(): Promise<Globals> {
 
 // ─── Pages ────────────────────────────────────────────────────────────────────
 
-export async function fetchPageByPermalink(permalink: string, preview = false): Promise<Page | null> {
+export async function fetchPageByPermalink(permalink: string, version?: string): Promise<Page | null> {
+  if (version) {
+    const id = await resolveItemId("pages", {
+      permalink: { _eq: permalink },
+      status: { _eq: "published" },
+    });
+    if (id) {
+      try {
+        return (await directus.request(
+          readItem("pages", id, { fields: PAGE_FIELDS as any[], version }),
+        )) as unknown as Page;
+      } catch {
+        // requested version doesn't exist - fall through to published content
+      }
+    }
+  }
+
   const results = (await directus.request(
     readItems("pages", {
-      filter: { permalink: { _eq: permalink }, ...publishedFilter(preview) } as any,
+      filter: { permalink: { _eq: permalink }, status: { _eq: "published" } } as any,
       fields: PAGE_FIELDS as any[],
       limit: 1,
     }),
@@ -266,10 +306,10 @@ export async function fetchPageByPermalink(permalink: string, preview = false): 
   return results[0] ?? null;
 }
 
-export async function fetchAllPages(preview = false): Promise<Pick<Page, "permalink" | "title">[]> {
+export async function fetchAllPages(): Promise<Pick<Page, "permalink" | "title">[]> {
   return directus.request(
     readItems("pages", {
-      filter: publishedFilter(preview) as any,
+      filter: { status: { _eq: "published" } } as any,
       fields: ["permalink", "title"],
       sort: ["sort"] as any[],
     }),
@@ -309,11 +349,26 @@ export async function fetchAllPostSlugs(): Promise<{ slug: string }[]> {
   ) as unknown as { slug: string }[];
 }
 
-export async function fetchPostBySlug(slug: string, preview = false): Promise<Post | null> {
+const POST_FIELDS = ["id", "slug", "status", "image", "published_at", "translations.*"];
+
+export async function fetchPostBySlug(slug: string, version?: string): Promise<Post | null> {
+  if (version) {
+    const id = await resolveItemId("posts", { slug: { _eq: slug }, status: { _eq: "published" } });
+    if (id) {
+      try {
+        return (await directus.request(
+          readItem("posts", id, { fields: POST_FIELDS as any[], version }),
+        )) as unknown as Post;
+      } catch {
+        // requested version doesn't exist - fall through to published content
+      }
+    }
+  }
+
   const results = (await directus.request(
     readItems("posts", {
-      filter: { slug: { _eq: slug }, ...publishedFilter(preview) } as any,
-      fields: ["id", "slug", "status", "image", "published_at", "translations.*"] as any[],
+      filter: { slug: { _eq: slug }, status: { _eq: "published" } } as any,
+      fields: POST_FIELDS as any[],
       limit: 1,
     }),
   )) as unknown as Post[];
@@ -333,18 +388,24 @@ export async function fetchProductsPagePermalink(): Promise<string | null> {
   return results[0]?.page?.permalink ?? null;
 }
 
-export async function fetchAllProductSlugs(
-  preview = false,
-): Promise<
-  { slug: string; category: { id: string } | null; translations: { languages_code: string; slug: string | null }[] }[]
+export async function fetchAllProductSlugs(): Promise<
+  {
+    slug: string;
+    category: { id: string } | null;
+    translations: { languages_code: string; slug: string | null }[];
+  }[]
 > {
   return directus.request(
     readItems("products", {
-      filter: publishedFilter(preview) as any,
+      filter: { status: { _eq: "published" } } as any,
       fields: ["slug", "category.id", "translations.languages_code", "translations.slug"] as any[],
       limit: -1,
     }),
-  ) as unknown as { slug: string; category: { id: string } | null; translations: { languages_code: string; slug: string | null }[] }[];
+  ) as unknown as {
+    slug: string;
+    category: { id: string } | null;
+    translations: { languages_code: string; slug: string | null }[];
+  }[];
 }
 
 export async function fetchProducts(
@@ -370,13 +431,12 @@ export async function fetchProductsByCategory(
   categoryIds: string[],
   limit = -1,
   sortBy?: string | null,
-  preview = false,
 ): Promise<Product[]> {
   const sort = SORT_MAP[sortBy ?? "sort"] ?? ["sort"];
   return directus.request(
     readItems("products", {
       filter: {
-        ...publishedFilter(preview),
+        status: { _eq: "published" },
         _or: [
           { category: { _in: categoryIds } },
           { additional_categories: { product_categories_id: { _in: categoryIds } } },
@@ -389,149 +449,167 @@ export async function fetchProductsByCategory(
   ) as unknown as Product[];
 }
 
-export async function fetchProductBySlug(slug: string, preview = false): Promise<Product | null> {
+const PRODUCT_DETAIL_FIELDS = [
+  "id",
+  "slug",
+  "status",
+  "sku",
+  "price",
+  "compare_at_price",
+  "image",
+  "gallery.directus_files_id",
+  "product_type",
+  "eclass_code",
+  "eclass_version",
+  "rfq_enabled",
+  "rfq_min_quantity",
+  "rfq_lead_time_days",
+  "unit_quantity",
+  "translations.*",
+  // category + template cascade
+  "category.id",
+  "category.slug",
+  "category.parent",
+  "category.listing_layout",
+  "category.eclass_code",
+  "category.eclass_version",
+  "category.translations.languages_code",
+  "category.translations.name",
+  "category.translations.slug",
+  ...PRODUCT_PAGE_TEMPLATE_FIELDS.map((f) => `category.default_page_template.${f}`),
+  // additional categories (M2M — drives extra listing memberships, not the canonical URL)
+  "additional_categories.product_categories_id.id",
+  "additional_categories.product_categories_id.slug",
+  "additional_categories.product_categories_id.parent",
+  "additional_categories.product_categories_id.translations.languages_code",
+  "additional_categories.product_categories_id.translations.name",
+  "additional_categories.product_categories_id.translations.slug",
+  // product template
+  ...PRODUCT_PAGE_TEMPLATE_FIELDS.map((f) => `page_template.${f}`),
+  // brand
+  "brand.id",
+  "brand.slug",
+  "brand.logo",
+  "brand.website",
+  "brand.translations.*",
+  // unit
+  "unit.id",
+  "unit.code",
+  "unit.symbol",
+  "unit.translations.*",
+  // variants
+  "variants.id",
+  "variants.status",
+  "variants.sku",
+  "variants.price",
+  "variants.compare_at_price",
+  "variants.stock",
+  "variants.low_stock_threshold",
+  "variants.image",
+  "variants.options",
+  "variants.translations.*",
+  "variants.unit_override.id",
+  "variants.unit_override.code",
+  "variants.unit_override.symbol",
+  "variants.unit_override.translations.*",
+  // tags (M2M junction)
+  "tags.product_tags_id.id",
+  "tags.product_tags_id.slug",
+  "tags.product_tags_id.translations.*",
+  // related products (self-M2M junction)
+  "related_products.related_products_id.id",
+  "related_products.related_products_id.slug",
+  "related_products.related_products_id.sku",
+  "related_products.related_products_id.price",
+  "related_products.related_products_id.compare_at_price",
+  "related_products.related_products_id.image",
+  "related_products.related_products_id.translations.*",
+  // certifications (M2M junction)
+  "certifications.obtained_at",
+  "certifications.product_certifications_id.id",
+  "certifications.product_certifications_id.certificate_number",
+  "certifications.product_certifications_id.issuer",
+  "certifications.product_certifications_id.issued_at",
+  "certifications.product_certifications_id.expires_at",
+  "certifications.product_certifications_id.document",
+  "certifications.product_certifications_id.translations.*",
+  // specs (O2M)
+  "specs.id",
+  "specs.sort",
+  "specs.status",
+  "specs.display_type",
+  "specs.irdi",
+  "specs.eclass_preferred_name",
+  "specs.translations.*",
+  "specs.group.id",
+  "specs.group.icon",
+  "specs.group.sort",
+  "specs.group.irdi",
+  "specs.group.translations.*",
+  "specs.unit.id",
+  "specs.unit.code",
+  "specs.unit.symbol",
+  "specs.unit.translations.*",
+  // spec variant values — nested under each spec via O2M backlink
+  "specs.spec_variant_values.variant",
+  "specs.spec_variant_values.value",
+  // pricing tiers (O2M)
+  "pricing_tiers.id",
+  "pricing_tiers.status",
+  "pricing_tiers.label",
+  "pricing_tiers.min_quantity",
+  "pricing_tiers.max_quantity",
+  "pricing_tiers.price",
+  "pricing_tiers.variant",
+  "pricing_tiers.note",
+  "pricing_tiers.customer_group.id",
+  "pricing_tiers.customer_group.code",
+  "pricing_tiers.customer_group.translations.*",
+  // regional prices (O2M)
+  "regional_prices.id",
+  "regional_prices.status",
+  "regional_prices.variant",
+  "regional_prices.price",
+  "regional_prices.compare_at_price",
+  "regional_prices.region.id",
+  "regional_prices.region.code",
+  "regional_prices.region.name",
+  "regional_prices.region.currency",
+  // media (O2M) — generic tagged assets (engineering drawings, etc.)
+  "media.id",
+  "media.sort",
+  "media.status",
+  "media.image",
+  "media.purpose",
+  "media.position",
+  "media.translations.languages_code",
+  "media.translations.caption",
+  // product page blocks M2A
+  ...PAGE_BLOCK_JUNCTION_FIELDS,
+  ...BLOCK_ITEM_FIELDS,
+] as any[];
+
+export async function fetchProductBySlug(slug: string, version?: string): Promise<Product | null> {
+  if (version) {
+    const id = await resolveItemId("products", {
+      slug: { _eq: slug },
+      status: { _eq: "published" },
+    });
+    if (id) {
+      try {
+        return (await directus.request(
+          readItem("products", id, { fields: PRODUCT_DETAIL_FIELDS, version }),
+        )) as unknown as Product;
+      } catch {
+        // requested version doesn't exist - fall through to published content
+      }
+    }
+  }
+
   const results = (await directus.request(
     readItems("products", {
-      filter: { slug: { _eq: slug }, ...publishedFilter(preview) } as any,
-      fields: [
-        "id",
-        "slug",
-        "status",
-        "sku",
-        "price",
-        "compare_at_price",
-        "image",
-        "gallery.directus_files_id",
-        "product_type",
-        "eclass_code",
-        "eclass_version",
-        "rfq_enabled",
-        "rfq_min_quantity",
-        "rfq_lead_time_days",
-        "unit_quantity",
-        "translations.*",
-        // category + template cascade
-        "category.id",
-        "category.slug",
-        "category.parent",
-        "category.listing_layout",
-        "category.eclass_code",
-        "category.eclass_version",
-        "category.translations.languages_code",
-        "category.translations.name",
-        "category.translations.slug",
-        ...PRODUCT_PAGE_TEMPLATE_FIELDS.map((f) => `category.default_page_template.${f}`),
-        // additional categories (M2M — drives extra listing memberships, not the canonical URL)
-        "additional_categories.product_categories_id.id",
-        "additional_categories.product_categories_id.slug",
-        "additional_categories.product_categories_id.parent",
-        "additional_categories.product_categories_id.translations.languages_code",
-        "additional_categories.product_categories_id.translations.name",
-        "additional_categories.product_categories_id.translations.slug",
-        // product template
-        ...PRODUCT_PAGE_TEMPLATE_FIELDS.map((f) => `page_template.${f}`),
-        // brand
-        "brand.id",
-        "brand.slug",
-        "brand.logo",
-        "brand.website",
-        "brand.translations.*",
-        // unit
-        "unit.id",
-        "unit.code",
-        "unit.symbol",
-        "unit.translations.*",
-        // variants
-        "variants.id",
-        "variants.status",
-        "variants.sku",
-        "variants.price",
-        "variants.compare_at_price",
-        "variants.stock",
-        "variants.low_stock_threshold",
-        "variants.image",
-        "variants.options",
-        "variants.translations.*",
-        "variants.unit_override.id",
-        "variants.unit_override.code",
-        "variants.unit_override.symbol",
-        "variants.unit_override.translations.*",
-        // tags (M2M junction)
-        "tags.product_tags_id.id",
-        "tags.product_tags_id.slug",
-        "tags.product_tags_id.translations.*",
-        // related products (self-M2M junction)
-        "related_products.related_products_id.id",
-        "related_products.related_products_id.slug",
-        "related_products.related_products_id.sku",
-        "related_products.related_products_id.price",
-        "related_products.related_products_id.compare_at_price",
-        "related_products.related_products_id.image",
-        "related_products.related_products_id.translations.*",
-        // certifications (M2M junction)
-        "certifications.obtained_at",
-        "certifications.product_certifications_id.id",
-        "certifications.product_certifications_id.certificate_number",
-        "certifications.product_certifications_id.issuer",
-        "certifications.product_certifications_id.issued_at",
-        "certifications.product_certifications_id.expires_at",
-        "certifications.product_certifications_id.document",
-        "certifications.product_certifications_id.translations.*",
-        // specs (O2M)
-        "specs.id",
-        "specs.sort",
-        "specs.status",
-        "specs.display_type",
-        "specs.irdi",
-        "specs.eclass_preferred_name",
-        "specs.translations.*",
-        "specs.group.id",
-        "specs.group.icon",
-        "specs.group.sort",
-        "specs.group.irdi",
-        "specs.group.translations.*",
-        "specs.unit.id",
-        "specs.unit.code",
-        "specs.unit.symbol",
-        "specs.unit.translations.*",
-        // spec variant values — nested under each spec via O2M backlink
-        "specs.spec_variant_values.variant",
-        "specs.spec_variant_values.value",
-        // pricing tiers (O2M)
-        "pricing_tiers.id",
-        "pricing_tiers.status",
-        "pricing_tiers.label",
-        "pricing_tiers.min_quantity",
-        "pricing_tiers.max_quantity",
-        "pricing_tiers.price",
-        "pricing_tiers.variant",
-        "pricing_tiers.note",
-        "pricing_tiers.customer_group.id",
-        "pricing_tiers.customer_group.code",
-        "pricing_tiers.customer_group.translations.*",
-        // regional prices (O2M)
-        "regional_prices.id",
-        "regional_prices.status",
-        "regional_prices.variant",
-        "regional_prices.price",
-        "regional_prices.compare_at_price",
-        "regional_prices.region.id",
-        "regional_prices.region.code",
-        "regional_prices.region.name",
-        "regional_prices.region.currency",
-        // media (O2M) — generic tagged assets (engineering drawings, etc.)
-        "media.id",
-        "media.sort",
-        "media.status",
-        "media.image",
-        "media.purpose",
-        "media.position",
-        "media.translations.languages_code",
-        "media.translations.caption",
-        // product page blocks M2A
-        ...PAGE_BLOCK_JUNCTION_FIELDS,
-        ...BLOCK_ITEM_FIELDS,
-      ] as any[],
+      filter: { slug: { _eq: slug }, status: { _eq: "published" } } as any,
+      fields: PRODUCT_DETAIL_FIELDS,
       limit: 1,
     }),
   )) as unknown as Product[];
@@ -540,10 +618,10 @@ export async function fetchProductBySlug(slug: string, preview = false): Promise
 
 // ─── Product categories ───────────────────────────────────────────────────────
 
-export async function fetchAllCategories(preview = false): Promise<ProductCategory[]> {
+export async function fetchAllCategories(): Promise<ProductCategory[]> {
   return directus.request(
     readItems("product_categories", {
-      filter: publishedFilter(preview) as any,
+      filter: { status: { _eq: "published" } } as any,
       fields: [
         "id",
         "slug",
@@ -564,7 +642,7 @@ export async function fetchAllCategories(preview = false): Promise<ProductCatego
   ) as unknown as ProductCategory[];
 }
 
-export async function fetchCategoryById(id: string, preview = false): Promise<ProductCategory | null> {
+export async function fetchCategoryById(id: string): Promise<ProductCategory | null> {
   const CATEGORY_BLOCK_FIELDS = PAGE_BLOCK_JUNCTION_FIELDS.map((f) => f).concat([
     "blocks.position",
     ...BLOCK_ITEM_FIELDS,
@@ -572,7 +650,7 @@ export async function fetchCategoryById(id: string, preview = false): Promise<Pr
 
   const results = (await directus.request(
     readItems("product_categories", {
-      filter: { id: { _eq: id }, ...publishedFilter(preview) } as any,
+      filter: { id: { _eq: id }, status: { _eq: "published" } } as any,
       fields: [
         "id",
         "slug",
@@ -599,9 +677,7 @@ export async function fetchCategoryById(id: string, preview = false): Promise<Pr
   return results[0] ?? null;
 }
 
-export async function fetchCategoriesByParent(
-  parentId: string | null,
-): Promise<ProductCategory[]> {
+export async function fetchCategoriesByParent(parentId: string | null): Promise<ProductCategory[]> {
   return directus.request(
     readItems("product_categories", {
       filter: {

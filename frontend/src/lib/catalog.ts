@@ -227,18 +227,13 @@ export type SlugRouteProps =
 /**
  * Resolves a `/[lang]/[...slug]` path to its content type at request time.
  * Used by the preview route, which has no static path list to look up.
- * When `preview` is true, draft/archived content is eligible to match.
  */
-export async function resolveSlugRoute(
-  slug: string,
-  lang: string,
-  preview: boolean,
-): Promise<SlugRouteProps | null> {
+export async function resolveSlugRoute(slug: string, lang: string): Promise<SlugRouteProps | null> {
   const [pages, postsPagePermalink, productsPagePermalink, allCategories, globals] = await Promise.all([
-    fetchAllPages(preview),
+    fetchAllPages(),
     fetchPostsPagePermalink(),
     fetchProductsPagePermalink(),
-    fetchAllCategories(preview),
+    fetchAllCategories(),
     fetchGlobals(),
   ]);
 
@@ -254,7 +249,7 @@ export async function resolveSlugRoute(
   const postsPrefix = postsPagePermalink?.replace(/^\//, "") ?? null;
   if (postsPrefix && normalizedSlug.startsWith(`${postsPrefix}/`)) {
     const postSlug = normalizedSlug.slice(postsPrefix.length + 1);
-    const post = await fetchPostBySlug(postSlug, preview);
+    const post = await fetchPostBySlug(postSlug);
     if (post) return { type: "post", postSlug, postsPagePermalink: postsPagePermalink! };
   }
 
@@ -275,7 +270,7 @@ export async function resolveSlugRoute(
       }
     }
 
-    const productSlugs = await fetchAllProductSlugs(preview);
+    const productSlugs = await fetchAllProductSlugs();
     for (const p of productSlugs) {
       const fullPath = getProductFullPath(p.slug, p.category?.id ?? null, catPathMap, urlStructure);
       if (fullPath === remainder) {
