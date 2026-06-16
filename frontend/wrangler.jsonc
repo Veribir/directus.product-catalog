@@ -17,5 +17,11 @@
     // Required so SSR routes (e.g. /preview/*) reach the Astro worker instead
     // of falling through to the static-asset not-found behaviour.
     "run_worker_first": true
+  },
+  "observability": {
+    "logs": {
+      "enabled": true,
+      "invocation_logs": true
+    }
   }
 }
