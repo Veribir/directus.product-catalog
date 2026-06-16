@@ -10,7 +10,8 @@
       "mcp__barkomas_dev__schema",
       "Edit(/.claude/skills/**)",
       "WebFetch(domain:barkomas.com)",
-      "mcp__barkomas_dev__files"
+      "mcp__barkomas_dev__files",
+      "WebFetch(domain:directus.com)"
     ]
   }
 }

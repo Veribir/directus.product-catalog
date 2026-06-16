@@ -24,15 +24,20 @@ Read `frontend/src/lib/types.ts` in full. Build a mental map of:
 For each relevant collection (or the one named in `$ARGUMENTS`), use `mcp__barkomas_dev__fields` with `action: "read"` to get the full field list with their types and nullable annotations.
 
 Key collections to check:
-- `globals`
-- `products`
-- `product_categories`
-- `product_variants`
-- `product_specs`
-- `product_spec_groups`
-- `posts`
-- `pages`
-- Block collections: `block_hero`, `block_richtext`, `block_posts`, `block_products`, `block_product_categories`
+
+**Site / content**
+- `globals`, `pages`, `posts`, `navigation`
+- Block collections: `block_hero`, `block_richtext`, `block_posts`, `block_cta_banner`, `block_numbered_list`, `block_features_grid`, `block_brands_logos`
+
+**Product catalog** (see `docs/product-catalog-schema-guide.md` for the full schema overview)
+- Lookups: `product_units`, `product_brands`, `product_regions`, `customer_groups`, `product_tags`, `product_certifications`, `product_spec_groups`
+- Templates: `product_page_templates`, `product_page_tabs`
+- Catalog: `product_categories`, `products`, `product_variants`
+- Specs: `product_specs`, `product_spec_variant_values`
+- Pricing: `product_pricing_tiers`, `product_regional_prices`, `product_rfq_requests`
+- Per-product content: `product_media`, `product_highlights`, `product_options`, `product_documents`, `product_faqs`
+- Product layout blocks: `block_product_hero`, `block_product_gallery`, `block_product_buybox`, `block_product_description`, `block_product_specs`, `block_product_card_grid`, `block_product_cta_group`, `block_product_options`, `block_product_documents`, `block_product_faq`, `block_product_pricing_table`, `block_product_related`, `block_product_content_slot`
+- Category/product general blocks: `block_products`, `block_product_categories`, `block_product_category_cards`
 - Translation junctions for each of the above
 
 ### 3 — Compare and report gaps

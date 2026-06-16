@@ -19,6 +19,14 @@ Before starting any task, read `.claude/directus.md` if Directus work is involve
 barkomas-dev/
   docs/plans/    — Implementation plan documents (feature designs, architecture decisions)
                    New plans go here, not at the project root.
+  docs/product-catalog-schema-guide.md
+                 — Birds-eye guide to the product catalog schema: collection groups,
+                   key fields, UX flow, and relationship map. Read this before any
+                   product catalog work instead of parsing the SQL.
+  directus/schema/product-catalog-schema.sql
+                 — Authoritative SQL DDL for the full product catalog + product
+                   page-builder block schema. Single source of truth for field names,
+                   types, enums, and FK behaviour.
   .claude/
     agents/      — Claude Code agents (this file lives here)
     skills/      — Claude Code slash-command skills

@@ -18,6 +18,7 @@ Create a complete new Directus collection following project conventions from `.c
 Before creating anything:
 - Use `mcp__barkomas_dev__collections` (`action: "read"`) to see all existing collections and their group assignments
 - Read `.claude/directus.md` fully if not already in context — it documents all field patterns, translations, and relation rules
+- If the new collection belongs to the `product_catalog` folder, read `docs/product-catalog-schema-guide.md` first to understand the existing schema structure and avoid duplicating or conflicting with established patterns (lookup tables, junction conventions, enum values)
 
 ### 2 — Create the main collection
 
