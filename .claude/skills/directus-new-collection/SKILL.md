@@ -44,7 +44,55 @@ Use `mcp__barkomas_dev__collections` with `action: "create"`. Always include the
 }
 ```
 
-### 3 — Create the translations junction table
+### 3 — Set up tab groups
+
+After creating the collection, add tab grouping so the admin UI is well-organised. Every collection with 5+ visible fields must have tabs.
+
+Create `meta_tabs` (container) and at minimum `meta_content` (first tab) in one batch call. Add `meta_seo` if the collection has an SEO field, and any other logical tabs based on the field set.
+
+```json
+[
+  {
+    "field": "meta_tabs",
+    "type": "alias",
+    "meta": {
+      "special": ["alias","no-data","group"],
+      "interface": "group-tabs",
+      "options": {"fillWidth": true},
+      "hidden": false,
+      "sort": 2,
+      "width": "full",
+      "group": null
+    },
+    "schema": null
+  },
+  {
+    "field": "meta_content",
+    "type": "alias",
+    "meta": {
+      "special": ["alias","no-data","group"],
+      "interface": "group-raw",
+      "hidden": false,
+      "sort": 1,
+      "width": "full",
+      "translations": [{"language": "en-US", "translation": "Content"}],
+      "group": "meta_tabs"
+    },
+    "schema": null
+  }
+]
+```
+
+Then, when creating the remaining fields in steps below, always set `"group": "meta_content"` (or the appropriate tab) in each field's meta. See `barkomas.md` → "Tab grouping" for the standard tab names and what belongs in each.
+
+Key rules:
+- `meta_tabs` sort: 2 (the `super-header` alias at sort 0 stays at `group: null` — it is NOT inside any tab).
+- `meta_content` is sort 1 inside the tab container — it opens by default.
+- `meta_seo` (if present) is always the last tab, highest sort number.
+- `presentation-divider` fields are redundant inside tabs — skip them when creating new collections with tabs.
+
+### 4 — Create the translations junction table
+
 
 Collection name: `<collection>_translations`
 
@@ -60,7 +108,7 @@ Fields:
 
 Collection meta: `{ "group": "<collection>", "hidden": true }`
 
-### 4 — Add the translations alias field to the main collection
+### 5 — Add the translations alias field to the main collection
 
 Use `mcp__barkomas_dev__fields` with `action: "create"` on `<collection>`:
 ```json
@@ -79,7 +127,8 @@ Use `mcp__barkomas_dev__fields` with `action: "create"` on `<collection>`:
     "display_options": { "template": "{{name}}", "languageField": "name", "userLanguage": true },
     "hidden": false,
     "width": "full",
-    "sort": 10
+    "sort": 10,
+    "group": "meta_content"
   },
   "schema": null
 }
@@ -87,7 +136,9 @@ Use `mcp__barkomas_dev__fields` with `action: "create"` on `<collection>`:
 
 **Critical**: `languageField` must be `"name"` (not `"code"`) — both in options and display_options.
 
-### 5 — Create the two relations on the junction table
+**Tab group**: set `"group": "meta_content"` on the `translations` alias (and all other visible fields) so they appear inside the Content tab, not floating outside the tab container.
+
+### 6 — Create the two relations on the junction table
 
 **Relation 1** — `<collection>_id → <collection>` (wires the translations alias):
 ```json
@@ -129,18 +180,18 @@ Use `mcp__barkomas_dev__fields` with `action: "create"` on `<collection>`:
 
 Both relations are independent — they can be created in parallel.
 
-### 6 — Create system field relations (user_created, user_updated → directus_users)
+### 7 — Create system field relations (user_created, user_updated → directus_users)
 
 For each of `user_created` and `user_updated`, create a relation with `on_delete: SET NULL`, `one_field: null`.
 
-### 7 — Verify
+### 8 — Verify
 
 - Read back the main collection meta to confirm `archive_field`, `group`
 - Read the `translations` alias field to confirm it was created
 - Report: collection name, junction table, fields created, relations wired
 - If Directus admin shows "1 translation config could not be resolved" — check that both relations (steps 5a and 5b) were created correctly
 
-### 8 — Frontend wiring (inform user)
+### 9 — Frontend wiring (inform user)
 
 After schema is done, remind the user of the frontend steps required:
 1. Add types to `frontend/src/lib/types.ts`

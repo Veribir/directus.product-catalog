@@ -45,7 +45,17 @@ Apply the following rules to choose the correct interface and meta:
 
 **Nullable**: most new fields should have `schema: { is_nullable: true }`. Only set `is_nullable: false` for required fields that have a default value.
 
-**Group assignment for `products`**: fields belong inside `meta_content` tab unless they are SEO. Pass `"group": "meta_content"` in meta.
+**Tab group assignment**: always check whether the collection uses tabs (`group-tabs` / `group-raw` fields). If it does, assign the new field to the appropriate tab via `"group": "<tab_field_name>"` in meta. If no tabs exist yet and the collection has 5+ visible fields, create the tab structure first (see `barkomas.md` → "Tab grouping").
+
+Standard tab assignment rules (see `barkomas.md` for the full table):
+- Identity/core fields (status, slug, name, image, translations) → `meta_content`
+- Category, brand, classification → `meta_catalog`
+- Tags, related items, certifications → `meta_relations`
+- Specs, highlights, media assets → `meta_specs`
+- Pricing, RFQ → `meta_commerce`
+- Documents, FAQs, options → `meta_extras`
+- Page template, blocks → `meta_layout`
+- SEO field → `meta_seo` (always last)
 
 **Placement dividers**: if adding a new logical section, first create a `presentation-divider` field one sort position before the content fields:
 ```json

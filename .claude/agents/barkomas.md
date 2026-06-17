@@ -120,6 +120,59 @@ First classify the error:
 - Monospace font for codes (SKU, slug, IRDI, eCl@ss): `options: { font: "monospace" }`.
 - Fields on `products` that belong in the content tab need `"group": "meta_content"` in meta.
 
+### Tab grouping — always apply for UX
+
+Any collection with 5+ visible fields **must** use tab groups. Apply this when creating new collections and when adding fields to existing ones.
+
+**Structure:**
+```
+meta_tabs        (type: alias, interface: group-tabs, group: null, sort: 2)
+  meta_content   (type: alias, interface: group-raw,  group: meta_tabs, sort: 1)  ← default tab
+  meta_seo       (type: alias, interface: group-raw,  group: meta_tabs, sort: N)  ← if collection has SEO
+  meta_<name>    (type: alias, interface: group-raw,  group: meta_tabs, sort: N)  ← any extra logical group
+```
+
+Fields are assigned to a tab by setting `meta.group` to the tab's field name (e.g. `"group": "meta_content"`).
+
+**How to create a tab container + tabs (batch):**
+```json
+[
+  {
+    "field": "meta_tabs",
+    "type": "alias",
+    "meta": { "special": ["alias","no-data","group"], "interface": "group-tabs", "options": {"fillWidth": true}, "sort": 2, "width": "full", "group": null },
+    "schema": null
+  },
+  {
+    "field": "meta_content",
+    "type": "alias",
+    "meta": { "special": ["alias","no-data","group"], "interface": "group-raw", "sort": 1, "width": "full", "translations": [{"language":"en-US","translation":"Content"}], "group": "meta_tabs" },
+    "schema": null
+  }
+]
+```
+
+**Standard tab names and what goes in them:**
+
+| Tab field | Label | Typical contents |
+|---|---|---|
+| `meta_content` | Content | status, slug, primary identity fields, images, translations, relations |
+| `meta_catalog` | Catalog | category, brand, classification (eCl@ss, etc.) |
+| `meta_relations` | Relations | tags, related items, certifications |
+| `meta_specs` | Specifications | spec rows, highlights, media assets |
+| `meta_commerce` | Commerce | pricing, RFQ, regional prices |
+| `meta_extras` | Downloads & FAQ | documents, options/parts, FAQs |
+| `meta_layout` | Layout | page_template, blocks (M2A page builder) |
+| `meta_seo` | SEO | seo field — always last tab |
+
+**Rules:**
+- `meta_tabs` goes at `sort: 2` (after the `super-header` at sort 0, which stays at `group: null`).
+- `meta_content` is always sort 1 within the tab container — it's the default open tab.
+- `meta_seo` is always the last tab.
+- `presentation-divider` fields are redundant inside tabs (the tab label already separates sections). Hide existing ones with `hidden: true` rather than deleting.
+- Single-tab collections (only `meta_content`) still benefit from the tab wrapper — it keeps the layout consistent and makes it easy to add more tabs later.
+- When adding a field to a collection that already has tabs, always set `"group": "<appropriate_tab>"` on the new field.
+
 ### Frontend / Astro
 - Accent colour: always `text-(--accent)` or `bg-(--accent)` — never hardcoded hex.
 - Dark/light variants: always branch on `isDark` using `class:list`, never assume light.
