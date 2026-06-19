@@ -523,6 +523,7 @@ const PRODUCT_DETAIL_FIELDS = [
   "related_products.related_products_id.price",
   "related_products.related_products_id.compare_at_price",
   "related_products.related_products_id.image",
+  "related_products.related_products_id.category.id",
   "related_products.related_products_id.translations.*",
   // certifications (M2M junction)
   "certifications.obtained_at",

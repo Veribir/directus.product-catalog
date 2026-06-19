@@ -571,7 +571,11 @@ export type Product = {
   translations: ProductTranslation[];
   variants: ProductVariant[];
   tags: { product_tags_id: ProductTag }[];
-  related_products: { related_products_id: Pick<Product, "id" | "slug" | "sku" | "price" | "compare_at_price" | "image" | "translations"> }[];
+  related_products: {
+    related_products_id: Pick<Product, "id" | "slug" | "sku" | "price" | "compare_at_price" | "image" | "translations"> & {
+      category: Pick<ProductCategoryRef, "id"> | null;
+    };
+  }[];
   certifications: { product_certifications_id: ProductCertification; obtained_at: string | null }[];
   specs: ProductSpec[];
   pricing_tiers: ProductPricingTier[];

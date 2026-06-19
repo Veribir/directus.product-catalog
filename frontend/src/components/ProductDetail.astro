@@ -33,9 +33,13 @@ const showRelated = templateBlocks.some((b) => b.collection === "block_product_r
 const showContentBlocks = templateBlocks.some((b) => b.collection === "block_product_content_slot");
 const showPricingTable = templateBlocks.some((b) => b.collection === "block_product_pricing_table");
 
-const allCategories = showBreadcrumb && product.category
-  ? await fetchAllCategories()
-  : [];
+const relatedProducts = (product.related_products ?? [])
+  .map((r) => r.related_products_id)
+  .filter(Boolean);
+
+const needsCategoryPaths =
+  (showBreadcrumb && product.category) || relatedProducts.some((rel) => rel.category);
+const allCategories = needsCategoryPaths ? await fetchAllCategories() : [];
 const catPathMap = allCategories.length > 0 ? buildCategoryPaths(allCategories, locale) : new Map<string, string>();
 const categoryPath = product.category ? catPathMap.get(product.category.id) ?? null : null;
 
@@ -47,10 +51,6 @@ const variantRows = (product.variants ?? [])
     const vtx = getTranslation(variant.translations, locale);
     return { variant, vtx };
   });
-
-const relatedProducts = (product.related_products ?? [])
-  .map((r) => r.related_products_id)
-  .filter(Boolean);
 
 const mainImageUrl = product.image
   ? assetUrl(product.image, "width=900&height=1000&fit=cover")
@@ -65,7 +65,15 @@ const brandLogoUrl = product.brand?.logo
 // Separate feature/spec blocks from other blocks for ordered rendering
 const sortedBlocks = [...(product.blocks ?? [])].sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0));
 const featureBlocks = sortedBlocks.filter(b => !b.hide_block && b.collection === "block_features_grid");
-const specBlocks = sortedBlocks.filter(b => !b.hide_block && b.collection === "block_product_specs");
+// Spec blocks can come from the product's own blocks or from its page template's tabs —
+// merge both sources (deduped by id) so template-defined specs actually render.
+const specBlocksById = new Map<string, (typeof sortedBlocks)[number] | (typeof templateBlocks)[number]>();
+for (const b of [...templateBlocks, ...sortedBlocks]) {
+  if (!b.hide_block && b.collection === "block_product_specs") {
+    specBlocksById.set(b.id, b);
+  }
+}
+const specBlocks = [...specBlocksById.values()];
 const cardGridBlocks = sortedBlocks.filter(b => !b.hide_block && b.collection === "block_product_card_grid");
 const otherBlocks = sortedBlocks.filter(b => !b.hide_block && b.collection !== "block_features_grid" && b.collection !== "block_product_specs" && b.collection !== "block_product_card_grid");
 
@@ -278,7 +286,7 @@ const catTaglineRest = catWords.slice(1).join(" ");
           const relImageUrl = rel.image
             ? assetUrl(rel.image, "width=400&height=400&fit=cover")
             : null;
-          const relFullPath = getProductFullPath(rel.slug, null, catPathMap);
+          const relFullPath = getProductFullPath(rel.slug, rel.category?.id ?? null, catPathMap);
           const relHref = `/${locale}${productsPagePermalink}/${relFullPath}`;
           const relPrice = formatPrice(rel.price, locale, currency);
           const relOnSale = isOnSale(rel.price, rel.compare_at_price);
