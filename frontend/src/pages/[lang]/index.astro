@@ -1,8 +1,6 @@
 ---
-import { getLanguages, type Language } from "../../lib/i18n";
-import { fetchPageByPermalink } from "../../lib/api";
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import PageBlocks from "../../components/PageBlocks.astro";
+import { getLanguages, getDefaultLanguage, type Language } from "../../lib/i18n";
+import HomeContent from "../../components/HomeContent.astro";
 
 export async function getStaticPaths() {
   const languages = await getLanguages();
@@ -14,17 +12,10 @@ export async function getStaticPaths() {
 
 const { language, languages } = Astro.props as { language: Language; languages: Language[] };
 
-const page = await fetchPageByPermalink("/");
-const title = (page?.seo as { title?: string } | null)?.title ?? page?.title ?? "Barkomas";
+// The default locale's homepage is also served unprefixed at "/" — point both
+// at the same canonical URL so search engines don't see them as duplicates.
+const defaultLanguage = getDefaultLanguage(languages);
+const canonicalPath = language.code === defaultLanguage.code ? "/" : undefined;
 ---
 
-<BaseLayout {title} {language} {languages}>
-  {
-    !page && (
-      <div class="flex items-center justify-center h-[60vh] text-slate-400 text-sm">
-        No published homepage found.
-      </div>
-    )
-  }
-  {page && <PageBlocks blocks={page.blocks} locale={language.code} pagePermalink="/" />}
-</BaseLayout>
+<HomeContent {language} {languages} {canonicalPath} />

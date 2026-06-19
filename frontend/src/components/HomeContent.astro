@@ -1,0 +1,28 @@
+---
+import type { Language } from "../lib/i18n";
+import { fetchPageByPermalink } from "../lib/api";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageBlocks from "./PageBlocks.astro";
+
+interface Props {
+  language: Language;
+  languages: Language[];
+  canonicalPath?: string;
+}
+
+const { language, languages, canonicalPath } = Astro.props;
+
+const page = await fetchPageByPermalink("/");
+const title = (page?.seo as { title?: string } | null)?.title ?? page?.title ?? "Barkomas";
+---
+
+<BaseLayout {title} {language} {languages} {canonicalPath}>
+  {
+    !page && (
+      <div class="flex items-center justify-center h-[60vh] text-slate-400 text-sm">
+        No published homepage found.
+      </div>
+    )
+  }
+  {page && <PageBlocks blocks={page.blocks} locale={language.code} pagePermalink="/" />}
+</BaseLayout>

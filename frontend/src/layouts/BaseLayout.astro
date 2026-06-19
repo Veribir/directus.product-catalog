@@ -15,6 +15,9 @@ interface Props {
   versionable?: boolean;
   versions?: ContentVersion[];
   currentVersion?: string | null;
+  /** Overrides the canonical URL path when it differs from Astro.url.pathname
+   * (e.g. the homepage is reachable both at "/" and "/en-US"). */
+  canonicalPath?: string;
 }
 
 const {
@@ -25,6 +28,7 @@ const {
   versionable = false,
   versions = [],
   currentVersion = null,
+  canonicalPath,
 } = Astro.props;
 
 const [globals, mainNav, footerNav] = await Promise.all([
@@ -38,6 +42,7 @@ const pageTitle = title ?? globals.title ?? "Barkomas";
 const faviconUrl = globals.favicon
   ? assetUrl(globals.favicon)
   : "/favicon.svg";
+const canonicalUrl = new URL(canonicalPath ?? Astro.url.pathname, Astro.site ?? Astro.url.origin);
 ---
 
 <html
@@ -48,6 +53,7 @@ const faviconUrl = globals.favicon
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href={faviconUrl} />
+    <link rel="canonical" href={canonicalUrl} />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />

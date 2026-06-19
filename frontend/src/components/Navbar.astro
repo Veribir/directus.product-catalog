@@ -1,7 +1,7 @@
 ---
 import type { Globals } from "../lib/directus";
 import { assetUrl } from "../lib/assets";
-import type { Language } from "../lib/i18n";
+import { getDefaultLanguage, type Language } from "../lib/i18n";
 import type { Navigation } from "../lib/directus";
 
 interface Props {
@@ -22,8 +22,18 @@ const logoUrl = globals.logo_dark_mode
 
 const siteTitle = globals.title ?? "Barkomas";
 
+const langPrefix = `/${language.code}`;
+const hasLangPrefix = currentPath === langPrefix || currentPath.startsWith(`${langPrefix}/`);
+// currentPath has no language prefix (e.g. the unprefixed "/" homepage) — fall
+// back to the default locale's prefixed URL rather than assuming "/" exists.
+const defaultLangPrefix = `/${getDefaultLanguage(languages).code}`;
+const homeHref = hasLangPrefix ? langPrefix : defaultLangPrefix;
+
 function localeHref(locale: string) {
-  return currentPath.replace(`/${language.code}`, `/${locale}`) || `/${locale}`;
+  if (hasLangPrefix) {
+    return currentPath.replace(langPrefix, `/${locale}`);
+  }
+  return `/${locale}`;
 }
 
 const topItems = (navigation?.items ?? []).sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0));
@@ -41,7 +51,7 @@ function navHref(url: string | null | undefined): string {
   style="top: var(--preview-bar-h, 0px)"
 >
   <div class="max-w-6xl mx-auto px-6 h-16 flex items-center gap-8">
-    <a href={`/${language.code}`} class="flex items-center gap-2.5 shrink-0 no-underline">
+    <a href={homeHref} class="flex items-center gap-2.5 shrink-0 no-underline">
       {logoUrl ? (
         <img src={logoUrl} alt={siteTitle} class="h-8 w-auto" />
       ) : (
