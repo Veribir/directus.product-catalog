@@ -97,7 +97,10 @@ const publishedVariants = variants.filter((v) => v.status === "published");
             return (
               <div class="grid grid-cols-2 gap-4 px-4 py-2.5 even:bg-slate-50">
                 <dt class="text-sm text-slate-500" title={spec.irdi ?? undefined}>{tx?.label}</dt>
-                <dd class="text-sm font-medium text-slate-800">{renderValue(spec, locale)}</dd>
+                <dd class="text-sm font-medium text-slate-800">
+                  {renderValue(spec, locale)}
+                  {tx?.note && <span class="block text-xs font-normal text-slate-400 mt-0.5">{tx.note}</span>}
+                </dd>
               </div>
             );
           })}
@@ -131,7 +134,10 @@ const publishedVariants = variants.filter((v) => v.status === "published");
             return (
               <div class="grid grid-cols-2 gap-4 py-2.5">
                 <dt class="text-sm text-slate-500" title={spec.irdi ?? undefined}>{tx?.label}</dt>
-                <dd class="text-sm font-medium text-slate-800">{renderValue(spec, locale)}</dd>
+                <dd class="text-sm font-medium text-slate-800">
+                  {renderValue(spec, locale)}
+                  {tx?.note && <span class="block text-xs font-normal text-slate-400 mt-0.5">{tx.note}</span>}
+                </dd>
               </div>
             );
           })}
@@ -164,7 +170,10 @@ const publishedVariants = variants.filter((v) => v.status === "published");
                 </span>
                 <div>
                   <dt class="text-sm font-semibold text-slate-800" title={spec.irdi ?? undefined}>{tx?.label}</dt>
-                  <dd class="text-sm text-slate-500">{renderValue(spec, locale)}</dd>
+                  <dd class="text-sm text-slate-500">
+                    {renderValue(spec, locale)}
+                    {tx?.note && <span class="block text-xs text-slate-400 mt-0.5">{tx.note}</span>}
+                  </dd>
                 </div>
               </li>
             );
@@ -199,7 +208,10 @@ const publishedVariants = variants.filter((v) => v.status === "published");
                   </span>
                 )}
                 <dt class="text-sm font-semibold text-slate-800" title={spec.irdi ?? undefined}>{tx?.label}</dt>
-                <dd class="text-sm text-slate-500">{renderValue(spec, locale)}</dd>
+                <dd class="text-sm text-slate-500">
+                  {renderValue(spec, locale)}
+                  {tx?.note && <span class="block text-xs text-slate-400 mt-0.5">{tx.note}</span>}
+                </dd>
               </div>
             );
           })}
@@ -238,6 +250,7 @@ const publishedVariants = variants.filter((v) => v.status === "published");
                     <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
                       <td class="py-2.5 pr-6 text-slate-500 font-medium text-sm" title={spec.irdi ?? undefined}>
                         {tx?.label}
+                        {tx?.note && <span class="block text-xs font-normal text-slate-400 mt-0.5">{tx.note}</span>}
                       </td>
                       {publishedVariants.map((variant) => {
                         const val = getComparisonValue(spec, variant, locale);
@@ -258,7 +271,10 @@ const publishedVariants = variants.filter((v) => v.status === "published");
                 const tx = getTranslation(spec.translations, locale);
                 return (
                   <div class="grid grid-cols-2 gap-4 py-2.5">
-                    <dt class="text-sm text-slate-500" title={spec.irdi ?? undefined}>{tx?.label}</dt>
+                    <dt class="text-sm text-slate-500" title={spec.irdi ?? undefined}>
+                      {tx?.label}
+                      {tx?.note && <span class="block text-xs font-normal text-slate-400 mt-0.5">{tx.note}</span>}
+                    </dt>
                     <dd class="text-sm font-medium text-slate-800">{renderValue(spec, locale)}</dd>
                   </div>
                 );
@@ -308,6 +324,7 @@ const publishedVariants = variants.filter((v) => v.status === "published");
                     <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
                       <td class="py-2.5 pr-6 text-slate-500 font-medium text-sm" title={spec.irdi ?? undefined}>
                         {tx?.label}
+                        {tx?.note && <span class="block text-xs font-normal text-slate-400 mt-0.5">{tx.note}</span>}
                       </td>
                       {publishedVariants.map((variant) => {
                         const val = getComparisonValue(spec, variant, locale);
@@ -328,7 +345,10 @@ const publishedVariants = variants.filter((v) => v.status === "published");
                 const tx = getTranslation(spec.translations, locale);
                 return (
                   <div class="grid grid-cols-2 gap-4 py-2.5">
-                    <dt class="text-sm text-slate-500" title={spec.irdi ?? undefined}>{tx?.label}</dt>
+                    <dt class="text-sm text-slate-500" title={spec.irdi ?? undefined}>
+                      {tx?.label}
+                      {tx?.note && <span class="block text-xs font-normal text-slate-400 mt-0.5">{tx.note}</span>}
+                    </dt>
                     <dd class="text-sm font-medium text-slate-800">{renderValue(spec, locale)}</dd>
                   </div>
                 );
