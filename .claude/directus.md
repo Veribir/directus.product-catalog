@@ -179,24 +179,58 @@ Relations: `{collection}_id → {collection}` with `one_field: "gallery"`, `junc
 }
 ```
 
-### Tabs Layout (Content / SEO)
-```json
-{ "field": "meta_tabs", "type": "alias",
-  "meta": { "special": ["alias","no-data","group"], "interface": "group-tabs",
-            "options": { "fillWidth": true },
-            "translations": [{ "language": "en-US", "translation": "Tabs" }] }, "schema": null },
+### Tab Grouping — always apply for UX
 
-{ "field": "meta_content", "type": "alias",
-  "meta": { "special": ["alias","no-data","group"], "interface": "group-raw",
-            "group": "meta_tabs",
-            "translations": [{ "language": "en-US", "translation": "Content" }] }, "schema": null },
+Any collection with 5+ visible fields **must** use tab groups. Apply this when creating new collections and when adding fields to existing ones.
 
-{ "field": "meta_seo", "type": "alias",
-  "meta": { "special": ["alias","no-data","group"], "interface": "group-raw",
-            "group": "meta_tabs",
-            "translations": [{ "language": "en-US", "translation": "SEO" }] }, "schema": null }
+**Structure:**
 ```
-Fields inside a tab get `"group": "meta_content"` or `"group": "meta_seo"` in their meta.
+meta_tabs        (type: alias, interface: group-tabs, group: null, sort: 2)
+  meta_content   (type: alias, interface: group-raw,  group: meta_tabs, sort: 1)  ← default tab
+  meta_seo       (type: alias, interface: group-raw,  group: meta_tabs, sort: N)  ← if collection has SEO
+  meta_<name>    (type: alias, interface: group-raw,  group: meta_tabs, sort: N)  ← any extra logical group
+```
+
+Fields are assigned to a tab by setting `meta.group` to the tab's field name (e.g. `"group": "meta_content"`).
+
+**How to create a tab container + tabs (batch):**
+```json
+[
+  {
+    "field": "meta_tabs",
+    "type": "alias",
+    "meta": { "special": ["alias","no-data","group"], "interface": "group-tabs", "options": {"fillWidth": true}, "sort": 2, "width": "full", "group": null },
+    "schema": null
+  },
+  {
+    "field": "meta_content",
+    "type": "alias",
+    "meta": { "special": ["alias","no-data","group"], "interface": "group-raw", "sort": 1, "width": "full", "translations": [{"language":"en-US","translation":"Content"}], "group": "meta_tabs" },
+    "schema": null
+  }
+]
+```
+
+**Standard tab names and what goes in them:**
+
+| Tab field | Label | Typical contents |
+|---|---|---|
+| `meta_content` | Content | status, slug, primary identity fields, images, translations, relations |
+| `meta_catalog` | Catalog | category, brand, classification (eCl@ss, etc.) |
+| `meta_relations` | Relations | tags, related items, certifications |
+| `meta_specs` | Specifications | spec rows, highlights, media assets |
+| `meta_commerce` | Commerce | pricing, RFQ, regional prices |
+| `meta_extras` | Downloads & FAQ | documents, options/parts, FAQs |
+| `meta_layout` | Layout | page_template, blocks (M2A page builder) |
+| `meta_seo` | SEO | seo field — always last tab |
+
+**Rules:**
+- `meta_tabs` goes at `sort: 2` (after the `super-header` at sort 0, which stays at `group: null`).
+- `meta_content` is always sort 1 within the tab container — it's the default open tab.
+- `meta_seo` is always the last tab.
+- `presentation-divider` fields are redundant inside tabs (the tab label already separates sections). Hide existing ones with `hidden: true` rather than deleting.
+- Single-tab collections (only `meta_content`) still benefit from the tab wrapper — it keeps the layout consistent and makes it easy to add more tabs later.
+- When adding a field to a collection that already has tabs, always set `"group": "<appropriate_tab>"` on the new field.
 
 ---
 
@@ -234,12 +268,35 @@ For a collection `posts`:
 `"name"` references the `name` field in the `languages` collection — shows "English", "French", etc.
 Using `"code"` shows "en-US", "fr-FR" — technically valid but inconsistent with project standard.
 
+**Key rules:**
+- `languageDirectionField: "direction"` must be in `options` — required for RTL languages (Arabic). Don't omit it.
+- `template` in `display_options` should use the collection's primary human-readable field: `{{name}}` for categories/products, `{{title}}` for posts, `{{headline}}` for hero blocks, etc. This is what editors see when the widget is collapsed.
+- `meta.translations` array sets the admin UI label for the field itself (e.g. `"translation": "Translations"` or the primary field name like `"Title"`).
+- If the collection uses tab groups (`meta_content`), set `"group": "meta_content"` on this alias field too.
+
 ### Junction table fields
 ```json
 { "field": "id",               "type": "integer", "schema": { "has_auto_increment": true, "is_primary_key": true }, "meta": { "hidden": true } },
 { "field": "{collection}_id",  "type": "uuid",    "schema": { "is_nullable": true }, "meta": { "hidden": true } },
 { "field": "languages_code",   "type": "string",  "schema": { "is_nullable": true }, "meta": { "hidden": true } }
 ```
+Then add the translatable content fields with full detail:
+```json
+{
+  "field": "name",
+  "type": "string",
+  "meta": {
+    "interface": "input",
+    "options": { "placeholder": "e.g. Electronics" },
+    "note": "Display name shown to visitors.",
+    "required": true,
+    "sort": 4,
+    "width": "full"
+  },
+  "schema": { "is_nullable": true }
+}
+```
+Use `"width": "half"` to visually pair two sibling fields (e.g. `title` + `description` side by side). Add `"required": true` on the primary name/title field. Always include a `note` and `placeholder` for editor UX.
 
 ### Two required relations on the junction table
 
@@ -281,8 +338,13 @@ Using `"code"` shows "en-US", "fr-FR" — technically valid but inconsistent wit
 }
 ```
 
-### Warning: "1 translation config could not be resolved"
-This Directus admin warning appears when the `translations` alias field exists but **one or both of the two relations above are missing or incomplete**. Always create both relations before considering the setup done.
+Relations 1 and 2 are independent — create them in parallel via MCP.
+
+**Verification checklist:**
+- Directus admin shows the translations widget (not a raw field) on the edit form ✓
+- Language labels show "English", "Arabic" etc. (not "en-US") ✓
+- No "1 translation config could not be resolved" warning in the admin header ✓ — this warning means one or both relations above are missing or incomplete
+- `translations.*` in the SDK query returns objects (not raw integer IDs) ✓ — if IDs come back, the **public Directus role lacks read permission** on the junction collection; fix in Settings → Access Policies → Public, never use a static token as a workaround
 
 ---
 
@@ -333,6 +395,80 @@ Use `on_delete: SET NULL` + `one_deselect_action: "nullify"` when the relation i
 
 ---
 
+## File & Image Operations via MCP
+
+### Importing a file from a URL
+Use `mcp__barkomas_dev__files` with `action: "import"`. The returned UUID is what you store in any `file`/`file-image` type field.
+
+```json
+{
+  "action": "import",
+  "data": [
+    {
+      "url": "https://example.com/image.jpg",
+      "file": {
+        "title": "Descriptive human title",
+        "folder": "ece7bab9-5433-4a63-b9f7-bde8b517d6d9"
+      }
+    }
+  ]
+}
+```
+
+**Batch imports** — send up to 6 at a time (fly.dev has a request timeout; batches > 6 risk partial failures):
+```json
+{
+  "action": "import",
+  "data": [
+    { "url": "https://…/img1.jpg", "file": { "title": "Image 1", "folder": "ece7bab9-5433-4a63-b9f7-bde8b517d6d9" } },
+    { "url": "https://…/img2.png", "file": { "title": "Image 2", "folder": "ece7bab9-5433-4a63-b9f7-bde8b517d6d9" } }
+  ]
+}
+```
+
+Returns an array of file UUIDs in the same order as the input. **Save every UUID immediately** — you will need them to assign to collection fields.
+
+### Assigning an imported file to a collection field
+After import, update the item with the UUID:
+```json
+{
+  "action": "update",
+  "collection": "block_numbered_list",
+  "keys": ["<item-uuid>"],
+  "data": { "image": "<file-uuid>" }
+}
+```
+
+Or pass the UUID inline when creating an item:
+```json
+{
+  "action": "create",
+  "collection": "block_hero_slider_slides",
+  "data": [{ "image": "<file-uuid>", "video": "<video-file-uuid>", … }]
+}
+```
+
+### Checking what files are already imported
+Before importing, check if the file already exists to avoid duplicates:
+```json
+{
+  "action": "read",
+  "query": {
+    "fields": ["id", "title", "filename_download"],
+    "sort": ["-uploaded_on"],
+    "limit": 50
+  }
+}
+```
+
+### File folder
+All project media goes in folder `ece7bab9-5433-4a63-b9f7-bde8b517d6d9`. Always pass this in the `file.folder` key on import.
+
+### Videos
+Videos import the same way as images — `mcp__barkomas_dev__files` with `action: "import"`. The MIME type is inferred from the URL. Video file UUIDs go in `video` fields (type `uuid` with `special: ["file"]`), not image fields. They use the same Asset URL pattern below, minus the transform query params.
+
+---
+
 ## Frontend SDK Patterns
 
 ### Translations field expansion
@@ -366,4 +502,6 @@ Never use a static token just to work around missing public permissions — fix 
 ```ts
 `${DIRECTUS_URL}/assets/${fileUuid}`
 `${DIRECTUS_URL}/assets/${fileUuid}?width=800&height=450&fit=cover`
+// Videos — no transform params, just the raw asset:
+`${DIRECTUS_URL}/assets/${fileUuid}`
 ```
