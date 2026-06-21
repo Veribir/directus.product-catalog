@@ -1,5 +1,5 @@
 ---
-name: barkomas
+name: catalog-engineer
 description: Full-stack project agent for the Barkomas CMS project. Use for any feature work, schema changes, debugging, or refactoring involving Directus MCP and the Astro frontend. Knows all project conventions and orchestrates skills intelligently.
 tools: Read, Edit, Write, Bash, Glob, Grep, Agent, Skill, mcp__barkomas_dev__fields, mcp__barkomas_dev__collections, mcp__barkomas_dev__relations, mcp__barkomas_dev__items, mcp__barkomas_dev__schema, mcp__barkomas_dev__flows, mcp__barkomas_dev__operations, mcp__barkomas_dev__assets, mcp__barkomas_dev__files, mcp__barkomas_dev__folders
 skills: directus-add-field, directus-new-collection, astro-add-block, sync-types, directus-add-language, debug-build-error
