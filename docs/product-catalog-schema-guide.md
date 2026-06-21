@@ -33,7 +33,7 @@ Small reference tables. Editors set these up once and reuse them everywhere.
 | `customer_groups` | Customer segments (wholesale, distributor, retail) for tiered pricing and RFQ. |
 | `product_tags` | Loose keywords for flexible filtering and FAQ tagging. Distinct from hierarchical categories. |
 | `product_certifications` | Industry/compliance certifications (CE, RoHS, ISO 9001). Linked to products via M2M. |
-| `product_spec_groups` | Named organizers for spec rows (e.g. "Electrical", "Physical Dimensions"). |
+| `product_spec_groups` | Named organizers for spec rows (e.g. "Electrical", "Physical Dimensions"). Usually global/shared across products; optionally scoped to a single product via `product_spec_groups.product`. |
 
 All of the above have `*_translations` companions.
 
@@ -135,19 +135,24 @@ Each product can have multiple purchasable variants (e.g. Red / XL).
 Technical specification rows. Two levels:
 
 ```
-product_spec_groups  (global — e.g. "Electrical")
-  └── (referenced by) product_specs.group
+product_spec_groups  (product: null = global/shared, e.g. "Electrical"; or scoped to one product)
+  ├── (referenced by) product_specs.group
+  └── specs            (reverse o2m — every spec across any product using this group; reference-only, no drag-reorder)
 
 products
+  ├── spec_groups (o2m — groups created specifically for this product, optional; sits above `specs` in the Specifications tab)
   └── product_specs (o2m — one spec row per product)
         ├── product_specs_translations (label, value, note)
         └── product_spec_variant_values (one cell per spec × variant combination)
+              └── (reverse o2m) product_variants.specs — per-variant spec overrides, viewable from either side
 ```
 
 | Collection | Purpose |
 |---|---|
 | `product_specs` | One row per spec (display_type: `text \| boolean \| number \| range \| list`). |
 | `product_spec_variant_values` | Comparison-table cell: spec × variant override value. |
+
+**Spec group scoping:** `product_spec_groups.product` is nullable. Leave it empty for a shared group reusable across many products (the original/default model). Set it to scope a group to exactly one product — useful when a group genuinely only applies to one product and doesn't need to live in the shared taxonomy. Editors browse a product's own scoped groups via `products.spec_groups`; the `group` dropdown on each spec still shows both shared and product-scoped groups, unfiltered.
 
 ---
 
@@ -302,8 +307,10 @@ products
   ├── page_template  → product_page_templates (overrides category default)
   ├── brand          → product_brands
   ├── unit           → product_units
-  ├──< product_variants
+  ├──< product_variants ──< product_spec_variant_values (reverse: variants.specs)
+  ├──< product_spec_groups (optional — groups scoped to this product only)
   ├──< product_specs ──< product_spec_variant_values >── product_variants
+  │     └── group → product_spec_groups (reverse: groups.specs)
   ├──< product_pricing_tiers   →? product_variants, →? customer_groups
   ├──< product_regional_prices →? product_variants, → product_regions
   ├──< product_media
