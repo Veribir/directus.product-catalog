@@ -74,26 +74,35 @@ const unitLabel = unitTx
     : unitTx.name_singular
   : null;
 
-// Separate feature/spec blocks from other blocks for ordered rendering
 const sortedBlocks = [...(product.blocks ?? [])].sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0));
-const featureBlocks = sortedBlocks.filter(b => !b.hide_block && b.collection === "block_features_grid");
-// Spec blocks can come from the product's own blocks or from its page template's tabs —
-// merge both sources (deduped by id) so template-defined specs actually render.
-const specBlocksById = new Map<string, (typeof sortedBlocks)[number] | (typeof templateBlocks)[number]>();
-for (const b of [...templateBlocks, ...sortedBlocks]) {
-  if (!b.hide_block && b.collection === "block_product_specs") {
-    specBlocksById.set(b.id, b);
-  }
-}
-const specBlocks = [...specBlocksById.values()];
+
 const cardGridBlocks = sortedBlocks.filter(b => !b.hide_block && b.collection === "block_product_card_grid");
-const otherBlocks = sortedBlocks.filter(b => !b.hide_block && b.collection !== "block_features_grid" && b.collection !== "block_product_specs" && b.collection !== "block_product_card_grid");
 
 // Certifications are shown if either the template or the product itself
 // configures a block_product_card_grid with source="certifications".
 const showCertifications = [...templateBlocks, ...cardGridBlocks].some(
   (b) => b.collection === "block_product_card_grid" && (b.item as BlockProductCardGrid)?.source === "certifications",
 );
+
+// Page-builder collections PageBlocks.astro knows how to render.
+const PAGEBLOCKS_COLLECTIONS = new Set([
+  "block_hero", "block_richtext", "block_posts", "block_products", "block_product_categories",
+  "block_hero_slider", "block_features_grid", "block_numbered_list", "block_brands_logos",
+  "block_cta_banner", "block_product_category_cards",
+]);
+
+// Content blocks can come from the product's own blocks or from its page template's tabs —
+// merge both sources (deduped by id), then render in a single sequence ordered by `sort`
+// so e.g. specs can appear above or below features depending on their sort value.
+const contentBlocksById = new Map<string, (typeof sortedBlocks)[number] | (typeof templateBlocks)[number]>();
+for (const b of [...templateBlocks, ...sortedBlocks]) {
+  if (!b.hide_block && (b.collection === "block_product_specs" || PAGEBLOCKS_COLLECTIONS.has(b.collection))) {
+    contentBlocksById.set(b.id, b);
+  }
+}
+const orderedContentBlocks = [...contentBlocksById.values()].sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0));
+const firstFeatureBlockId = orderedContentBlocks.find((b) => b.collection === "block_features_grid")?.id ?? null;
+const firstSpecBlockId = orderedContentBlocks.find((b) => b.collection === "block_product_specs")?.id ?? null;
 
 // Category tagline: first word accent, rest normal
 const catWords = (categoryTx?.name ?? "").split(" ");
@@ -225,48 +234,50 @@ const catTaglineRest = catWords.slice(1).join(" ");
     </section>
   )}
 
-  {/* ─── KEY FEATURES (block_features_grid from product blocks) ────────────── */}
-  {showContentBlocks && featureBlocks.length > 0 && (
-    <div id="key-features">
-      <PageBlocks
-        blocks={featureBlocks as PageBlock[]}
-        {locale}
-        pagePermalink={productsPagePermalink}
-      />
-    </div>
-  )}
+  {/* ─── CONTENT BLOCKS (features, specs, richtext, etc.) — unified sort order ── */}
+  {orderedContentBlocks.map((block) => {
+    if (block.collection === "block_product_specs") {
+      return (
+        <section class="py-20 bg-white">
+          <div class="max-w-7xl mx-auto px-6 md:px-16">
+            {block.id === firstSpecBlockId && (
+              <div class="mb-12">
+                <p class="text-xs font-bold tracking-[0.2em] uppercase mb-4 text-slate-400">
+                  <span class="text-(--accent)">TECHNICAL</span> SPECIFICATIONS
+                </p>
+                {tx?.description && (
+                  <p class="text-xl md:text-2xl font-medium leading-snug text-slate-800 max-w-3xl">
+                    {tx.description}
+                  </p>
+                )}
+              </div>
+            )}
+            <div class="flex flex-col gap-16">
+              <BlockProductSpecsComponent
+                block={block.item as BlockProductSpecs}
+                specs={product.specs}
+                variants={variantRows.map(r => r.variant)}
+                media={product.media ?? []}
+                {locale}
+              />
+            </div>
+          </div>
+        </section>
+      );
+    }
 
-  {/* ─── TECHNICAL SPECIFICATIONS (block_product_specs from product blocks) ── */}
-  {specBlocks.length > 0 && (
-    <section class="py-20 bg-white">
-      <div class="max-w-7xl mx-auto px-6 md:px-16">
+    if (!showContentBlocks) return null;
 
-        {/* Section header */}
-        <div class="mb-12">
-          <p class="text-xs font-bold tracking-[0.2em] uppercase mb-4 text-slate-400">
-            <span class="text-(--accent)">TECHNICAL</span> SPECIFICATIONS
-          </p>
-          {tx?.description && (
-            <p class="text-xl md:text-2xl font-medium leading-snug text-slate-800 max-w-3xl">
-              {tx.description}
-            </p>
-          )}
+    if (block.collection === "block_features_grid") {
+      return (
+        <div id={block.id === firstFeatureBlockId ? "key-features" : undefined}>
+          <PageBlocks blocks={[block] as PageBlock[]} {locale} pagePermalink={productsPagePermalink} />
         </div>
+      );
+    }
 
-        <div class="flex flex-col gap-16">
-          {specBlocks.map((block) => (
-            <BlockProductSpecsComponent
-              block={block.item as BlockProductSpecs}
-              specs={product.specs}
-              variants={variantRows.map(r => r.variant)}
-              media={product.media ?? []}
-              {locale}
-            />
-          ))}
-        </div>
-      </div>
-    </section>
-  )}
+    return <PageBlocks blocks={[block] as PageBlock[]} {locale} pagePermalink={productsPagePermalink} />;
+  })}
 
   {/* ─── PHOTO GALLERY STRIP ───────────────────────────────────────────────── */}
   {showGallery && (product.gallery ?? []).length > 0 && (
@@ -280,15 +291,6 @@ const catTaglineRest = catWords.slice(1).join(" ");
         />
       ))}
     </div>
-  )}
-
-  {/* ─── CTA BANNER & OTHER BLOCKS ─────────────────────────────────────────── */}
-  {showContentBlocks && otherBlocks.length > 0 && (
-    <PageBlocks
-      blocks={otherBlocks as PageBlock[]}
-      {locale}
-      pagePermalink={productsPagePermalink}
-    />
   )}
 
   {/* ─── CERTIFICATIONS ────────────────────────────────────────────────────── */}
