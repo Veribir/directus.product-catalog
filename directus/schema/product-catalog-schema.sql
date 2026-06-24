@@ -179,6 +179,11 @@ CREATE TABLE product_spec_groups (
   status varchar(255) DEFAULT 'draft',          -- draft | published
   icon varchar(255),                            -- Material Symbols icon name
   irdi varchar(255),                            -- eCl@ss IRDI for this property group
+  product uuid REFERENCES products(id) ON DELETE CASCADE,
+  -- nullable. NULL = shared group reusable across any product (the default
+  -- model). Set = scope this group to exactly one product; o2m alias =
+  -- products.spec_groups, sort_field="sort". product_specs.group still
+  -- shows both shared and product-scoped groups, unfiltered.
   date_created timestamptz,
   user_created uuid REFERENCES directus_users(id) ON DELETE SET NULL,
   date_updated timestamptz,
@@ -1118,6 +1123,7 @@ CREATE TABLE block_products_translations (
 -- product_categories.brand         -> product_brands.id          ON DELETE SET NULL
 -- product_variants.product         -> products.id                ON DELETE CASCADE
 -- product_variants.unit_override   -> product_units.id           ON DELETE SET NULL
+-- product_spec_groups.product      -> products.id                ON DELETE CASCADE (nullable; reverse o2m = products.spec_groups)
 -- product_specs.product            -> products.id                ON DELETE CASCADE
 -- product_specs.group               -> product_spec_groups.id    ON DELETE SET NULL
 -- product_specs.unit               -> product_units.id           ON DELETE SET NULL
