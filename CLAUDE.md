@@ -24,7 +24,9 @@ barkomas-dev/
   .mcp.json      — MCP server config (barkomas_dev → Directus at localhost:8055)
   .claude/
     directus.md  — Full Directus/MCP conventions, schema patterns, translations setup (read before any Directus work)
-    astro.md     — Astro/frontend conventions, SSR env vars, build safety (read before any frontend work)
+    rules/       — Path-gated convention docs that auto-load when matching files enter context:
+                   frontend.md (Astro/frontend, on frontend/**), directus-schema.md (on directus/schema/** + types.ts)
+    settings.json — Committed permissions (shared MCP + WebFetch allow-list); settings.local.json holds personal overrides
     agents/      — Claude Code project agents (catalog-engineer — the full-stack project agent)
     skills/      — Claude Code slash-command skills
 ```
@@ -70,7 +72,7 @@ The frontend is **static by default** (`astro build`). All Directus fetches happ
 | `catalog.ts` | Category path building (`buildCategoryPaths`), product URL resolution (`getProductFullPath`), page-template resolution (`resolveTemplate`, `getTemplateBlocks`), eCl@ss helpers (`resolveEclassCode`). |
 | `price.ts` | `formatPrice(price, locale, currency)`, `isOnSale()`. Never format prices manually. |
 | `assets.ts` | `assetUrl(fileUuid, transformParams)` — builds Directus asset URLs. |
-| `env.ts` | `getRuntimeEnv(key)` — reads runtime secrets in SSR pages (Cloudflare Worker env, falling back to `import.meta.env`). See `.claude/astro.md` for the build-time vs runtime-secret distinction. |
+| `env.ts` | `getRuntimeEnv(key)` — reads runtime secrets in SSR pages (Cloudflare Worker env, falling back to `import.meta.env`). See `.claude/rules/frontend.md` for the build-time vs runtime-secret distinction. |
 
 ### Routing (`frontend/src/pages/`)
 
@@ -79,7 +81,7 @@ The frontend is **static by default** (`astro build`). All Directus fetches happ
 | `/` | Redirects to `/{defaultLocale}` |
 | `/[lang]` | Homepage — fetches `pages` where `permalink = "/"` |
 | `/[lang]/[...slug]` | All other pages, post detail pages, **and product/category detail pages**. `getStaticPaths()` generates paths for CMS pages, blog posts, products, and categories. A `type` prop discriminates rendering between `"page"`, `"post"`, `"product"`, and `"category"`. |
-| `/preview/[lang]/[...slug]` | SSR-only (`prerender = false`) — live preview of unpublished/draft content, gated by `PREVIEW_SECRET`. Requires `ASTRO_ADAPTER=cloudflare` to build/run; see `.claude/astro.md` → "Env vars in SSR pages". |
+| `/preview/[lang]/[...slug]` | SSR-only (`prerender = false`) — live preview of unpublished/draft content, gated by `PREVIEW_SECRET`. Requires `ASTRO_ADAPTER=cloudflare` to build/run; see `.claude/rules/frontend.md` → "Env vars in SSR pages". |
 | `/api/deploy` | API endpoint, not a page route — triggers a deploy. |
 
 The `[lang]` segment is always a language code from the `languages` collection (e.g. `en-US`, `fr-FR`).
@@ -125,7 +127,7 @@ The `--accent` CSS variable is defined as a fallback in `global.css` and overrid
 
 ### Directus MCP
 
-The `mcp__barkomas_dev__*` tools connect to Directus at `http://localhost:8055`. Before any Directus schema work, read `.claude/directus.md` — it covers collection/field/relation patterns, tab grouping, translations setup, file/image import, known MCP tool gotchas, and the `languages` collection conventions. Before any frontend/build work, read `.claude/astro.md`.
+The `mcp__barkomas_dev__*` tools connect to Directus at `http://localhost:8055`. Before any Directus schema work, read `.claude/directus.md` — it covers collection/field/relation patterns, tab grouping, translations setup, file/image import, known MCP tool gotchas, and the `languages` collection conventions. Frontend/build conventions are in `.claude/rules/frontend.md`, which auto-loads when you touch `frontend/**`.
 
 For multi-step feature work spanning both Directus and the frontend, use the `catalog-engineer` agent (`.claude/agents/catalog-engineer.md`) — it orchestrates the project's skills (`/directus-add-field`, `/directus-new-collection`, `/astro-add-block`, `/sync-types`, `/directus-add-language`, `/debug-build-error`) and knows the full decision tree for common tasks.
 

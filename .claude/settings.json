@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__barkomas_dev__items",
+      "mcp__barkomas_dev__collections",
+      "mcp__barkomas_dev__fields",
+      "mcp__barkomas_dev__relations",
+      "mcp__barkomas_dev__flows",
+      "mcp__barkomas_dev__operations",
+      "mcp__barkomas_dev__schema",
+      "mcp__barkomas_dev__files",
+      "WebFetch(domain:barkomas.com)",
+      "WebFetch(domain:directus.com)"
+    ]
+  }
+}

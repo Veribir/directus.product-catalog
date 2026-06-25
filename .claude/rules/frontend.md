@@ -1,7 +1,13 @@
+---
+paths:
+  - "frontend/**"
+---
+
 # Frontend / Astro Conventions
 
-This document is the authoritative reference for all Astro frontend and build work on this project.
-Read it fully before creating or modifying frontend code. Pairs with `.claude/directus.md` (the Directus/MCP reference).
+This rule auto-loads whenever a `frontend/**` file enters context. It is the authoritative
+reference for all Astro frontend and build work on this project. Pairs with `.claude/directus.md`
+(the Directus/MCP reference, loaded on demand for schema work).
 
 ---
 
