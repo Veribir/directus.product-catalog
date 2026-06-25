@@ -367,6 +367,10 @@ export type ProductSpecGroup = {
   icon: string | null;
   sort: number | null;
   irdi: string | null;
+  // true = available on every product; false = only on products it is linked to
+  // via the products_spec_groups M2M. Groups are product-agnostic — the same
+  // group is shared across products (no per-product ownership).
+  is_global: boolean;
   translations: { languages_code: string; name: string; note: string | null }[];
 };
 

@@ -546,6 +546,7 @@ const PRODUCT_DETAIL_FIELDS = [
   "specs.group.icon",
   "specs.group.sort",
   "specs.group.irdi",
+  "specs.group.is_global",
   "specs.group.translations.*",
   "specs.unit.id",
   "specs.unit.code",

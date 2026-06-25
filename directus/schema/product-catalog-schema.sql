@@ -173,21 +173,22 @@ CREATE TABLE product_certifications_translations (
 -- 2. SPEC GROUPS
 -- ============================================================================
 
+-- Spec groups are PRODUCT-AGNOSTIC: one group (e.g. "Drilling Capacity") is
+-- shared across many products — there is NO per-product ownership column.
+-- A group is offered on a product when is_global = true (every product) OR it
+-- is linked to that product via the products_spec_groups M2M (section 9).
 CREATE TABLE product_spec_groups (
   id uuid PRIMARY KEY,
   sort integer,
   status varchar(255) DEFAULT 'draft',          -- draft | published
   icon varchar(255),                            -- Material Symbols icon name
   irdi varchar(255),                            -- eCl@ss IRDI for this property group
-  product uuid REFERENCES products(id) ON DELETE CASCADE,
-  -- nullable. NULL = shared group reusable across any product (the default
-  -- model). Set = scope this group to exactly one product; o2m alias =
-  -- products.spec_groups, sort_field="sort". product_specs.group still
-  -- shows both shared and product-scoped groups, unfiltered.
+  is_global boolean NOT NULL DEFAULT false,     -- true = available on every product
   date_created timestamptz,
   user_created uuid REFERENCES directus_users(id) ON DELETE SET NULL,
   date_updated timestamptz,
   user_updated uuid REFERENCES directus_users(id) ON DELETE SET NULL
+  -- products -> M2M alias -> products_spec_groups (section 9)
 );
 
 CREATE TABLE product_spec_groups_translations (
@@ -373,7 +374,11 @@ CREATE TABLE product_specs (
   id uuid PRIMARY KEY,
   sort integer,
   status varchar(255) DEFAULT 'draft',          -- draft | published
-  product uuid REFERENCES products(id) ON DELETE CASCADE,            -- o2m alias = products.specs, sort_field="sort"
+  product uuid REFERENCES products(id) ON DELETE CASCADE,
+  -- NULLABLE. Auto-set when the spec is created from the product (o2m parent,
+  -- alias = products.specs, sort_field="sort"). Left empty when a spec is
+  -- inline-created from the VARIANT interface — the "Spec -> backfill product
+  -- from variant" Flow then sets it from product_spec_variant_values.variant.
   "group" uuid REFERENCES product_spec_groups(id) ON DELETE SET NULL,
   unit uuid REFERENCES product_units(id) ON DELETE SET NULL,
   display_type varchar(255),                    -- text | boolean | number | range | list
@@ -512,6 +517,16 @@ CREATE TABLE products_tags (
   id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   products_id uuid REFERENCES products(id) ON DELETE CASCADE,
   product_tags_id uuid REFERENCES product_tags(id) ON DELETE CASCADE
+);
+
+-- products.spec_groups (M2M) — non-global spec groups offered on this product.
+-- A group with is_global=true needs NO row here (available everywhere); rows
+-- here scope a non-global group to a defined subset of products.
+CREATE TABLE products_spec_groups (
+  id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  products_id uuid REFERENCES products(id) ON DELETE CASCADE,                    -- o2m alias = products.spec_groups
+  product_spec_groups_id uuid REFERENCES product_spec_groups(id) ON DELETE CASCADE,  -- reverse alias = product_spec_groups.products
+  sort integer
 );
 
 
@@ -1123,8 +1138,9 @@ CREATE TABLE block_products_translations (
 -- product_categories.brand         -> product_brands.id          ON DELETE SET NULL
 -- product_variants.product         -> products.id                ON DELETE CASCADE
 -- product_variants.unit_override   -> product_units.id           ON DELETE SET NULL
--- product_spec_groups.product      -> products.id                ON DELETE CASCADE (nullable; reverse o2m = products.spec_groups)
--- product_specs.product            -> products.id                ON DELETE CASCADE
+-- products_spec_groups.products_id            -> products.id              ON DELETE CASCADE (M2M; alias products.spec_groups)
+-- products_spec_groups.product_spec_groups_id -> product_spec_groups.id   ON DELETE CASCADE (reverse alias product_spec_groups.products)
+-- product_specs.product            -> products.id                ON DELETE CASCADE (NULLABLE — backfilled by Flow from variant)
 -- product_specs.group               -> product_spec_groups.id    ON DELETE SET NULL
 -- product_specs.unit               -> product_units.id           ON DELETE SET NULL
 -- product_spec_variant_values.spec    -> product_specs.id        ON DELETE CASCADE

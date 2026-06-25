@@ -33,7 +33,7 @@ Small reference tables. Editors set these up once and reuse them everywhere.
 | `customer_groups` | Customer segments (wholesale, distributor, retail) for tiered pricing and RFQ. |
 | `product_tags` | Loose keywords for flexible filtering and FAQ tagging. Distinct from hierarchical categories. |
 | `product_certifications` | Industry/compliance certifications (CE, RoHS, ISO 9001). Linked to products via M2M. |
-| `product_spec_groups` | Named organizers for spec rows (e.g. "Electrical", "Physical Dimensions"). Usually global/shared across products; optionally scoped to a single product via `product_spec_groups.product`. |
+| `product_spec_groups` | Named organizers for spec rows (e.g. "Electrical", "Physical Dimensions"). Product-agnostic — one group is shared across products (`is_global`, or linked to a subset via the `products_spec_groups` M2M). |
 
 All of the above have `*_translations` companions.
 
@@ -132,27 +132,44 @@ Each product can have multiple purchasable variants (e.g. Red / XL).
 
 ### 6. Specs
 
-Technical specification rows. Two levels:
+Technical specification rows. The spec matrix (spec rows × variant columns) is **one
+dataset editable from two doors** — the product OR the variant — see "Editing specs"
+below.
 
 ```
-product_spec_groups  (product: null = global/shared, e.g. "Electrical"; or scoped to one product)
+product_spec_groups  (PRODUCT-AGNOSTIC — one group shared across many products)
+  ├── is_global = true  → offered on every product
+  ├── products (M2M, products_spec_groups) → non-global group scoped to a subset
   ├── (referenced by) product_specs.group
-  └── specs            (reverse o2m — every spec across any product using this group; reference-only, no drag-reorder)
+  └── specs            (reverse o2m — every spec across any product using this group; reference-only)
 
 products
-  ├── spec_groups (o2m — groups created specifically for this product, optional; sits above `specs` in the Specifications tab)
-  └── product_specs (o2m — one spec row per product)
+  ├── spec_groups (M2M → product_spec_groups — non-global groups offered on this product)
+  └── product_specs (o2m — one spec row per product; `product` is nullable, backfilled by Flow)
         ├── product_specs_translations (label, value, note)
         └── product_spec_variant_values (one cell per spec × variant combination)
-              └── (reverse o2m) product_variants.specs — per-variant spec overrides, viewable from either side
+              └── (reverse o2m) product_variants.specs — this variant's spec sheet, editable from the variant
 ```
 
 | Collection | Purpose |
 |---|---|
-| `product_specs` | One row per spec (display_type: `text \| boolean \| number \| range \| list`). |
-| `product_spec_variant_values` | Comparison-table cell: spec × variant override value. |
+| `product_specs` | One row per spec (display_type: `text \| boolean \| number \| range \| list`). `product` is nullable. |
+| `product_spec_variant_values` | Comparison-table cell: spec × variant value. |
+| `products_spec_groups` | M2M junction — links non-global groups to the products that may use them. |
 
-**Spec group scoping:** `product_spec_groups.product` is nullable. Leave it empty for a shared group reusable across many products (the original/default model). Set it to scope a group to exactly one product — useful when a group genuinely only applies to one product and doesn't need to live in the shared taxonomy. Editors browse a product's own scoped groups via `products.spec_groups`; the `group` dropdown on each spec still shows both shared and product-scoped groups, unfiltered.
+**Spec groups are product-agnostic.** There is no per-product ownership column. A group
+is offered on a product when `is_global = true` (every product) **or** it is linked to
+that product via the `products_spec_groups` M2M. The same "Drilling Capacity" group is
+reused across the whole product line rather than recreated per product.
+
+**Editing specs — two doors (same rows):**
+- **Product door** — `products.specs`: define a spec (group + label + unit + base value)
+  with its per-variant values nested under it.
+- **Variant door** — `product_variants.specs`: open a variant and fill in *its* value per
+  spec, or inline-create a new spec (and group). A spec created here has no `product` yet;
+  the **"Spec → backfill product from variant"** Flow sets `product_specs.product` from the
+  variant's product on save. Both doors write to the same `product_specs` /
+  `product_spec_variant_values` rows — one canonical definition, no duplication.
 
 ---
 
@@ -307,10 +324,11 @@ products
   ├── page_template  → product_page_templates (overrides category default)
   ├── brand          → product_brands
   ├── unit           → product_units
-  ├──< product_variants ──< product_spec_variant_values (reverse: variants.specs)
-  ├──< product_spec_groups (optional — groups scoped to this product only)
+  ├──< product_variants ──< product_spec_variant_values (reverse: variants.specs — variant door)
+  ├── >< product_spec_groups (M2M products_spec_groups — non-global groups offered on this product)
   ├──< product_specs ──< product_spec_variant_values >── product_variants
-  │     └── group → product_spec_groups (reverse: groups.specs)
+  │     ├── product → products (nullable; backfilled by Flow from the variant)
+  │     └── group → product_spec_groups (is_global or M2M; reverse: groups.specs)
   ├──< product_pricing_tiers   →? product_variants, →? customer_groups
   ├──< product_regional_prices →? product_variants, → product_regions
   ├──< product_media
