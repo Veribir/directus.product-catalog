@@ -10,8 +10,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
+    "format": "prettier --write \"./**/*.{ts,astro,js,mjs,css,json,svelte}\"",
+    "format:check": "prettier --check \"./**/*.{ts,astro,js,mjs,css,json,svelte}\"",
     "deploy": "wrangler deploy"
   },
   "dependencies": {
