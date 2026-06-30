@@ -1,9 +1,8 @@
 ---
-import type { ProductSpec, ProductVariant } from "../lib/directus";
+import type { ProductSpec, ProductSpecGroup, ProductVariant } from "../lib/directus";
 import { getTranslation } from "../lib/i18n";
 
 interface Props {
-  specs: ProductSpec[];
   variants: ProductVariant[];
   locale: string;
   layout:
@@ -13,38 +12,65 @@ interface Props {
     | "comparison_accordion"
     | "numbered_list"
     | "feature_grid";
+  specGroupFilter?: string | null;
 }
 
-const { specs, variants, locale, layout } = Astro.props;
+const { variants, locale, layout, specGroupFilter = null } = Astro.props;
 
-const published = specs
-  .filter((s) => s.status === "published")
-  .sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0));
+const publishedVariants = variants.filter((v) => v.status === "published");
 
-if (published.length === 0) return;
+// A product's full spec sheet is the UNION of all its variants' variant_spec_groups
+// → variant_spec_values (see docs/product-catalog-schema-guide.md §6). There is no
+// product-level spec list — specs are only ever reached through a variant.
+type GroupEntry = {
+  group: ProductSpecGroup;
+  specs: Map<string, ProductSpec>; // specId -> spec (deduped across variants)
+};
 
-const groupMap = new Map<string, { label: string; icon: string | null; irdi: string | null; specs: typeof published }>();
+const groupMap = new Map<string, GroupEntry>();
+// valueMap[specId][variantId] = value
+const valueMap: Record<string, Record<string, string>> = {};
 
-for (const spec of published) {
-  const groupId = spec.group?.id ?? "__ungrouped__";
-  if (!groupMap.has(groupId)) {
-    const groupTx = spec.group ? getTranslation(spec.group.translations, locale) : null;
-    groupMap.set(groupId, {
-      label: groupTx?.name ?? (spec.group ? spec.group.id : "Specifications"),
-      icon: spec.group?.icon ?? null,
-      irdi: spec.group?.irdi ?? null,
-      specs: [],
-    });
+for (const variant of publishedVariants) {
+  for (const vsg of variant.variant_spec_groups ?? []) {
+    const group = vsg.spec_group;
+    if (!group) continue;
+    if (specGroupFilter && group.id !== specGroupFilter) continue;
+
+    if (!groupMap.has(group.id)) {
+      groupMap.set(group.id, { group, specs: new Map() });
+    }
+    const entry = groupMap.get(group.id)!;
+
+    for (const sv of vsg.variant_spec_values ?? []) {
+      const spec = sv.spec;
+      if (!spec || spec.status !== "published") continue;
+
+      if (!entry.specs.has(spec.id)) {
+        entry.specs.set(spec.id, spec);
+      }
+      if (!valueMap[spec.id]) valueMap[spec.id] = {};
+      valueMap[spec.id][variant.id] = sv.value;
+    }
   }
-  groupMap.get(groupId)!.specs.push(spec);
 }
 
-const groups = [...groupMap.values()];
+const groups = [...groupMap.values()]
+  .sort((a, b) => (a.group.sort ?? 0) - (b.group.sort ?? 0))
+  .map(({ group, specs }) => {
+    const groupTx = getTranslation(group.translations, locale);
+    return {
+      id: group.id,
+      label: groupTx?.name ?? group.id,
+      icon: group.icon,
+      irdi: group.irdi,
+      specs: [...specs.values()].sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0)),
+    };
+  });
 
-function renderValue(spec: ProductSpec, locale: string): string {
-  const tx = getTranslation(spec.translations, locale);
-  if (!tx) return "";
-  const raw = tx.value ?? "";
+if (groups.length === 0) return;
+
+function formatValue(spec: ProductSpec, raw: string): string {
   if (spec.display_type === "boolean") {
     const lower = raw.toLowerCase();
     return lower === "true" || lower === "yes" || lower === "1" ? "✓ Yes" : "✗ No";
@@ -53,310 +79,388 @@ function renderValue(spec: ProductSpec, locale: string): string {
   return unit ? `${raw} ${unit}` : raw;
 }
 
-// Build value map from spec_variant_values nested under each spec
-const valueMap: Record<string, Record<string, string>> = {};
-for (const spec of published) {
-  for (const sv of spec.spec_variant_values ?? []) {
-    if (!valueMap[spec.id]) valueMap[spec.id] = {};
-    valueMap[spec.id][sv.variant] = sv.value;
-  }
+// Single-value render (non-comparison layouts) — uses the first variant that
+// has a value for this spec, since there's no product-level/base value.
+function renderValue(spec: ProductSpec): string {
+  const firstValue = publishedVariants
+    .map((v) => valueMap[spec.id]?.[v.id])
+    .find((v) => v !== undefined);
+  if (firstValue === undefined) return "";
+  return formatValue(spec, firstValue);
 }
 
-function getComparisonValue(spec: ProductSpec, variant: ProductVariant, locale: string): string {
-  const override = valueMap[spec.id]?.[variant.id];
-  if (override !== undefined) {
-    if (spec.display_type === "boolean") {
-      const lower = override.toLowerCase();
-      return lower === "true" || lower === "yes" || lower === "1" ? "✓ Yes" : "✗ No";
-    }
-    const unit = spec.unit?.symbol ?? "";
-    return unit ? `${override} ${unit}` : override;
-  }
-  return renderValue(spec, locale);
+function getComparisonValue(spec: ProductSpec, variant: ProductVariant): string {
+  const raw = valueMap[spec.id]?.[variant.id];
+  if (raw === undefined) return "";
+  return formatValue(spec, raw);
 }
-
-const publishedVariants = variants.filter((v) => v.status === "published");
 ---
 
 {/* ── TABLE layout ─────────────────────────────────────────────────────────── */}
-{layout === "table" && (
-  <div class="flex flex-col gap-8">
-    {groups.map((group) => (
-      <div>
-        <h3 class="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-3" title={group.irdi ?? undefined}>
-          {group.icon && (
-            <span class="material-symbols-outlined text-base text-(--accent)" aria-hidden="true">
-              {group.icon}
-            </span>
-          )}
-          {group.label}
-        </h3>
-        <dl class="divide-y divide-slate-100 border border-slate-200 rounded-lg overflow-hidden">
-          {group.specs.map((spec) => {
-            const tx = getTranslation(spec.translations, locale);
-            return (
-              <div class="grid grid-cols-2 gap-4 px-4 py-2.5 even:bg-slate-50">
-                <dt class="text-sm text-slate-500" title={spec.irdi ?? undefined}>{tx?.label}</dt>
-                <dd class="text-sm font-medium text-slate-800">
-                  {renderValue(spec, locale)}
-                  {tx?.note && <span class="block text-xs font-normal text-slate-400 mt-0.5">{tx.note}</span>}
-                </dd>
-              </div>
-            );
-          })}
-        </dl>
-      </div>
-    ))}
-  </div>
-)}
-
-{/* ── ACCORDION layout ──────────────────────────────────────────────────────── */}
-{layout === "accordion" && (
-  <div class="flex flex-col divide-y divide-slate-100">
-    {groups.map((group) => (
-      <details class="group">
-        <summary class="flex items-center justify-between gap-2 py-4 cursor-pointer select-none list-none hover:text-slate-900 transition-colors">
-          <span class="flex items-center gap-2 text-base font-semibold text-slate-800 group-open:text-(--accent) transition-colors" title={group.irdi ?? undefined}>
+{
+  layout === "table" && (
+    <div class="flex flex-col gap-8">
+      {groups.map((group) => (
+        <div>
+          <h3
+            class="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-3"
+            title={group.irdi ?? undefined}
+          >
             {group.icon && (
               <span class="material-symbols-outlined text-base text-(--accent)" aria-hidden="true">
                 {group.icon}
               </span>
             )}
             {group.label}
-          </span>
-          <svg class="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform flex-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-          </svg>
-        </summary>
-        <dl class="divide-y divide-slate-50 pb-4">
-          {group.specs.map((spec) => {
-            const tx = getTranslation(spec.translations, locale);
-            return (
-              <div class="grid grid-cols-2 gap-4 py-2.5">
-                <dt class="text-sm text-slate-500" title={spec.irdi ?? undefined}>{tx?.label}</dt>
-                <dd class="text-sm font-medium text-slate-800">
-                  {renderValue(spec, locale)}
-                  {tx?.note && <span class="block text-xs font-normal text-slate-400 mt-0.5">{tx.note}</span>}
-                </dd>
-              </div>
-            );
-          })}
-        </dl>
-      </details>
-    ))}
-  </div>
-)}
+          </h3>
+          <dl class="divide-y divide-slate-100 border border-slate-200 rounded-lg overflow-hidden">
+            {group.specs.map((spec) => {
+              const tx = getTranslation(spec.translations, locale);
+              return (
+                <div class="grid grid-cols-2 gap-4 px-4 py-2.5 even:bg-slate-50">
+                  <dt class="text-sm text-slate-500" title={spec.irdi ?? undefined}>
+                    {tx?.label}
+                  </dt>
+                  <dd class="text-sm font-medium text-slate-800">
+                    {renderValue(spec)}
+                    {tx?.note && (
+                      <span class="block text-xs font-normal text-slate-400 mt-0.5">{tx.note}</span>
+                    )}
+                  </dd>
+                </div>
+              );
+            })}
+          </dl>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+{/* ── ACCORDION layout ──────────────────────────────────────────────────────── */}
+{
+  layout === "accordion" && (
+    <div class="flex flex-col divide-y divide-slate-100">
+      {groups.map((group) => (
+        <details class="group">
+          <summary class="flex items-center justify-between gap-2 py-4 cursor-pointer select-none list-none hover:text-slate-900 transition-colors">
+            <span
+              class="flex items-center gap-2 text-base font-semibold text-slate-800 group-open:text-(--accent) transition-colors"
+              title={group.irdi ?? undefined}
+            >
+              {group.icon && (
+                <span
+                  class="material-symbols-outlined text-base text-(--accent)"
+                  aria-hidden="true"
+                >
+                  {group.icon}
+                </span>
+              )}
+              {group.label}
+            </span>
+            <svg
+              class="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform flex-none"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </summary>
+          <dl class="divide-y divide-slate-50 pb-4">
+            {group.specs.map((spec) => {
+              const tx = getTranslation(spec.translations, locale);
+              return (
+                <div class="grid grid-cols-2 gap-4 py-2.5">
+                  <dt class="text-sm text-slate-500" title={spec.irdi ?? undefined}>
+                    {tx?.label}
+                  </dt>
+                  <dd class="text-sm font-medium text-slate-800">
+                    {renderValue(spec)}
+                    {tx?.note && (
+                      <span class="block text-xs font-normal text-slate-400 mt-0.5">{tx.note}</span>
+                    )}
+                  </dd>
+                </div>
+              );
+            })}
+          </dl>
+        </details>
+      ))}
+    </div>
+  )
+}
 
 {/* ── NUMBERED LIST layout ──────────────────────────────────────────────────── */}
-{layout === "numbered_list" && (
-  <div class="flex flex-col gap-10">
-    {groups.map((group) => (
-      <div>
-        <h3 class="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-4" title={group.irdi ?? undefined}>
-          {group.icon && (
-            <span class="material-symbols-outlined text-base text-(--accent)" aria-hidden="true">
-              {group.icon}
-            </span>
-          )}
-          {group.label}
-        </h3>
-        <ol class="flex flex-col gap-4 list-none p-0 m-0">
-          {group.specs.map((spec, i) => {
-            const tx = getTranslation(spec.translations, locale);
-            return (
-              <li class="flex items-start gap-4">
-                <span class="flex-none w-8 h-8 rounded-full bg-(--accent)/10 text-(--accent) font-bold text-sm flex items-center justify-center">
-                  {i + 1}
-                </span>
-                <div>
-                  <dt class="text-sm font-semibold text-slate-800" title={spec.irdi ?? undefined}>{tx?.label}</dt>
+{
+  layout === "numbered_list" && (
+    <div class="flex flex-col gap-10">
+      {groups.map((group) => (
+        <div>
+          <h3
+            class="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-4"
+            title={group.irdi ?? undefined}
+          >
+            {group.icon && (
+              <span class="material-symbols-outlined text-base text-(--accent)" aria-hidden="true">
+                {group.icon}
+              </span>
+            )}
+            {group.label}
+          </h3>
+          <ol class="flex flex-col gap-4 list-none p-0 m-0">
+            {group.specs.map((spec, i) => {
+              const tx = getTranslation(spec.translations, locale);
+              return (
+                <li class="flex items-start gap-4">
+                  <span class="flex-none w-8 h-8 rounded-full bg-(--accent)/10 text-(--accent) font-bold text-sm flex items-center justify-center">
+                    {i + 1}
+                  </span>
+                  <div>
+                    <dt class="text-sm font-semibold text-slate-800" title={spec.irdi ?? undefined}>
+                      {tx?.label}
+                    </dt>
+                    <dd class="text-sm text-slate-500">
+                      {renderValue(spec)}
+                      {tx?.note && (
+                        <span class="block text-xs text-slate-400 mt-0.5">{tx.note}</span>
+                      )}
+                    </dd>
+                  </div>
+                </li>
+              );
+            })}
+          </ol>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+{/* ── FEATURE GRID layout ───────────────────────────────────────────────────── */}
+{
+  layout === "feature_grid" && (
+    <div class="flex flex-col gap-10">
+      {groups.map((group) => (
+        <div>
+          <h3
+            class="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-4"
+            title={group.irdi ?? undefined}
+          >
+            {group.icon && (
+              <span class="material-symbols-outlined text-base text-(--accent)" aria-hidden="true">
+                {group.icon}
+              </span>
+            )}
+            {group.label}
+          </h3>
+          <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {group.specs.map((spec) => {
+              const tx = getTranslation(spec.translations, locale);
+              return (
+                <div class="rounded-lg border border-slate-200 p-4 flex flex-col gap-2">
+                  {group.icon && (
+                    <span class="material-symbols-outlined text-(--accent)" aria-hidden="true">
+                      {group.icon}
+                    </span>
+                  )}
+                  <dt class="text-sm font-semibold text-slate-800" title={spec.irdi ?? undefined}>
+                    {tx?.label}
+                  </dt>
                   <dd class="text-sm text-slate-500">
-                    {renderValue(spec, locale)}
+                    {renderValue(spec)}
                     {tx?.note && <span class="block text-xs text-slate-400 mt-0.5">{tx.note}</span>}
                   </dd>
                 </div>
-              </li>
-            );
-          })}
-        </ol>
-      </div>
-    ))}
-  </div>
-)}
-
-{/* ── FEATURE GRID layout ───────────────────────────────────────────────────── */}
-{layout === "feature_grid" && (
-  <div class="flex flex-col gap-10">
-    {groups.map((group) => (
-      <div>
-        <h3 class="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-4" title={group.irdi ?? undefined}>
-          {group.icon && (
-            <span class="material-symbols-outlined text-base text-(--accent)" aria-hidden="true">
-              {group.icon}
-            </span>
-          )}
-          {group.label}
-        </h3>
-        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {group.specs.map((spec) => {
-            const tx = getTranslation(spec.translations, locale);
-            return (
-              <div class="rounded-lg border border-slate-200 p-4 flex flex-col gap-2">
-                {group.icon && (
-                  <span class="material-symbols-outlined text-(--accent)" aria-hidden="true">
-                    {group.icon}
-                  </span>
-                )}
-                <dt class="text-sm font-semibold text-slate-800" title={spec.irdi ?? undefined}>{tx?.label}</dt>
-                <dd class="text-sm text-slate-500">
-                  {renderValue(spec, locale)}
-                  {tx?.note && <span class="block text-xs text-slate-400 mt-0.5">{tx.note}</span>}
-                </dd>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
-      </div>
-    ))}
-  </div>
-)}
+      ))}
+    </div>
+  )
+}
 
 {/* ── COMPARISON TABLE layout — flat table per group, no accordion ─────────── */}
-{layout === "comparison_table" && (
-  <div class="flex flex-col gap-10">
-    {groups.map((group) => (
-      <div>
-        <h3 class="text-base font-semibold text-slate-800 mb-3">{group.label}</h3>
-        <div class="overflow-x-auto">
-          {publishedVariants.length > 0 ? (
-            <table class="w-full text-sm border-collapse">
-              <thead>
-                <tr>
-                  <th class="text-left py-2 pr-6 text-slate-400 font-medium w-40 border-b border-slate-100"></th>
-                  {publishedVariants.map((variant) => {
-                    const vtx = getTranslation(variant.translations, locale);
+{
+  layout === "comparison_table" && (
+    <div class="flex flex-col gap-10">
+      {groups.map((group) => (
+        <div>
+          <h3 class="text-base font-semibold text-slate-800 mb-3">{group.label}</h3>
+          <div class="overflow-x-auto">
+            {publishedVariants.length > 0 ? (
+              <table class="w-full text-sm border-collapse">
+                <thead>
+                  <tr>
+                    <th class="text-left py-2 pr-6 text-slate-400 font-medium w-40 border-b border-slate-100" />
+                    {publishedVariants.map((variant) => {
+                      const vtx = getTranslation(variant.translations, locale);
+                      return (
+                        <th class="text-left py-2 px-4 font-bold text-(--accent) border-b border-slate-100 whitespace-nowrap">
+                          {vtx?.name ?? variant.sku ?? variant.id}
+                        </th>
+                      );
+                    })}
+                  </tr>
+                </thead>
+                <tbody>
+                  {group.specs.map((spec) => {
+                    const tx = getTranslation(spec.translations, locale);
                     return (
-                      <th class="text-left py-2 px-4 font-bold text-(--accent) border-b border-slate-100 whitespace-nowrap">
-                        {vtx?.name ?? variant.sku ?? variant.id}
-                      </th>
+                      <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                        <td
+                          class="py-2.5 pr-6 text-slate-500 font-medium text-sm"
+                          title={spec.irdi ?? undefined}
+                        >
+                          {tx?.label}
+                          {tx?.note && (
+                            <span class="block text-xs font-normal text-slate-400 mt-0.5">
+                              {tx.note}
+                            </span>
+                          )}
+                        </td>
+                        {publishedVariants.map((variant) => {
+                          const val = getComparisonValue(spec, variant);
+                          return (
+                            <td class="py-2.5 px-4 text-slate-800 text-sm">
+                              {val || <span class="text-slate-300">—</span>}
+                            </td>
+                          );
+                        })}
+                      </tr>
                     );
                   })}
-                </tr>
-              </thead>
-              <tbody>
+                </tbody>
+              </table>
+            ) : (
+              <dl class="divide-y divide-slate-50">
                 {group.specs.map((spec) => {
                   const tx = getTranslation(spec.translations, locale);
                   return (
-                    <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
-                      <td class="py-2.5 pr-6 text-slate-500 font-medium text-sm" title={spec.irdi ?? undefined}>
+                    <div class="grid grid-cols-2 gap-4 py-2.5">
+                      <dt class="text-sm text-slate-500" title={spec.irdi ?? undefined}>
                         {tx?.label}
-                        {tx?.note && <span class="block text-xs font-normal text-slate-400 mt-0.5">{tx.note}</span>}
-                      </td>
-                      {publishedVariants.map((variant) => {
-                        const val = getComparisonValue(spec, variant, locale);
-                        return (
-                          <td class="py-2.5 px-4 text-slate-800 text-sm">
-                            {val || <span class="text-slate-300">—</span>}
-                          </td>
-                        );
-                      })}
-                    </tr>
+                        {tx?.note && (
+                          <span class="block text-xs font-normal text-slate-400 mt-0.5">
+                            {tx.note}
+                          </span>
+                        )}
+                      </dt>
+                      <dd class="text-sm font-medium text-slate-800">{renderValue(spec)}</dd>
+                    </div>
                   );
                 })}
-              </tbody>
-            </table>
-          ) : (
-            <dl class="divide-y divide-slate-50">
-              {group.specs.map((spec) => {
-                const tx = getTranslation(spec.translations, locale);
-                return (
-                  <div class="grid grid-cols-2 gap-4 py-2.5">
-                    <dt class="text-sm text-slate-500" title={spec.irdi ?? undefined}>
-                      {tx?.label}
-                      {tx?.note && <span class="block text-xs font-normal text-slate-400 mt-0.5">{tx.note}</span>}
-                    </dt>
-                    <dd class="text-sm font-medium text-slate-800">{renderValue(spec, locale)}</dd>
-                  </div>
-                );
-              })}
-            </dl>
-          )}
+              </dl>
+            )}
+          </div>
         </div>
-      </div>
-    ))}
-  </div>
-)}
+      ))}
+    </div>
+  )
+}
 
 {/* ── COMPARISON ACCORDION layout — accordion per group, variant columns in accent ─ */}
-{layout === "comparison_accordion" && (
-  <div class="flex flex-col divide-y divide-slate-100">
-    {groups.map((group, gi) => (
-      <details class="group" open={gi === 0 || undefined}>
-        <summary class="flex items-center justify-between gap-2 py-4 cursor-pointer select-none list-none" title={group.irdi ?? undefined}>
-          <span class="text-base font-semibold text-slate-800 group-open:text-(--accent) transition-colors">
-            {group.label}
-          </span>
-          <svg class="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform flex-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-          </svg>
-        </summary>
+{
+  layout === "comparison_accordion" && (
+    <div class="flex flex-col divide-y divide-slate-100">
+      {groups.map((group, gi) => (
+        <details class="group" open={gi === 0 || undefined}>
+          <summary
+            class="flex items-center justify-between gap-2 py-4 cursor-pointer select-none list-none"
+            title={group.irdi ?? undefined}
+          >
+            <span class="text-base font-semibold text-slate-800 group-open:text-(--accent) transition-colors">
+              {group.label}
+            </span>
+            <svg
+              class="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform flex-none"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </summary>
 
-        <div class="pb-6 overflow-x-auto">
-          {publishedVariants.length > 0 ? (
-            <table class="w-full text-sm border-collapse">
-              <thead>
-                <tr>
-                  <th class="text-left py-2 pr-6 text-slate-400 font-medium w-40 border-b border-slate-100"></th>
-                  {publishedVariants.map((variant) => {
-                    const vtx = getTranslation(variant.translations, locale);
+          <div class="pb-6 overflow-x-auto">
+            {publishedVariants.length > 0 ? (
+              <table class="w-full text-sm border-collapse">
+                <thead>
+                  <tr>
+                    <th class="text-left py-2 pr-6 text-slate-400 font-medium w-40 border-b border-slate-100" />
+                    {publishedVariants.map((variant) => {
+                      const vtx = getTranslation(variant.translations, locale);
+                      return (
+                        <th class="text-left py-2 px-4 font-bold text-(--accent) border-b border-slate-100 whitespace-nowrap">
+                          {vtx?.name ?? variant.sku ?? variant.id}
+                        </th>
+                      );
+                    })}
+                  </tr>
+                </thead>
+                <tbody>
+                  {group.specs.map((spec) => {
+                    const tx = getTranslation(spec.translations, locale);
                     return (
-                      <th class="text-left py-2 px-4 font-bold text-(--accent) border-b border-slate-100 whitespace-nowrap">
-                        {vtx?.name ?? variant.sku ?? variant.id}
-                      </th>
+                      <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                        <td
+                          class="py-2.5 pr-6 text-slate-500 font-medium text-sm"
+                          title={spec.irdi ?? undefined}
+                        >
+                          {tx?.label}
+                          {tx?.note && (
+                            <span class="block text-xs font-normal text-slate-400 mt-0.5">
+                              {tx.note}
+                            </span>
+                          )}
+                        </td>
+                        {publishedVariants.map((variant) => {
+                          const val = getComparisonValue(spec, variant);
+                          return (
+                            <td class="py-2.5 px-4 text-slate-800 text-sm">
+                              {val || <span class="text-slate-300">—</span>}
+                            </td>
+                          );
+                        })}
+                      </tr>
                     );
                   })}
-                </tr>
-              </thead>
-              <tbody>
+                </tbody>
+              </table>
+            ) : (
+              <dl class="divide-y divide-slate-50">
                 {group.specs.map((spec) => {
                   const tx = getTranslation(spec.translations, locale);
                   return (
-                    <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
-                      <td class="py-2.5 pr-6 text-slate-500 font-medium text-sm" title={spec.irdi ?? undefined}>
+                    <div class="grid grid-cols-2 gap-4 py-2.5">
+                      <dt class="text-sm text-slate-500" title={spec.irdi ?? undefined}>
                         {tx?.label}
-                        {tx?.note && <span class="block text-xs font-normal text-slate-400 mt-0.5">{tx.note}</span>}
-                      </td>
-                      {publishedVariants.map((variant) => {
-                        const val = getComparisonValue(spec, variant, locale);
-                        return (
-                          <td class="py-2.5 px-4 text-slate-800 text-sm">
-                            {val || <span class="text-slate-300">—</span>}
-                          </td>
-                        );
-                      })}
-                    </tr>
+                        {tx?.note && (
+                          <span class="block text-xs font-normal text-slate-400 mt-0.5">
+                            {tx.note}
+                          </span>
+                        )}
+                      </dt>
+                      <dd class="text-sm font-medium text-slate-800">{renderValue(spec)}</dd>
+                    </div>
                   );
                 })}
-              </tbody>
-            </table>
-          ) : (
-            <dl class="divide-y divide-slate-50">
-              {group.specs.map((spec) => {
-                const tx = getTranslation(spec.translations, locale);
-                return (
-                  <div class="grid grid-cols-2 gap-4 py-2.5">
-                    <dt class="text-sm text-slate-500" title={spec.irdi ?? undefined}>
-                      {tx?.label}
-                      {tx?.note && <span class="block text-xs font-normal text-slate-400 mt-0.5">{tx.note}</span>}
-                    </dt>
-                    <dd class="text-sm font-medium text-slate-800">{renderValue(spec, locale)}</dd>
-                  </div>
-                );
-              })}
-            </dl>
-          )}
-        </div>
-      </details>
-    ))}
-  </div>
-)}
+              </dl>
+            )}
+          </div>
+        </details>
+      ))}
+    </div>
+  )
+}

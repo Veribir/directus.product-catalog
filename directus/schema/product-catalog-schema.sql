@@ -173,22 +173,23 @@ CREATE TABLE product_certifications_translations (
 -- 2. SPEC GROUPS
 -- ============================================================================
 
--- Spec groups are PRODUCT-AGNOSTIC: one group (e.g. "Drilling Capacity") is
--- shared across many products — there is NO per-product ownership column.
--- A group is offered on a product when is_global = true (every product) OR it
--- is linked to that product via the products_spec_groups M2M (section 9).
+-- Spec groups are catalog-wide and shared: one group (e.g. "Drilling Capacity")
+-- is reused across many products' variants — there is NO per-product ownership
+-- column and NO scoping mechanism (no is_global flag, no products M2M). A
+-- group simply exists in the catalog and is pulled in wherever a variant
+-- attaches it via product_variant_spec_groups (section 7).
 CREATE TABLE product_spec_groups (
   id uuid PRIMARY KEY,
   sort integer,
   status varchar(255) DEFAULT 'draft',          -- draft | published
   icon varchar(255),                            -- Material Symbols icon name
   irdi varchar(255),                            -- eCl@ss IRDI for this property group
-  is_global boolean NOT NULL DEFAULT false,     -- true = available on every product
   date_created timestamptz,
   user_created uuid REFERENCES directus_users(id) ON DELETE SET NULL,
   date_updated timestamptz,
   user_updated uuid REFERENCES directus_users(id) ON DELETE SET NULL
-  -- products -> M2M alias -> products_spec_groups (section 9)
+  -- specs -> o2m alias -> product_specs.group (reverse; specs across any product using this group)
+  -- variant_groups -> o2m alias -> product_variant_spec_groups.spec_group (reverse; section 7)
 );
 
 CREATE TABLE product_spec_groups_translations (
@@ -367,18 +368,20 @@ CREATE TABLE product_variants_translations (
 
 
 -- ============================================================================
--- 7. SPECS + PER-VARIANT SPEC VALUES
+-- 7. SPECS + PER-VARIANT SPEC GROUPS/VALUES
 -- ============================================================================
+-- Domain constraint: every product has at least one variant (no single-SKU
+-- products exist), so ALL spec values are entered and stored per variant.
+-- There is no product-level/base value and no product-side entry surface —
+-- the variant is the ONLY door for filling in spec data (see product_variant_
+-- spec_groups below). product_specs itself stays catalog-wide: a canonical,
+-- reusable definition (label/unit/irdi/display_type) with no product or
+-- variant ownership column.
 
 CREATE TABLE product_specs (
   id uuid PRIMARY KEY,
   sort integer,
   status varchar(255) DEFAULT 'draft',          -- draft | published
-  product uuid REFERENCES products(id) ON DELETE CASCADE,
-  -- NULLABLE. Auto-set when the spec is created from the product (o2m parent,
-  -- alias = products.specs, sort_field="sort"). Left empty when a spec is
-  -- inline-created from the VARIANT interface — the "Spec -> backfill product
-  -- from variant" Flow then sets it from product_spec_variant_values.variant.
   "group" uuid REFERENCES product_spec_groups(id) ON DELETE SET NULL,
   unit uuid REFERENCES product_units(id) ON DELETE SET NULL,
   display_type varchar(255),                    -- text | boolean | number | range | list
@@ -388,6 +391,7 @@ CREATE TABLE product_specs (
   user_created uuid REFERENCES directus_users(id) ON DELETE SET NULL,
   date_updated timestamptz,
   user_updated uuid REFERENCES directus_users(id) ON DELETE SET NULL
+  -- spec_variant_values -> o2m alias -> product_spec_variant_values.spec (reverse)
 );
 
 CREATE TABLE product_specs_translations (
@@ -395,16 +399,44 @@ CREATE TABLE product_specs_translations (
   product_specs_id uuid REFERENCES product_specs(id) ON DELETE CASCADE,
   languages_code varchar(255) REFERENCES languages(code) ON DELETE CASCADE,
   label varchar(255) NOT NULL,
-  value text NOT NULL,
   note text
+  -- NOTE: there is no `value` column here. A spec definition has no base/
+  -- product-level value — every value lives on product_spec_variant_values
+  -- below, scoped to a specific variant.
 );
 
--- One row per (spec, variant) pair — the comparison-table cell value.
+-- A per-variant INSTANCE of a spec group: "this variant has values for this
+-- group." This is the real entry surface — open a variant, add a group here,
+-- then fill in its values below. Both FKs are NOT NULL: a row with no variant
+-- or no group is meaningless.
+CREATE TABLE product_variant_spec_groups (
+  id uuid PRIMARY KEY,
+  sort integer,
+  spec_group uuid NOT NULL REFERENCES product_spec_groups(id) ON DELETE CASCADE,
+  product_variant uuid NOT NULL REFERENCES product_variants(id) ON DELETE CASCADE,
+  -- o2m alias = product_variants.variant_spec_groups, sort_field="sort"
+  date_created timestamptz,
+  user_created uuid REFERENCES directus_users(id) ON DELETE SET NULL,
+  date_updated timestamptz,
+  user_updated uuid REFERENCES directus_users(id) ON DELETE SET NULL
+  -- variant_spec_values -> o2m alias -> product_spec_variant_values.variant_spec_group (reverse)
+);
+
+-- One row per (spec, variant) cell value. `spec_group` is stored here too —
+-- alongside product_specs.group and product_variant_spec_groups.spec_group —
+-- as a DELIBERATE denormalization so this table can be filtered/queried by
+-- group without joining through both spec and variant_spec_group. All three
+-- FKs are NOT NULL.
 CREATE TABLE product_spec_variant_values (
   id uuid PRIMARY KEY,
   sort integer,
-  spec uuid REFERENCES product_specs(id) ON DELETE CASCADE,          -- o2m alias = product_specs.spec_variant_values
-  variant uuid REFERENCES product_variants(id) ON DELETE CASCADE,
+  spec uuid NOT NULL REFERENCES product_specs(id) ON DELETE CASCADE,
+  -- o2m alias = product_specs.spec_variant_values
+  spec_group uuid NOT NULL REFERENCES product_spec_groups(id) ON DELETE SET NULL,
+  -- denormalized copy of spec.group / variant_spec_group.spec_group — see note above
+  variant_spec_group uuid NOT NULL REFERENCES product_variant_spec_groups(id) ON DELETE CASCADE,
+  -- the variant + group this cell belongs to; variant is reached via
+  -- variant_spec_group.product_variant (there is no direct `variant` column)
   value varchar(255),
   date_created timestamptz,
   user_created uuid REFERENCES directus_users(id) ON DELETE SET NULL,
@@ -519,15 +551,9 @@ CREATE TABLE products_tags (
   product_tags_id uuid REFERENCES product_tags(id) ON DELETE CASCADE
 );
 
--- products.spec_groups (M2M) — non-global spec groups offered on this product.
--- A group with is_global=true needs NO row here (available everywhere); rows
--- here scope a non-global group to a defined subset of products.
-CREATE TABLE products_spec_groups (
-  id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-  products_id uuid REFERENCES products(id) ON DELETE CASCADE,                    -- o2m alias = products.spec_groups
-  product_spec_groups_id uuid REFERENCES product_spec_groups(id) ON DELETE CASCADE,  -- reverse alias = product_spec_groups.products
-  sort integer
-);
+-- NOTE: products_spec_groups (M2M linking products to non-global spec groups)
+-- has been DROPPED. Spec groups no longer have any product-scoping mechanism —
+-- see section 7 for the current variant-only model.
 
 
 -- ============================================================================
@@ -1138,13 +1164,13 @@ CREATE TABLE block_products_translations (
 -- product_categories.brand         -> product_brands.id          ON DELETE SET NULL
 -- product_variants.product         -> products.id                ON DELETE CASCADE
 -- product_variants.unit_override   -> product_units.id           ON DELETE SET NULL
--- products_spec_groups.products_id            -> products.id              ON DELETE CASCADE (M2M; alias products.spec_groups)
--- products_spec_groups.product_spec_groups_id -> product_spec_groups.id   ON DELETE CASCADE (reverse alias product_spec_groups.products)
--- product_specs.product            -> products.id                ON DELETE CASCADE (NULLABLE — backfilled by Flow from variant)
 -- product_specs.group               -> product_spec_groups.id    ON DELETE SET NULL
 -- product_specs.unit               -> product_units.id           ON DELETE SET NULL
--- product_spec_variant_values.spec    -> product_specs.id        ON DELETE CASCADE
--- product_spec_variant_values.variant -> product_variants.id     ON DELETE CASCADE
+-- product_variant_spec_groups.spec_group     -> product_spec_groups.id   ON DELETE CASCADE  (NOT NULL)
+-- product_variant_spec_groups.product_variant -> product_variants.id     ON DELETE CASCADE  (NOT NULL; alias product_variants.variant_spec_groups)
+-- product_spec_variant_values.spec            -> product_specs.id              ON DELETE CASCADE  (NOT NULL)
+-- product_spec_variant_values.spec_group      -> product_spec_groups.id        ON DELETE SET NULL (NOT NULL column; denormalized, see section 7)
+-- product_spec_variant_values.variant_spec_group -> product_variant_spec_groups.id ON DELETE CASCADE (NOT NULL)
 -- product_pricing_tiers.product    -> products.id                ON DELETE CASCADE
 -- product_pricing_tiers.variant    -> product_variants.id        ON DELETE SET NULL
 -- product_pricing_tiers.customer_group -> customer_groups.id     ON DELETE SET NULL

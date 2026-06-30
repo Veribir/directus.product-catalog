@@ -33,7 +33,7 @@ Small reference tables. Editors set these up once and reuse them everywhere.
 | `customer_groups` | Customer segments (wholesale, distributor, retail) for tiered pricing and RFQ. |
 | `product_tags` | Loose keywords for flexible filtering and FAQ tagging. Distinct from hierarchical categories. |
 | `product_certifications` | Industry/compliance certifications (CE, RoHS, ISO 9001). Linked to products via M2M. |
-| `product_spec_groups` | Named organizers for spec rows (e.g. "Electrical", "Physical Dimensions"). Product-agnostic — one group is shared across products (`is_global`, or linked to a subset via the `products_spec_groups` M2M). |
+| `product_spec_groups` | Named organizers for spec rows (e.g. "Electrical", "Physical Dimensions"). Catalog-wide and shared — there is no product ownership column and no scoping mechanism; a group is simply attached wherever a variant uses it (see §6). |
 
 All of the above have `*_translations` companions.
 
@@ -88,7 +88,6 @@ The core catalog item.
 products
   ├── products_translations
   ├── product_variants          (o2m, cascades on delete)
-  ├── product_specs             (o2m, cascades on delete)
   ├── product_pricing_tiers     (o2m, cascades on delete)
   ├── product_regional_prices   (o2m, cascades on delete)
   ├── product_media             (o2m, cascades on delete)
@@ -121,7 +120,9 @@ products
 
 ### 5. Variants
 
-Each product can have multiple purchasable variants (e.g. Red / XL).
+Each product can have multiple purchasable variants (e.g. Red / XL). Every product in
+this catalog has at least one variant — there are no single-SKU products — so the
+variant is also where all spec data is entered (see §6).
 
 | Collection | Purpose |
 |---|---|
@@ -132,44 +133,56 @@ Each product can have multiple purchasable variants (e.g. Red / XL).
 
 ### 6. Specs
 
-Technical specification rows. The spec matrix (spec rows × variant columns) is **one
-dataset editable from two doors** — the product OR the variant — see "Editing specs"
-below.
+Technical specification rows. **There is only one door: the variant.** Every spec
+value is entered per variant — there is no product-level/base value and no
+product-side entry surface for specs.
 
 ```
-product_spec_groups  (PRODUCT-AGNOSTIC — one group shared across many products)
-  ├── is_global = true  → offered on every product
-  ├── products (M2M, products_spec_groups) → non-global group scoped to a subset
+product_spec_groups  (catalog-wide — no product ownership, no scoping mechanism)
   ├── (referenced by) product_specs.group
-  └── specs            (reverse o2m — every spec across any product using this group; reference-only)
+  ├── specs                 (reverse o2m — every spec across the catalog using this group; reference-only)
+  └── variant_groups         (reverse o2m — every product_variant_spec_groups row using this group)
 
-products
-  ├── spec_groups (M2M → product_spec_groups — non-global groups offered on this product)
-  └── product_specs (o2m — one spec row per product; `product` is nullable, backfilled by Flow)
-        ├── product_specs_translations (label, value, note)
-        └── product_spec_variant_values (one cell per spec × variant combination)
-              └── (reverse o2m) product_variants.specs — this variant's spec sheet, editable from the variant
+product_specs  (canonical definition — label, unit, display_type, irdi; no product/variant ownership)
+  ├── product_specs_translations (label, note — no base value)
+  └── spec_variant_values (reverse o2m → product_spec_variant_values.spec)
+
+product_variants
+  └── variant_spec_groups (o2m → product_variant_spec_groups — the entry surface)
+        ├── spec_group        → product_spec_groups (NOT NULL)
+        ├── product_variant   → product_variants (NOT NULL)
+        └── variant_spec_values (o2m → product_spec_variant_values.variant_spec_group)
+              ├── spec               → product_specs (NOT NULL)
+              ├── spec_group         → product_spec_groups (NOT NULL; denormalized — see below)
+              ├── variant_spec_group → product_variant_spec_groups (NOT NULL)
+              └── value
 ```
 
 | Collection | Purpose |
 |---|---|
-| `product_specs` | One row per spec (display_type: `text \| boolean \| number \| range \| list`). `product` is nullable. |
-| `product_spec_variant_values` | Comparison-table cell: spec × variant value. |
-| `products_spec_groups` | M2M junction — links non-global groups to the products that may use them. |
+| `product_specs` | Canonical, catalog-wide spec definition (display_type: `text \| boolean \| number \| range \| list`). No product or variant ownership column. |
+| `product_variant_spec_groups` | Per-variant instance of a spec group — "this variant has values for this group." The real entry point: open a variant, add a group here, then fill in values underneath. |
+| `product_spec_variant_values` | One cell per spec × variant combination — the actual value. |
 
-**Spec groups are product-agnostic.** There is no per-product ownership column. A group
-is offered on a product when `is_global = true` (every product) **or** it is linked to
-that product via the `products_spec_groups` M2M. The same "Drilling Capacity" group is
-reused across the whole product line rather than recreated per product.
+**Spec groups are catalog-wide.** There is no per-product or per-variant ownership
+column on `product_spec_groups`, and no scoping mechanism (no `is_global` flag, no M2M
+to products) — a group is simply attached wherever a variant uses it via
+`product_variant_spec_groups`. The same "Drilling Capacity" group can be reused across
+the whole product line.
 
-**Editing specs — two doors (same rows):**
-- **Product door** — `products.specs`: define a spec (group + label + unit + base value)
-  with its per-variant values nested under it.
-- **Variant door** — `product_variants.specs`: open a variant and fill in *its* value per
-  spec, or inline-create a new spec (and group). A spec created here has no `product` yet;
-  the **"Spec → backfill product from variant"** Flow sets `product_specs.product` from the
-  variant's product on save. Both doors write to the same `product_specs` /
-  `product_spec_variant_values` rows — one canonical definition, no duplication.
+**Editing specs — one door (the variant):**
+Open a variant → **Specs** → add a spec group (inline-create or pick an existing
+`product_spec_groups` row) → that creates a `product_variant_spec_groups` row → add
+values underneath, each picking (or inline-creating) a `product_specs` row and typing
+this variant's value. `product_specs` stays canonical — editing a spec's label or unit
+updates it everywhere it's used — but there is no product-side list to browse or edit
+specs from; everything is reached through a variant.
+
+**`spec_group` is stored three times, deliberately.** It appears on
+`product_variant_spec_groups.spec_group`, on `product_spec_variant_values.spec_group`,
+and is derivable from `product_specs.group`. This is intentional denormalization so the
+value table can be filtered/queried by group without joining through both the spec and
+the variant-group — not an oversight or a sync risk to "fix."
 
 ---
 
@@ -292,8 +305,10 @@ These blocks live in the main `blocks` folder and are reused across pages, categ
    ├── products              → slug, SKU, price, category, brand, template
    ├── products_translations → name, display_title, description, content
    ├── product_variants      → SKU/price/stock overrides per variant
-   ├── product_specs         → spec rows (label + value, grouped)
-   ├── product_spec_variant_values → per-variant spec cell overrides
+   │     └── variant_spec_groups → product_variant_spec_groups (one per spec
+   │           group this variant has values for)
+   │           └── variant_spec_values → product_spec_variant_values (pick or
+   │                 inline-create a product_specs row, type this variant's value)
    ├── product_pricing_tiers → volume / segment price rules
    ├── product_regional_prices → per-region overrides
    ├── product_media         → engineering drawings / diagrams
@@ -324,11 +339,13 @@ products
   ├── page_template  → product_page_templates (overrides category default)
   ├── brand          → product_brands
   ├── unit           → product_units
-  ├──< product_variants ──< product_spec_variant_values (reverse: variants.specs — variant door)
-  ├── >< product_spec_groups (M2M products_spec_groups — non-global groups offered on this product)
-  ├──< product_specs ──< product_spec_variant_values >── product_variants
-  │     ├── product → products (nullable; backfilled by Flow from the variant)
-  │     └── group → product_spec_groups (is_global or M2M; reverse: groups.specs)
+  ├──< product_variants
+  │     └──< product_variant_spec_groups (the only spec entry surface)
+  │           ├── spec_group → product_spec_groups (NOT NULL)
+  │           └──< product_spec_variant_values
+  │                 ├── spec        → product_specs (NOT NULL; catalog-wide, no product/variant ownership)
+  │                 ├── spec_group  → product_spec_groups (NOT NULL; denormalized copy)
+  │                 └── value
   ├──< product_pricing_tiers   →? product_variants, →? customer_groups
   ├──< product_regional_prices →? product_variants, → product_regions
   ├──< product_media

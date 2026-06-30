@@ -362,18 +362,20 @@ export type ProductTag = {
   translations: { languages_code: string; name: string }[];
 };
 
+// Catalog-wide, ungated — no product/category ownership and no scoping
+// mechanism. A group is simply attached wherever a variant uses it via
+// product_variant_spec_groups (see ProductVariantSpecGroup below).
 export type ProductSpecGroup = {
   id: string;
   icon: string | null;
   sort: number | null;
   irdi: string | null;
-  // true = available on every product; false = only on products it is linked to
-  // via the products_spec_groups M2M. Groups are product-agnostic — the same
-  // group is shared across products (no per-product ownership).
-  is_global: boolean;
   translations: { languages_code: string; name: string; note: string | null }[];
 };
 
+// Canonical, catalog-wide spec definition. No product or variant ownership
+// column and no base/default value — every value is entered per variant via
+// ProductSpecVariantValue, reached through ProductVariantSpecGroup.
 export type ProductSpec = {
   id: string;
   sort: number | null;
@@ -383,8 +385,25 @@ export type ProductSpec = {
   display_type: "text" | "boolean" | "number" | "range" | "list" | null;
   irdi: string | null;
   eclass_preferred_name: string | null;
-  translations: { languages_code: string; label: string; value: string; note: string | null }[];
-  spec_variant_values: { variant: string; value: string }[];
+  translations: { languages_code: string; label: string; note: string | null }[];
+};
+
+// One cell — this variant's value for one spec. Reached only through its
+// parent ProductVariantSpecGroup; no `variant` column on this row itself.
+export type ProductSpecVariantValue = {
+  id: string;
+  sort: number | null;
+  value: string;
+  spec: ProductSpec;
+};
+
+// Per-variant instance of a spec group — "this variant has values for this
+// group." The real entry point/door for all spec data (see schema guide §6).
+export type ProductVariantSpecGroup = {
+  id: string;
+  sort: number | null;
+  spec_group: ProductSpecGroup;
+  variant_spec_values: ProductSpecVariantValue[];
 };
 
 export type ProductCertification = {
@@ -507,6 +526,7 @@ export type ProductVariant = {
   reorder_point: number | null;
   reorder_quantity: number | null;
   unit_override: ProductUnit | null;
+  variant_spec_groups: ProductVariantSpecGroup[];
 };
 
 export type ProductTranslation = {
@@ -532,13 +552,6 @@ export type ProductMedia = {
   purpose: string;
   position: "left" | "right" | "center" | null;
   translations: ProductMediaTranslation[];
-};
-
-export type ProductSpecVariantValue = {
-  id: string;
-  spec: string;
-  variant: string;
-  value: string;
 };
 
 export type ProductCategoryRef = {
@@ -581,7 +594,6 @@ export type Product = {
     };
   }[];
   certifications: { product_certifications_id: ProductCertification; obtained_at: string | null }[];
-  specs: ProductSpec[];
   pricing_tiers: ProductPricingTier[];
   regional_prices: ProductRegionalPrice[];
   media: ProductMedia[];

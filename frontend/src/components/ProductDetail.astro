@@ -1,5 +1,11 @@
 ---
-import type { Product, PageBlock, BlockProductSpecs, BlockProductHero, BlockProductCardGrid } from "../lib/directus";
+import type {
+  Product,
+  PageBlock,
+  BlockProductSpecs,
+  BlockProductHero,
+  BlockProductCardGrid,
+} from "../lib/directus";
 import { assetUrl } from "../lib/assets";
 import { getTranslation } from "../lib/i18n";
 import { formatPrice, isOnSale } from "../lib/price";
@@ -42,8 +48,9 @@ const relatedProducts = (product.related_products ?? [])
 const needsCategoryPaths =
   (showBreadcrumb && product.category) || relatedProducts.some((rel) => rel.category);
 const allCategories = needsCategoryPaths ? await fetchAllCategories() : [];
-const catPathMap = allCategories.length > 0 ? buildCategoryPaths(allCategories, locale) : new Map<string, string>();
-const categoryPath = product.category ? catPathMap.get(product.category.id) ?? null : null;
+const catPathMap =
+  allCategories.length > 0 ? buildCategoryPaths(allCategories, locale) : new Map<string, string>();
+const categoryPath = product.category ? (catPathMap.get(product.category.id) ?? null) : null;
 
 const currency = "USD";
 
@@ -76,33 +83,55 @@ const unitLabel = unitTx
 
 const sortedBlocks = [...(product.blocks ?? [])].sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0));
 
-const cardGridBlocks = sortedBlocks.filter(b => !b.hide_block && b.collection === "block_product_card_grid");
+const cardGridBlocks = sortedBlocks.filter(
+  (b) => !b.hide_block && b.collection === "block_product_card_grid",
+);
 
 // Certifications are shown if either the template or the product itself
 // configures a block_product_card_grid with source="certifications".
 const showCertifications = [...templateBlocks, ...cardGridBlocks].some(
-  (b) => b.collection === "block_product_card_grid" && (b.item as BlockProductCardGrid)?.source === "certifications",
+  (b) =>
+    b.collection === "block_product_card_grid" &&
+    (b.item as BlockProductCardGrid)?.source === "certifications",
 );
 
 // Page-builder collections PageBlocks.astro knows how to render.
 const PAGEBLOCKS_COLLECTIONS = new Set([
-  "block_hero", "block_richtext", "block_posts", "block_products", "block_product_categories",
-  "block_hero_slider", "block_features_grid", "block_numbered_list", "block_brands_logos",
-  "block_cta_banner", "block_product_category_cards",
+  "block_hero",
+  "block_richtext",
+  "block_posts",
+  "block_products",
+  "block_product_categories",
+  "block_hero_slider",
+  "block_features_grid",
+  "block_numbered_list",
+  "block_brands_logos",
+  "block_cta_banner",
+  "block_product_category_cards",
 ]);
 
 // Content blocks can come from the product's own blocks or from its page template's tabs —
 // merge both sources (deduped by id), then render in a single sequence ordered by `sort`
 // so e.g. specs can appear above or below features depending on their sort value.
-const contentBlocksById = new Map<string, (typeof sortedBlocks)[number] | (typeof templateBlocks)[number]>();
+const contentBlocksById = new Map<
+  string,
+  (typeof sortedBlocks)[number] | (typeof templateBlocks)[number]
+>();
 for (const b of [...templateBlocks, ...sortedBlocks]) {
-  if (!b.hide_block && (b.collection === "block_product_specs" || PAGEBLOCKS_COLLECTIONS.has(b.collection))) {
+  if (
+    !b.hide_block &&
+    (b.collection === "block_product_specs" || PAGEBLOCKS_COLLECTIONS.has(b.collection))
+  ) {
     contentBlocksById.set(b.id, b);
   }
 }
-const orderedContentBlocks = [...contentBlocksById.values()].sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0));
-const firstFeatureBlockId = orderedContentBlocks.find((b) => b.collection === "block_features_grid")?.id ?? null;
-const firstSpecBlockId = orderedContentBlocks.find((b) => b.collection === "block_product_specs")?.id ?? null;
+const orderedContentBlocks = [...contentBlocksById.values()].sort(
+  (a, b) => (a.sort ?? 0) - (b.sort ?? 0),
+);
+const firstFeatureBlockId =
+  orderedContentBlocks.find((b) => b.collection === "block_features_grid")?.id ?? null;
+const firstSpecBlockId =
+  orderedContentBlocks.find((b) => b.collection === "block_product_specs")?.id ?? null;
 
 // Category tagline: first word accent, rest normal
 const catWords = (categoryTx?.name ?? "").split(" ");
@@ -112,65 +141,65 @@ const catTaglineRest = catWords.slice(1).join(" ");
 
 <div>
   {/* ─── BREADCRUMB BAR (white, above the dark section) ─────────────────── */}
-  {showBreadcrumb && categoryPath && allCategories.length > 0 && (
-    <div class="bg-white border-b border-slate-100">
-      <div class="px-6 md:px-16 py-3 flex items-center justify-between gap-4">
-        <div class="text-slate-500 text-sm">
-          <CategoryBreadcrumb
-            {categoryPath}
-            {productsPagePermalink}
-            {locale}
-            {allCategories}
-          />
+  {
+    showBreadcrumb && categoryPath && allCategories.length > 0 && (
+      <div class="bg-white border-b border-slate-100">
+        <div class="px-6 md:px-16 py-3 flex items-center justify-between gap-4">
+          <div class="text-slate-500 text-sm">
+            <CategoryBreadcrumb {categoryPath} {productsPagePermalink} {locale} {allCategories} />
+          </div>
+          <a
+            href="/contact"
+            class="shrink-0 px-5 py-2.5 rounded-lg bg-(--accent) text-white text-sm font-semibold whitespace-nowrap hover:opacity-90 transition-opacity"
+          >
+            Information & Request Form
+          </a>
         </div>
-        <a
-          href="/contact"
-          class="shrink-0 px-5 py-2.5 rounded-lg bg-(--accent) text-white text-sm font-semibold whitespace-nowrap hover:opacity-90 transition-opacity"
-        >
-          Information & Request Form
-        </a>
       </div>
-    </div>
-  )}
+    )
+  }
 
   {/* ─── HERO (dark section — image fills full height from top) ─────────── */}
   <section class="bg-zinc-950 text-white">
-
     {/* Two-column hero: text left | image right (full bleed, no top offset) */}
     <div class="grid md:grid-cols-[45%_55%] min-h-[85vh]">
-
       {/* Left: text */}
       <div class="flex flex-col justify-center gap-6 px-6 md:px-20 py-20">
-
         {/* Category tagline */}
-        {categoryTx?.name && (
-          <p class="text-xs font-bold tracking-[0.2em] uppercase">
-            <span class="text-(--accent)">{catTaglineFirst}</span>
-            {catTaglineRest && <span class="text-white/50"> {catTaglineRest}</span>}
-          </p>
-        )}
+        {
+          categoryTx?.name && (
+            <p class="text-xs font-bold tracking-[0.2em] uppercase">
+              <span class="text-(--accent)">{catTaglineFirst}</span>
+              {catTaglineRest && <span class="text-white/50"> {catTaglineRest}</span>}
+            </p>
+          )
+        }
 
         {/* Product name */}
-        {tx?.name && (
-          <h1 class="text-4xl md:text-5xl lg:text-[3.25rem] font-extrabold leading-[1.1] text-white">
-            {tx.name}
-          </h1>
-        )}
+        {
+          tx?.name && (
+            <h1 class="text-4xl md:text-5xl lg:text-[3.25rem] font-extrabold leading-[1.1] text-white">
+              {tx.name}
+            </h1>
+          )
+        }
 
         {/* Tagline */}
-        {tx?.tagline && (
-          <p class="text-base text-white/50 leading-relaxed max-w-sm">
-            {tx.tagline}
-          </p>
-        )}
+        {
+          tx?.tagline && (
+            <p class="text-base text-white/50 leading-relaxed max-w-sm">{tx.tagline}</p>
+          )
+        }
 
         {/* Model range */}
-        {tx?.model_range && (
-          <div class="flex items-center gap-3 text-sm text-white/60">
-            <span class="text-(--accent) font-bold text-2xl leading-none">›</span>
-            <span class="tracking-wide">{tx.model_range}</span>
-          </div>
-        )}
+        {
+          tx?.model_range && (
+            <div class="flex items-center gap-3 text-sm text-white/60">
+              <span class="text-(--accent) font-bold text-2xl leading-none">›</span>
+              <span class="tracking-wide">{tx.model_range}</span>
+            </div>
+          )
+        }
 
         {/* CTA buttons */}
         <div class="flex flex-wrap gap-4 mt-2">
@@ -186,176 +215,212 @@ const catTaglineRest = catWords.slice(1).join(" ");
           >
             Key Features
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 9l-7 7-7-7"></path>
             </svg>
           </a>
         </div>
-
       </div>
 
       {/* Right: full-bleed product image */}
       <div class="relative min-h-72 md:min-h-full">
-        {mainImageUrl ? (
-          <img
-            src={mainImageUrl}
-            alt={tx?.name ?? ""}
-            class="absolute inset-0 w-full h-full object-cover object-center"
-            loading="eager"
-          />
-        ) : (
-          <div class="absolute inset-0 bg-zinc-800" />
-        )}
-        {brandLogoUrl && (
-          <div class="absolute bottom-8 left-8 z-10">
-            <img src={brandLogoUrl} alt="" class="h-14 w-auto" loading="eager" />
-          </div>
-        )}
+        {
+          mainImageUrl ? (
+            <img
+              src={mainImageUrl}
+              alt={tx?.name ?? ""}
+              class="absolute inset-0 w-full h-full object-cover object-center"
+              loading="eager"
+            />
+          ) : (
+            <div class="absolute inset-0 bg-zinc-800" />
+          )
+        }
+        {
+          brandLogoUrl && (
+            <div class="absolute bottom-8 left-8 z-10">
+              <img src={brandLogoUrl} alt="" class="h-14 w-auto" loading="eager" />
+            </div>
+          )
+        }
       </div>
-
     </div>
   </section>
 
   {/* ─── META BAR: eCl@ss classification + tags ─────────────────────────────── */}
-  {(eclassInfo || productTags.length > 0) && (
-    <div class="bg-white border-b border-slate-100">
-      <div class="max-w-7xl mx-auto px-6 md:px-16 py-4 flex flex-wrap items-center gap-4">
-        {eclassInfo && <EclassBadge code={eclassInfo.code} version={eclassInfo.version} />}
-        {productTags.length > 0 && <ProductTags tags={productTags} {locale} />}
+  {
+    (eclassInfo || productTags.length > 0) && (
+      <div class="bg-white border-b border-slate-100">
+        <div class="max-w-7xl mx-auto px-6 md:px-16 py-4 flex flex-wrap items-center gap-4">
+          {eclassInfo && <EclassBadge code={eclassInfo.code} version={eclassInfo.version} />}
+          {productTags.length > 0 && <ProductTags tags={productTags} {locale} />}
+        </div>
       </div>
-    </div>
-  )}
+    )
+  }
 
   {/* ─── DESCRIPTION (rich text content) ───────────────────────────────────── */}
-  {tx?.content && (
-    <section class="py-16 bg-white">
-      <div class="max-w-3xl mx-auto px-6 md:px-16">
-        <div class="prose prose-slate max-w-none" set:html={tx.content} />
-      </div>
-    </section>
-  )}
+  {
+    tx?.content && (
+      <section class="py-16 bg-white">
+        <div class="max-w-3xl mx-auto px-6 md:px-16">
+          <div class="prose prose-slate max-w-none" set:html={tx.content} />
+        </div>
+      </section>
+    )
+  }
 
   {/* ─── CONTENT BLOCKS (features, specs, richtext, etc.) — unified sort order ── */}
-  {orderedContentBlocks.map((block) => {
-    if (block.collection === "block_product_specs") {
-      return (
-        <section class="py-20 bg-white">
-          <div class="max-w-7xl mx-auto px-6 md:px-16">
-            {block.id === firstSpecBlockId && (
-              <div class="mb-12">
-                <p class="text-xs font-bold tracking-[0.2em] uppercase mb-4 text-slate-400">
-                  <span class="text-(--accent)">TECHNICAL</span> SPECIFICATIONS
-                </p>
-                {tx?.description && (
-                  <p class="text-xl md:text-2xl font-medium leading-snug text-slate-800 max-w-3xl">
-                    {tx.description}
+  {
+    orderedContentBlocks.map((block) => {
+      if (block.collection === "block_product_specs") {
+        return (
+          <section class="py-20 bg-white">
+            <div class="max-w-7xl mx-auto px-6 md:px-16">
+              {block.id === firstSpecBlockId && (
+                <div class="mb-12">
+                  <p class="text-xs font-bold tracking-[0.2em] uppercase mb-4 text-slate-400">
+                    <span class="text-(--accent)">TECHNICAL</span> SPECIFICATIONS
                   </p>
-                )}
+                  {tx?.description && (
+                    <p class="text-xl md:text-2xl font-medium leading-snug text-slate-800 max-w-3xl">
+                      {tx.description}
+                    </p>
+                  )}
+                </div>
+              )}
+              <div class="flex flex-col gap-16">
+                <BlockProductSpecsComponent
+                  block={block.item as BlockProductSpecs}
+                  variants={variantRows.map((r) => r.variant)}
+                  media={product.media ?? []}
+                  {locale}
+                />
               </div>
-            )}
-            <div class="flex flex-col gap-16">
-              <BlockProductSpecsComponent
-                block={block.item as BlockProductSpecs}
-                specs={product.specs}
-                variants={variantRows.map(r => r.variant)}
-                media={product.media ?? []}
-                {locale}
-              />
             </div>
+          </section>
+        );
+      }
+
+      if (!showContentBlocks) return null;
+
+      if (block.collection === "block_features_grid") {
+        return (
+          <div id={block.id === firstFeatureBlockId ? "key-features" : undefined}>
+            <PageBlocks
+              blocks={[block] as PageBlock[]}
+              {locale}
+              pagePermalink={productsPagePermalink}
+            />
           </div>
-        </section>
-      );
-    }
+        );
+      }
 
-    if (!showContentBlocks) return null;
-
-    if (block.collection === "block_features_grid") {
       return (
-        <div id={block.id === firstFeatureBlockId ? "key-features" : undefined}>
-          <PageBlocks blocks={[block] as PageBlock[]} {locale} pagePermalink={productsPagePermalink} />
-        </div>
+        <PageBlocks
+          blocks={[block] as PageBlock[]}
+          {locale}
+          pagePermalink={productsPagePermalink}
+        />
       );
-    }
-
-    return <PageBlocks blocks={[block] as PageBlock[]} {locale} pagePermalink={productsPagePermalink} />;
-  })}
+    })
+  }
 
   {/* ─── PHOTO GALLERY STRIP ───────────────────────────────────────────────── */}
-  {showGallery && (product.gallery ?? []).length > 0 && (
-    <div class="overflow-x-auto flex gap-1 bg-white">
-      {(product.gallery ?? []).map(g => (
-        <img
-          src={assetUrl(g.directus_files_id, "width=700&height=500&fit=cover")}
-          alt=""
-          class="h-56 md:h-80 w-auto flex-none object-cover"
-          loading="lazy"
-        />
-      ))}
-    </div>
-  )}
+  {
+    showGallery && (product.gallery ?? []).length > 0 && (
+      <div class="overflow-x-auto flex gap-1 bg-white">
+        {(product.gallery ?? []).map((g) => (
+          <img
+            src={assetUrl(g.directus_files_id, "width=700&height=500&fit=cover")}
+            alt=""
+            class="h-56 md:h-80 w-auto flex-none object-cover"
+            loading="lazy"
+          />
+        ))}
+      </div>
+    )
+  }
 
   {/* ─── CERTIFICATIONS ────────────────────────────────────────────────────── */}
-  {showCertifications && (product.certifications ?? []).length > 0 && (
-    <div class="max-w-6xl mx-auto px-6 md:px-16 py-12">
-      <h2 class="text-xl font-bold text-slate-900 mb-6">Certifications</h2>
-      <ProductCertifications certifications={product.certifications} {locale} />
-    </div>
-  )}
+  {
+    showCertifications && (product.certifications ?? []).length > 0 && (
+      <div class="max-w-6xl mx-auto px-6 md:px-16 py-12">
+        <h2 class="text-xl font-bold text-slate-900 mb-6">Certifications</h2>
+        <ProductCertifications certifications={product.certifications} {locale} />
+      </div>
+    )
+  }
 
   {/* ─── VOLUME PRICING ────────────────────────────────────────────────────── */}
-  {showPricingTable && (product.pricing_tiers ?? []).length > 0 && (
-    <div class="max-w-6xl mx-auto px-6 md:px-16 py-12">
-      <h2 class:list={["text-xl font-bold text-slate-900", unitLabel ? "mb-1" : "mb-6"]}>Volume Pricing</h2>
-      {unitLabel && <p class="text-sm text-slate-500 mb-6">Priced per {unitLabel}</p>}
-      <ProductPricingTable tiers={product.pricing_tiers} {locale} {currency} />
-    </div>
-  )}
+  {
+    showPricingTable && (product.pricing_tiers ?? []).length > 0 && (
+      <div class="max-w-6xl mx-auto px-6 md:px-16 py-12">
+        <h2 class:list={["text-xl font-bold text-slate-900", unitLabel ? "mb-1" : "mb-6"]}>
+          Volume Pricing
+        </h2>
+        {unitLabel && <p class="text-sm text-slate-500 mb-6">Priced per {unitLabel}</p>}
+        <ProductPricingTable tiers={product.pricing_tiers} {locale} {currency} />
+      </div>
+    )
+  }
 
   {/* ─── RELATED PRODUCTS ──────────────────────────────────────────────────── */}
-  {showRelated && relatedProducts.length > 0 && (
-    <div class="max-w-6xl mx-auto px-6 md:px-16 py-12">
-      <h2 class="text-xl font-bold text-slate-900 mb-6">Related Products</h2>
-      <ul class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 list-none p-0 m-0">
-        {relatedProducts.map((rel) => {
-          const relTx = getTranslation(rel.translations, locale);
-          const relImageUrl = rel.image
-            ? assetUrl(rel.image, "width=400&height=400&fit=cover")
-            : null;
-          const relFullPath = getProductFullPath(rel.slug, rel.category?.id ?? null, catPathMap);
-          const relHref = `/${locale}${productsPagePermalink}/${relFullPath}`;
-          const relPrice = formatPrice(rel.price, locale, currency);
-          const relOnSale = isOnSale(rel.price, rel.compare_at_price);
+  {
+    showRelated && relatedProducts.length > 0 && (
+      <div class="max-w-6xl mx-auto px-6 md:px-16 py-12">
+        <h2 class="text-xl font-bold text-slate-900 mb-6">Related Products</h2>
+        <ul class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 list-none p-0 m-0">
+          {relatedProducts.map((rel) => {
+            const relTx = getTranslation(rel.translations, locale);
+            const relImageUrl = rel.image
+              ? assetUrl(rel.image, "width=400&height=400&fit=cover")
+              : null;
+            const relFullPath = getProductFullPath(rel.slug, rel.category?.id ?? null, catPathMap);
+            const relHref = `/${locale}${productsPagePermalink}/${relFullPath}`;
+            const relPrice = formatPrice(rel.price, locale, currency);
+            const relOnSale = isOnSale(rel.price, rel.compare_at_price);
 
-          return (
-            <li class="flex flex-col rounded-xl border border-slate-200 bg-white overflow-hidden hover:shadow-md transition-shadow">
-              <a href={relHref} tabindex="-1" aria-hidden="true" class="block">
-                {relImageUrl ? (
-                  <img src={relImageUrl} alt={relTx?.name ?? ""} class="w-full aspect-square object-cover" />
-                ) : (
-                  <div class="w-full aspect-square bg-slate-100 flex items-center justify-center text-3xl text-slate-300">⚙</div>
-                )}
-              </a>
-              <div class="p-3 flex flex-col gap-1">
-                <h3 class="text-sm font-semibold">
-                  <a href={relHref} class="no-underline hover:underline text-slate-900">
-                    {relTx?.name ?? rel.slug}
-                  </a>
-                </h3>
-                {relPrice && (
-                  <div class="flex items-center gap-1.5">
-                    <span class="text-sm font-bold text-slate-800">{relPrice}</span>
-                    {relOnSale && (
-                      <span class="text-xs text-slate-400 line-through">
-                        {formatPrice(rel.compare_at_price, locale, currency)}
-                      </span>
-                    )}
-                  </div>
-                )}
-              </div>
-            </li>
-          );
-        })}
-      </ul>
-    </div>
-  )}
-
+            return (
+              <li class="flex flex-col rounded-xl border border-slate-200 bg-white overflow-hidden hover:shadow-md transition-shadow">
+                <a href={relHref} tabindex="-1" aria-hidden="true" class="block">
+                  {relImageUrl ? (
+                    <img
+                      src={relImageUrl}
+                      alt={relTx?.name ?? ""}
+                      class="w-full aspect-square object-cover"
+                    />
+                  ) : (
+                    <div class="w-full aspect-square bg-slate-100 flex items-center justify-center text-3xl text-slate-300">
+                      ⚙
+                    </div>
+                  )}
+                </a>
+                <div class="p-3 flex flex-col gap-1">
+                  <h3 class="text-sm font-semibold">
+                    <a href={relHref} class="no-underline hover:underline text-slate-900">
+                      {relTx?.name ?? rel.slug}
+                    </a>
+                  </h3>
+                  {relPrice && (
+                    <div class="flex items-center gap-1.5">
+                      <span class="text-sm font-bold text-slate-800">{relPrice}</span>
+                      {relOnSale && (
+                        <span class="text-xs text-slate-400 line-through">
+                          {formatPrice(rel.compare_at_price, locale, currency)}
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    )
+  }
 </div>

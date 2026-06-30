@@ -55,6 +55,7 @@ export type {
   ProductSpecGroup,
   ProductSpec,
   ProductSpecVariantValue,
+  ProductVariantSpecGroup,
   ProductCertification,
   CustomerGroup,
   ProductPricingTier,

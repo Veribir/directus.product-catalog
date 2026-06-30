@@ -1,25 +1,25 @@
 ---
-import type { BlockProductSpecs, ProductMedia, ProductSpec, ProductVariant } from "../../lib/directus";
+import type { BlockProductSpecs, ProductMedia, ProductVariant } from "../../lib/directus";
 import { assetUrl } from "../../lib/assets";
 import { getTranslation } from "../../lib/i18n";
 import ProductSpecs from "../ProductSpecs.astro";
 
 interface Props {
   block: BlockProductSpecs;
-  specs: ProductSpec[];
   variants: ProductVariant[];
   media: ProductMedia[];
   locale: string;
 }
 
-const { block, specs, variants, media, locale } = Astro.props;
+const { block, variants, media, locale } = Astro.props;
 
-const filteredSpecs = block.spec_group
-  ? specs.filter((s) => s.group?.id === block.spec_group)
-  : specs;
-
-const published = filteredSpecs.filter((s) => s.status === "published");
-if (published.length === 0) return;
+// A product's spec sheet is the union of all its variants' variant_spec_groups —
+// there is no product-level spec list (see docs/product-catalog-schema-guide.md §6).
+// Bail out early if no published variant has any spec data at all.
+const hasAnySpecs = variants
+  .filter((v) => v.status === "published")
+  .some((v) => (v.variant_spec_groups ?? []).length > 0);
+if (!hasAnySpecs) return;
 
 const drawings = block.show_media
   ? media
@@ -29,9 +29,17 @@ const drawings = block.show_media
 
 const mediaPosition = block.media_position ?? "left";
 const leftDrawings =
-  mediaPosition === "both" ? drawings.filter((d) => (d.position ?? "left") === "left") : mediaPosition === "left" ? drawings : [];
+  mediaPosition === "both"
+    ? drawings.filter((d) => (d.position ?? "left") === "left")
+    : mediaPosition === "left"
+      ? drawings
+      : [];
 const rightDrawings =
-  mediaPosition === "both" ? drawings.filter((d) => d.position === "right") : mediaPosition === "right" ? drawings : [];
+  mediaPosition === "both"
+    ? drawings.filter((d) => d.position === "right")
+    : mediaPosition === "right"
+      ? drawings
+      : [];
 
 const layout = block.layout ?? "table";
 ---
@@ -44,47 +52,55 @@ const layout = block.layout ?? "table";
     leftDrawings.length > 0 && rightDrawings.length > 0 && "md:grid-cols-[260px_1fr_260px]",
   ]}
 >
-  {leftDrawings.length > 0 && (
-    <div class="hidden md:flex flex-col gap-10 sticky top-24">
-      {leftDrawings.map((d) => {
-        const dtx = getTranslation(d.translations, locale);
-        return (
-          <figure class="m-0">
-            <img
-              src={assetUrl(d.image, "width=260&fit=contain&format=webp")}
-              alt={dtx?.caption ?? ""}
-              class="w-full object-contain opacity-70 mix-blend-multiply"
-              loading="lazy"
-            />
-            {dtx?.caption && (
-              <figcaption class="text-xs text-slate-400 mt-2 text-center">{dtx.caption}</figcaption>
-            )}
-          </figure>
-        );
-      })}
-    </div>
-  )}
+  {
+    leftDrawings.length > 0 && (
+      <div class="hidden md:flex flex-col gap-10 sticky top-24">
+        {leftDrawings.map((d) => {
+          const dtx = getTranslation(d.translations, locale);
+          return (
+            <figure class="m-0">
+              <img
+                src={assetUrl(d.image, "width=260&fit=contain&format=webp")}
+                alt={dtx?.caption ?? ""}
+                class="w-full object-contain opacity-70 mix-blend-multiply"
+                loading="lazy"
+              />
+              {dtx?.caption && (
+                <figcaption class="text-xs text-slate-400 mt-2 text-center">
+                  {dtx.caption}
+                </figcaption>
+              )}
+            </figure>
+          );
+        })}
+      </div>
+    )
+  }
 
-  <ProductSpecs specs={filteredSpecs} {variants} {locale} {layout} />
+  <ProductSpecs {variants} {locale} {layout} specGroupFilter={block.spec_group} />
 
-  {rightDrawings.length > 0 && (
-    <div class="hidden md:flex flex-col gap-10 sticky top-24">
-      {rightDrawings.map((d) => {
-        const dtx = getTranslation(d.translations, locale);
-        return (
-          <figure class="m-0">
-            <img
-              src={assetUrl(d.image, "width=260&fit=contain&format=webp")}
-              alt={dtx?.caption ?? ""}
-              class="w-full object-contain opacity-70 mix-blend-multiply"
-              loading="lazy"
-            />
-            {dtx?.caption && (
-              <figcaption class="text-xs text-slate-400 mt-2 text-center">{dtx.caption}</figcaption>
-            )}
-          </figure>
-        );
-      })}
-    </div>
-  )}
+  {
+    rightDrawings.length > 0 && (
+      <div class="hidden md:flex flex-col gap-10 sticky top-24">
+        {rightDrawings.map((d) => {
+          const dtx = getTranslation(d.translations, locale);
+          return (
+            <figure class="m-0">
+              <img
+                src={assetUrl(d.image, "width=260&fit=contain&format=webp")}
+                alt={dtx?.caption ?? ""}
+                class="w-full object-contain opacity-70 mix-blend-multiply"
+                loading="lazy"
+              />
+              {dtx?.caption && (
+                <figcaption class="text-xs text-slate-400 mt-2 text-center">
+                  {dtx.caption}
+                </figcaption>
+              )}
+            </figure>
+          );
+        })}
+      </div>
+    )
+  }
 </div>
