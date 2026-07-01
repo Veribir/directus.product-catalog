@@ -555,6 +555,17 @@ CREATE TABLE products_tags (
 -- has been DROPPED. Spec groups no longer have any product-scoping mechanism —
 -- see section 7 for the current variant-only model.
 
+-- product_categories.spec_groups (M2M — which spec groups belong to a category)
+-- Used by the "Auto-assign spec groups on variant create" Flow: when a variant
+-- is added, the flow resolves its product's categories, looks up this junction,
+-- and bulk-creates product_variant_spec_groups rows for all linked spec groups.
+CREATE TABLE product_categories_spec_groups (
+  id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  product_categories_id uuid NOT NULL REFERENCES product_categories(id) ON DELETE CASCADE,
+  product_spec_groups_id uuid NOT NULL REFERENCES product_spec_groups(id) ON DELETE CASCADE,
+  sort integer
+);
+
 
 -- ============================================================================
 -- 10. GENERIC PER-PRODUCT CONTENT COLLECTIONS
@@ -1162,6 +1173,8 @@ CREATE TABLE block_products_translations (
 -- product_categories.parent        -> product_categories.id      ON DELETE SET NULL (self)
 -- product_categories.default_page_template -> product_page_templates.id ON DELETE SET NULL
 -- product_categories.brand         -> product_brands.id          ON DELETE SET NULL
+-- product_categories_spec_groups.product_categories_id -> product_categories.id ON DELETE CASCADE (M2M; alias product_categories.spec_groups ↔ product_spec_groups.categories)
+-- product_categories_spec_groups.product_spec_groups_id -> product_spec_groups.id ON DELETE CASCADE
 -- product_variants.product         -> products.id                ON DELETE CASCADE
 -- product_variants.unit_override   -> product_units.id           ON DELETE SET NULL
 -- product_specs.group               -> product_spec_groups.id    ON DELETE SET NULL
