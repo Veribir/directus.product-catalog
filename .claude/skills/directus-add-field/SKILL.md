@@ -107,4 +107,16 @@ Use `mcp__barkomas_dev__fields` with `action: "create"`:
 
 Read the field back with `mcp__barkomas_dev__fields` (`action: "read"`, supply `field`) and confirm it was created with the expected interface and sort order.
 
-Report: collection name, field name, interface used, sort position, group assignment (if any).
+### 5 — Frontend wiring (schema change cascade)
+
+A Directus field is not "done" until all three layers agree. Missing any one causes either a TypeScript error (missing type) or silent data gaps (field never fetched) — this is the most common mistake.
+
+1. **Directus** — field created via MCP ✓ (steps 1–4)
+2. **`frontend/src/lib/types.ts`** — add the property to the right type with correct nullability (`| null` for nullable fields).
+3. **`frontend/src/lib/api.ts`** — add the field string to the relevant fetch function's fields array (e.g. `PAGE_FIELDS`, `PRODUCT_DETAIL_FIELDS`, `BLOCK_ITEM_FIELDS`).
+
+If the field must appear in the UI, also update the component that renders it. Then run `npm run build` from `frontend/` to verify.
+
+### 6 — Report
+
+Report: collection name, field name, interface used, sort position, group assignment (if any), and which frontend layers were updated.
