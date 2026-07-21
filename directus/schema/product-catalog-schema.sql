@@ -822,7 +822,7 @@ CREATE TABLE block_product_hero (
   image_position varchar(255) DEFAULT 'right',  -- left | right | full_bleed | none
   cta_style varchar(255) DEFAULT 'quote_only',
   -- quote_only        -> primary RFQ-style CTAs (block_product_cta_group)
-  -- cart_and_wishlist -> qty selector + add-to-quote + wishlist
+  -- cart_and_wishlist -> qty selector + direct order + wishlist
   -- both              -> render both groups
   enable_zoom boolean DEFAULT true,             -- magnifier / "hover to inspect"
   enable_floorplan_view boolean DEFAULT false,  -- floor-plan / schematic icon
