@@ -5,7 +5,7 @@
   // (run from this directory) deploys.
   //
   // Set "name" to the Worker name for this project before deploying.
-  "name": "dev-tamim",
+  "name": "directus-product-catalog",
   "compatibility_date": "2026-04-15",
   // Without this, `wrangler deploy` deletes all dashboard-configured plaintext
   // "Environment Variables" (e.g. PREVIEW_SECRET) before applying this file's
