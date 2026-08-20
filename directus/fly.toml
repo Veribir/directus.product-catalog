@@ -1,13 +1,12 @@
-# fly.toml app configuration file generated for dev-tamim on 2026-06-03T21:24:19+06:00
+# fly.toml app configuration file generated for cat-directus on 2026-08-20T15:46:54+06:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'dev-tamim'
+app = 'cat-directus'
 primary_region = 'sin'
 
 [build]
-
 [http_service]
   internal_port = 8055
   force_https = true
